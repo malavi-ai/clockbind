@@ -14,13 +14,11 @@ jobs:
           Z=$(ls *.zip 2>/dev/null | head -1)
           if [ -z "$Z" ]; then echo "no zip yet"; exit 0; fi
           unzip -q "$Z" -d /tmp/u
+          rm -rf /tmp/u/*/.github
           cp -a /tmp/u/*/. .
-          git rm -q -r --ignore-unmatch "$Z" .github/workflows/unpack.yml github
-          find .github -mindepth 1 -maxdepth 1 ! -name workflows -exec git rm -q -r {} +
-          rm -rf .pytest_cache clockbind/__pycache__
+          git rm -q -r --ignore-unmatch "$Z" github ".github/ workflows "
           git config user.name "Seyed Mehdi Alavi"
           git config user.email "malavi-ai@users.noreply.github.com"
           git add -A
           git commit -m "Add ClockBind 1.0.0"
           git push
-
