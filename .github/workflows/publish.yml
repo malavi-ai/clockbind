@@ -1,0 +1,90 @@
+name: publish
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: publish
+  cancel-in-progress: false
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack uploaded zip
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          zips=( *.zip )
+          if [ ${#zips[@]} -eq 0 ]; then echo "No zip uploaded."; exit 0; fi
+          git config user.name "Seyed Mehdi Alavi"
+          git config user.email "malavi-ai@users.noreply.github.com"
+          reject() {
+            echo "::error::$1"
+            git rm -q -- "${zips[@]}" && git commit -q -m "Remove rejected upload: $1" && git push -q || true
+            exit 1
+          }
+          if [ ${#zips[@]} -gt 1 ]; then reject "Upload exactly one zip. Found: ${zips[*]}"; fi
+          Z="${zips[0]}"
+          rm -rf /tmp/u && mkdir /tmp/u
+          unzip -q "$Z" -d /tmp/u -x '__MACOSX/*' '*/.DS_Store' '.DS_Store' || reject "The zip could not be opened."
+          tops=( /tmp/u/* /tmp/u/.[!.]* )
+          if [ ${#tops[@]} -ne 1 ] || [ ! -d "${tops[0]}" ]; then reject "The zip must contain exactly one folder (e.g. ClockBind_1.0.1/)."; fi
+          SRC="${tops[0]}"
+          if [ ! -f "$SRC/pyproject.toml" ] || [ ! -d "$SRC/clockbind" ]; then reject "This zip is not a ClockBind package (pyproject.toml or clockbind/ missing)."; fi
+          if [ -d "$SRC/.github" ] && ! diff -rq "$SRC/.github" .github >/dev/null 2>&1; then
+            echo "::warning::The zip's .github folder differs from the repository's. It is ignored; edit workflow files on GitHub directly."
+          fi
+          rm -rf "$SRC/.github"
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          cp -a "$SRC/." .
+          git add -A
+          V=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
+          git commit -q -m "ClockBind $V" || echo "Nothing changed."
+          git push
+      - name: Test
+        shell: bash
+        run: |
+          set -euo pipefail
+          git pull -q
+          python3 -m venv /tmp/venv
+          /tmp/venv/bin/python -m pip install -q --upgrade pip
+          /tmp/venv/bin/python -m pip install -q ".[test]"
+          /tmp/venv/bin/python -m pytest -q tests
+      - name: Release (Zenodo mints the DOI)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          V=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
+          if gh release view "v$V" >/dev/null 2>&1; then echo "v$V is already released."; exit 0; fi
+          N=$(awk -v V="$V" '$1=="##" && $2==V {f=1; next} /^## /{f=0} f' CHANGELOG.md)
+          gh release create "v$V" --target main --title "ClockBind $V" --notes "${N:-ClockBind $V}"
+  pages:
+    needs: unpack
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Check for web app
+        id: chk
+        run: if [ -f docs/index.html ]; then echo "ok=1" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/configure-pages@v5
+        if: steps.chk.outputs.ok == '1'
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.chk.outputs.ok == '1'
+        with:
+          path: docs
+      - id: deploy
+        if: steps.chk.outputs.ok == '1'
+        uses: actions/deploy-pages@v4
