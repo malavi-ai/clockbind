@@ -1,1 +1,26 @@
+name: unpack
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip and commit
+        run: |
+          Z=$(ls *.zip 2>/dev/null | head -1)
+          if [ -z "$Z" ]; then echo "no zip yet"; exit 0; fi
+          unzip -q "$Z" -d /tmp/u
+          cp -a /tmp/u/*/. .
+          git rm -q -r --ignore-unmatch "$Z" .github/workflows/unpack.yml github
+          find .github -mindepth 1 -maxdepth 1 ! -name workflows -exec git rm -q -r {} +
+          rm -rf .pytest_cache clockbind/__pycache__
+          git config user.name "Seyed Mehdi Alavi"
+          git config user.email "malavi-ai@users.noreply.github.com"
+          git add -A
+          git commit -m "Add ClockBind 1.0.0"
+          git push
 
