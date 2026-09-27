@@ -1,0 +1,51 @@
+Procedure,Statistic,R reference,Max |difference|,Tolerance,Result
+Descriptives,"mean, SD, median, Q1",base::mean/sd/quantile,5.10702591327572e-15,1e-10,PASS
+Descriptives,"skewness, kurtosis (G1, G2)",psych::describe(type = 2),1.7208456881689926e-15,1e-10,PASS
+Independent t-test,"Student t, p",stats::t.test(var.equal = TRUE),4.440892098500626e-16,1e-10,PASS
+Independent t-test,"Welch t, df, p",stats::t.test(),2.8421709430404007e-13,1e-08,PASS
+Independent t-test,"Levene F (mean-centred), p",anova(lm(|y − group mean| ~ g)),8.881784197001252e-16,1e-10,PASS
+Paired t-test,"t, p",stats::t.test(paired = TRUE),5.040631857745012e-25,1e-10,PASS
+One-sample t-test,"t, p",stats::t.test(mu = 0),6.661338147750939e-16,1e-10,PASS
+One-way ANOVA,"F, p",stats::aov,7.771561172376096e-16,1e-10,PASS
+One-way ANOVA,"Welch F, df2, p",stats::oneway.test,3.126388037344441e-13,1e-08,PASS
+One-way ANOVA,Levene F,anova(lm(|y − group mean| ~ g)),1.7763568394002505e-15,1e-10,PASS
+Tukey HSD,mean differences,stats::TukeyHSD,9.71445146547012e-16,1e-10,PASS
+Tukey HSD,adjusted p,stats::TukeyHSD,3.863576125695545e-13,0.002,PASS
+Chi-square,"Pearson χ², p",stats::chisq.test(correct = FALSE),2.220446049250313e-16,1e-10,PASS
+Chi-square 2×2,"Yates χ², p",stats::chisq.test(correct = TRUE),0.0,1e-10,PASS
+Fisher's exact,p (two-sided),stats::fisher.test,0.0,1e-08,PASS
+Mann–Whitney,"U (= R's W), p",stats::wilcox.test(exact = FALSE),0.0,1e-10,PASS
+Wilcoxon signed-rank,"V, p","stats::wilcox.test(paired = TRUE, exact = FALSE)",2.274746684520826e-24,1e-10,PASS
+Kruskal–Wallis,"H, p",stats::kruskal.test,4.440892098500626e-16,1e-10,PASS
+Correlation,"pearson coefficient, p",stats::cor.test(method = 'pearson'),2.220446049250313e-16,1e-10,PASS
+Correlation,"spearman coefficient, p",stats::cor.test(method = 'spearman'),1.1102230246251565e-16,1e-10,PASS
+Correlation,kendall coefficient,stats::cor.test(method = 'kendall'),4.440892098500626e-16,1e-10,PASS
+Linear regression,coefficients,stats::lm,2.4424906541753444e-15,1e-10,PASS
+Linear regression,classical SE,stats::lm,7.494005416219807e-16,1e-10,PASS
+Linear regression,"R², F",summary.lm,6.394884621840902e-14,1e-10,PASS
+Linear regression,HC3 SE,sandwich::vcovHC(type = 'HC3'),1.3322676295501878e-15,1e-10,PASS
+Linear regression,CR2 cluster-robust SE,clubSandwich::vcovCR(type = 'CR2'),1.27675647831893e-15,1e-08,PASS
+Linear regression,CR1 cluster-robust SE,clubSandwich::vcovCR(type = 'CR1S'),3.58046925441613e-15,1e-08,PASS
+Logistic regression,"coefficients, SE",stats::glm(binomial),1.9937513445755783e-08,1e-06,PASS
+Logistic regression,deviance (−2LL),stats::glm(binomial),1.7053025658242404e-13,1e-06,PASS
+Multinomial logistic,coefficients,nnet::multinom,3.00563821054034e-08,0.0001,PASS
+Multinomial logistic,standard errors,nnet::multinom (Hessian),9.492134300792543e-10,0.0001,PASS
+Ordinal logistic,coefficients,MASS::polr,1.0578219679202583e-05,0.0001,PASS
+Ordinal logistic,thresholds,MASS::polr,2.9077497985363632e-05,0.0001,PASS
+Ordinal logistic,SE,MASS::polr (Hessian),3.015612210222063e-07,0.001,PASS
+Reliability,"Cronbach's α, standardised α",psych::alpha,3.3306690738754696e-16,1e-10,PASS
+Reliability,"corrected item–total r, α if deleted",psych::alpha,6.661338147750939e-16,1e-10,PASS
+Reliability,McDonald's ω (1 factor),"lavaan one-factor CFA, ω from standardised loadings",3.00533951058668e-08,0.001,PASS
+Agreement,"Cohen's κ, weighted κ (linear, quadratic)",irr::kappa2,3.3306690738754696e-16,1e-10,PASS
+Agreement,Gwet's AC1,irrCAC::gwet.ac1.raw (reports 5 decimals),1.1610185594035372e-06,5e-06,PASS
+ICC,"ICC1, ICC2, ICC3, ICC1k, ICC2k, ICC3k",psych::ICC(lmer = FALSE),1.2212453270876722e-15,1e-10,PASS
+Exploratory FA,"ML varimax loadings (|λ|, factor order aligned)","psych::fa(fm = 'ml', rotate = 'varimax')",4.005972326193152e-06,0.002,PASS
+Exploratory FA,communalities,psych::fa,5.909645887203219e-06,0.002,PASS
+Exploratory FA,"KMO, Bartlett χ²","psych::KMO, psych::cortest.bartlett",2.2737367544323206e-13,1e-06,PASS
+Confirmatory FA,"χ², df, CFI, TLI, RMSEA, SRMR",lavaan::cfa (same engine),0.0,1e-08,PASS
+Power,required n (t_independent),pwr::pwr.t.test,1.4476989207423685e-07,0.001,PASS
+Power,required n (anova),pwr::pwr.anova.test,1.2395461681080633e-05,0.001,PASS
+Power,required n (correlation),pwr::pwr.r.test,2.0379915781632008e-06,0.001,PASS
+Power,required n (chisquare),pwr::pwr.chisq.test,9.642349141358864e-09,0.001,PASS
+Conjoint AMCE,estimates,stats::lm on dummies,6.439293542825908e-15,1e-10,PASS
+Conjoint AMCE,CR2 SE (respondent clusters),clubSandwich::vcovCR(type = 'CR2'),4.544975507059235e-16,1e-08,PASS

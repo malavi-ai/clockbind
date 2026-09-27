@@ -1,0 +1,39 @@
+{
+  "_note": "EXAMPLE ONLY. Replace attributes and levels with those fixed in Study 1 Protocol v0.4.1 after cognitive interviews.",
+  "attributes": {
+    "standards_compliance": [
+      "low",
+      "high"
+    ],
+    "prior_experience": [
+      "none",
+      "some",
+      "extensive"
+    ],
+    "capital_commitment": [
+      "low",
+      "high"
+    ],
+    "market_access": [
+      "local",
+      "regional"
+    ]
+  },
+  "task_factor": {
+    "name": "enforceability",
+    "levels": [
+      "HIGH",
+      "LOW"
+    ],
+    "baseline": "HIGH"
+  },
+  "n_tasks": 8,
+  "n_blocks": 4,
+  "restrictions": [],
+  "baselines": {
+    "standards_compliance": "low",
+    "prior_experience": "none",
+    "capital_commitment": "low",
+    "market_access": "local"
+  }
+}

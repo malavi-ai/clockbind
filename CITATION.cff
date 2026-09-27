@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use ClockBind, please cite it using the metadata below, together with the underlying libraries named in the methods text of each analysis."
+type: software
+title: "ClockBind: a reproducible statistics studio for doctoral research"
+version: 1.0.0
+date-released: 2026-09-26
+license: MIT
+authors:
+  - family-names: Alavi
+    given-names: Seyed Mehdi
+    affiliation: "Doctoral School of Regional and Business Administration Sciences (SzEEDSM), Széchenyi István University, Győr, Hungary"
+    orcid: "https://orcid.org/0009-0003-8430-211X"
+repository-code: "https://github.com/malavi-ai/clockbind"
+# doi: 10.5281/zenodo.XXXXXXX                                      # fill after the first Zenodo release
+keywords:
+  - reproducible research
+  - case screening
+  - cluster-robust inference
+  - overlap weights
+  - conjoint analysis
+  - reliability
+  - factor analysis
+abstract: >-
+  ClockBind is an open-source statistics studio with a command-line interface and a local point-and-click app.
+  It records the exact analysis specification, input and output hashes, software versions and code hash for every run,
+  and each statistical procedure is validated against established reference implementations in R.
+  Computations rely on established libraries (NumPy, SciPy, statsmodels, factor_analyzer; lavaan in R for confirmatory factor analysis).

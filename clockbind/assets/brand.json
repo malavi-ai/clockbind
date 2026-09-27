@@ -1,0 +1,18 @@
+{
+  "_note": "Brand theme for charts, the Studio and Word output. Replace the values with your official brand codes; keep the keys. Logo must be an official file you are allowed to use.",
+  "name": "ClockBind",
+  "colors": {
+    "ink": "#14233A",
+    "accent": "#A4772B",
+    "second": "#2A7A6D",
+    "third": "#5F7A98",
+    "error": "#B3452A",
+    "muted": "#5C6978",
+    "line": "#D3DADB",
+    "background": "#EEF1F0"
+  },
+  "fonts": {"display": "Newsreader", "body": "IBM Plex Sans", "mono": "IBM Plex Mono", "word": "Calibri"},
+  "word_header_logo": "",
+  "word_footer": "",
+  "studio_footer": ""
+}

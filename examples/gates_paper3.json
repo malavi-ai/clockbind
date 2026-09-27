@@ -1,0 +1,9 @@
+{
+  "_note": "PLACEHOLDER thresholds. Freeze your own values (with supervisor/methodologist) before any outcome is seen.",
+  "min_n_per_arm": 20,
+  "min_firms_per_arm": 12,
+  "min_ess_per_arm": 12,
+  "min_ess_total": 60,
+  "max_abs_smd": 0.10,
+  "min_ps_own_arm": 0.01
+}

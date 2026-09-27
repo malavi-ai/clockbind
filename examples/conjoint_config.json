@@ -1,0 +1,38 @@
+{
+  "attributes": {
+    "standards_compliance": [
+      "low",
+      "high"
+    ],
+    "track_record": [
+      "new",
+      "established"
+    ],
+    "capital_commitment": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "local_network": [
+      "weak",
+      "strong"
+    ]
+  },
+  "task_factor": {
+    "name": "enforceability",
+    "levels": [
+      "HIGH",
+      "LOW"
+    ],
+    "baseline": "HIGH"
+  },
+  "n_tasks": 8,
+  "n_blocks": 4,
+  "restrictions": [],
+  "baselines": {
+    "standards_compliance": "low",
+    "track_record": "new",
+    "capital_commitment": "low",
+    "local_network": "weak"
+  }
+}

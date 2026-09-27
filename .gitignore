@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+clockbind_runs/
+phdstat_runs/
+*.sav
+*.dta
+**/PRIVATE*/
+**/*CONFIDENTIAL*
+data/
+.DS_Store

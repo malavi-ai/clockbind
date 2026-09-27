@@ -1,0 +1,10 @@
+{
+  "_note": "ASSUMED utilities on the logit scale for design-recovery simulation. Not estimates.",
+  "utilities": {"standards_compliance=high": 0.5, "track_record=established": 0.4,
+                "capital_commitment=high": 0.3, "local_network=strong": 0.2},
+  "interaction": {"standards_compliance=high x enforceability=LOW": 0.4},
+  "outside": 0.0,
+  "outside_by_factor": {"LOW": 0.3},
+  "heterogeneity_sd": 0.3,
+  "fatigue": 0.1
+}

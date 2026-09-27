@@ -1,0 +1,17 @@
+{
+  "aims": "Null calibration of the overlap-weighted dimension contrast for Paper 3 (E2) under clustering and a rare arm",
+  "dgm": {
+    "name": "paper3",
+    "common": {"mean_rel_per_firm": 2.0, "firm_sd_y": 0.6},
+    "scenarios": [
+      {"name": "null_N150firms", "params": {"n_firms": 150, "arm_effects": [0, 0, 0, 0]}},
+      {"name": "null_N250firms", "params": {"n_firms": 250, "arm_effects": [0, 0, 0, 0]}}
+    ]
+  },
+  "estimand": {"contrast": "bilateral:0.5,focal:0.5,partner:-0.5,third_party:-0.5", "truth_n": 200000},
+  "methods": ["CR2", "CR1"],
+  "performance": ["estimable_rate", "bias", "empirical_se", "model_se", "coverage", "rejection_rate"],
+  "gates": {"min_n_per_arm": 20, "min_firms_per_arm": 12, "min_ess_per_arm": 12, "min_ess_total": 60, "max_abs_smd": 0.15, "min_ps_own_arm": 0.01},
+  "n_reps": 1000,
+  "seed": 20260926
+}

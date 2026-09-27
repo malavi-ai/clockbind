@@ -1,0 +1,267 @@
+{
+  "protocol_version": "v2b-DRAFT (mechanism path)",
+  "frozen": false,
+  "note": "DRAFT for the author's decision. Criteria and definitions must match manuscript §3.1 word for word before freezing. No target counts exist anywhere in this file.",
+  "id_column": "entry_id",
+  "episode_column": "episode_id",
+  "round_column": "search_round",
+  "reason_column": "reason",
+  "claimed_status_column": "hand_status",
+  "carry_columns": [
+    "company_drive"
+  ],
+  "values": {
+    "pass": [
+      "Y"
+    ],
+    "fail": [
+      "N"
+    ],
+    "unknown": [
+      "Unknown",
+      "not documented"
+    ]
+  },
+  "stages": [
+    {
+      "id": "S0",
+      "name": "Analytic universe",
+      "unit": "entry",
+      "criteria": [
+        {
+          "id": "S0a",
+          "type": "yn",
+          "column": "S0_distinct_source",
+          "label": "Distinct empirical source",
+          "definition": "Not a duplicate, staging copy or administrative package of another entry.",
+          "entry_specific": true
+        },
+        {
+          "id": "S0b",
+          "type": "yn",
+          "column": "S0_organisational",
+          "label": "Organisational episode",
+          "definition": "Concerns an organisation (SME or larger), not private/personal use."
+        },
+        {
+          "id": "S0c",
+          "type": "yn",
+          "column": "S0_in_archive_window",
+          "label": "Inside archive window",
+          "definition": "Dated within the frozen archive window (2024-01-01 to 2026-08-24)."
+        },
+        {
+          "id": "S0d",
+          "type": "yn",
+          "column": "S0_research_access_cleared",
+          "label": "Lawful research access",
+          "definition": "Records sit in a drive/mailbox whose controller assessment is signed. KVKK pending = Unknown (held, not excluded)."
+        }
+      ]
+    },
+    {
+      "id": "S1",
+      "name": "Candidate episode",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "S1a",
+          "type": "yn",
+          "column": "S1_material",
+          "label": "Materiality",
+          "definition": "Material specialised asset or capital episode (threshold defined in §3.1)."
+        },
+        {
+          "id": "S1b",
+          "type": "yn",
+          "column": "S1_chronology",
+          "label": "Reconstructable chronology",
+          "definition": "A contemporaneous chronology can be reconstructed from dated documents."
+        },
+        {
+          "id": "S1c",
+          "type": "yn",
+          "column": "S1_evidence_sufficient",
+          "label": "Sufficient evidence",
+          "definition": "At least one contemporaneous transactional or correspondence source."
+        },
+        {
+          "id": "S1d",
+          "type": "any_of",
+          "columns": [
+            "S1_finance_architecture",
+            "S1_comparator_role"
+          ],
+          "label": "Financing/payment architecture OR defined comparator role",
+          "definition": "Either a meaningful financing/payment architecture, or a comparator role defined before outcomes were examined."
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Core case",
+      "unit": "episode",
+      "paths": [
+        {
+          "name": "Temporal core",
+          "criteria": [
+            {
+              "id": "S2a",
+              "type": "yn",
+              "column": "S2_route_evaluated",
+              "label": "Financing route evaluated",
+              "definition": "Episode-level evidence that at least one financing route was evaluated."
+            },
+            {
+              "id": "S2b",
+              "type": "yn",
+              "column": "S2_exante_timing",
+              "label": "Ex-ante timing evidence",
+              "definition": "Timing expectations documented before the outcome; never inferred from realised latency."
+            },
+            {
+              "id": "S2c",
+              "type": "in",
+              "column": "S2_window_tier",
+              "allowed": [
+                "A",
+                "B"
+              ],
+              "label": "Window Tier A/B",
+              "definition": "Tier A or B action window (protocol lock: Tier C is descriptive/sensitivity only).",
+              "scale": [
+                "A",
+                "B",
+                "C",
+                "none"
+              ]
+            },
+            {
+              "id": "S2d",
+              "type": "yn",
+              "column": "S2_window_pre_outcome",
+              "label": "Window documented before outcome",
+              "definition": "The window endpoint tW is documented in a source dated before the outcome."
+            },
+            {
+              "id": "S2e",
+              "type": "yn",
+              "column": "S2_required_event",
+              "label": "Required event R by tW",
+              "definition": "The event R that had to occur by tW is explicit."
+            },
+            {
+              "id": "S2f",
+              "type": "yn",
+              "column": "S2_outcome_mature",
+              "label": "Mature outcome",
+              "definition": "Outcome complete or mature enough to classify without speculation."
+            },
+            {
+              "id": "S2g",
+              "type": "yn",
+              "column": "S2_triangulated",
+              "label": "Triangulation",
+              "definition": "≥2 source types, or 1 strong external source plus independent corroboration."
+            },
+            {
+              "id": "S2h",
+              "type": "yn",
+              "column": "S2_clocks_separable",
+              "label": "Separable clocks",
+              "definition": "Finance, payment, fulfilment, logistics and operational clocks can be dated separately."
+            },
+            {
+              "id": "S2i",
+              "type": "yn",
+              "column": "S2_rivals_coded",
+              "label": "Rival explanations coded",
+              "definition": "Rival explanations explicitly coded for the episode."
+            }
+          ]
+        },
+        {
+          "name": "Mechanism core",
+          "criteria": [
+            {
+              "id": "S2a",
+              "type": "yn",
+              "column": "S2_route_evaluated",
+              "label": "Financing route evaluated",
+              "definition": "Episode-level evidence that at least one financing route was evaluated."
+            },
+            {
+              "id": "S2b",
+              "type": "yn",
+              "column": "S2_exante_timing",
+              "label": "Ex-ante timing evidence",
+              "definition": "Timing expectations documented before the outcome; never inferred from realised latency."
+            },
+            {
+              "id": "S2d",
+              "type": "yn",
+              "column": "S2_window_pre_outcome",
+              "label": "Window documented before outcome",
+              "definition": "The window endpoint tW is documented in a source dated before the outcome."
+            },
+            {
+              "id": "S2e",
+              "type": "yn",
+              "column": "S2_required_event",
+              "label": "Required event R by tW",
+              "definition": "The event R that had to occur by tW is explicit."
+            },
+            {
+              "id": "S2f",
+              "type": "yn",
+              "column": "S2_outcome_mature",
+              "label": "Mature outcome",
+              "definition": "Outcome complete or mature enough to classify without speculation."
+            },
+            {
+              "id": "S2g",
+              "type": "yn",
+              "column": "S2_triangulated",
+              "label": "Triangulation",
+              "definition": "≥2 source types, or 1 strong external source plus independent corroboration."
+            },
+            {
+              "id": "S2h",
+              "type": "yn",
+              "column": "S2_clocks_separable",
+              "label": "Separable clocks",
+              "definition": "Finance, payment, fulfilment, logistics and operational clocks can be dated separately."
+            },
+            {
+              "id": "S2i",
+              "type": "yn",
+              "column": "S2_rivals_coded",
+              "label": "Rival explanations coded",
+              "definition": "Rival explanations explicitly coded for the episode."
+            },
+            {
+              "id": "S2c_mech",
+              "type": "in",
+              "column": "S2_window_tier",
+              "allowed": [
+                "C"
+              ],
+              "label": "Tier C window (mechanism case)",
+              "definition": "Tier C window: may support a mechanism claim only, never a binding-clock claim.",
+              "scale": [
+                "A",
+                "B",
+                "C",
+                "none"
+              ]
+            }
+          ]
+        }
+      ],
+      "levels_by_path": {
+        "Temporal core": "Level 3 – binding clock",
+        "Mechanism core": "Level 2 – mechanism"
+      }
+    }
+  ]
+}

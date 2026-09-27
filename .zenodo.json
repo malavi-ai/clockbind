@@ -1,0 +1,23 @@
+{
+  "title": "ClockBind: a reproducible statistics studio for doctoral research",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Alavi, Seyed Mehdi",
+      "affiliation": "Széchenyi István University, SzEEDSM",
+      "orcid": "0009-0003-8430-211X"
+    }
+  ],
+  "keywords": [
+    "reproducible research",
+    "case screening",
+    "cluster-robust inference",
+    "overlap weights",
+    "conjoint analysis",
+    "reliability",
+    "factor analysis"
+  ],
+  "description": "Open-source statistics studio (CLI + local app) with run provenance and validation against R reference implementations. Developed with the assistance of Claude (Anthropic); all design decisions and validation are the author's responsibility.",
+  "notes": "Contains no research data."
+}
