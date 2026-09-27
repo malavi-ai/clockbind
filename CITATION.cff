@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use ClockBind, please cite it using the metadata below, together with the underlying libraries named in the methods text of each analysis."
 type: software
 title: "ClockBind: a reproducible statistics studio for doctoral research"
-version: 1.0.0
-date-released: 2026-09-26
+version: 1.0.1
+date-released: 2026-09-27
 license: MIT
 authors:
   - family-names: Alavi
@@ -11,7 +11,14 @@ authors:
     affiliation: "Doctoral School of Regional and Business Administration Sciences (SzEEDSM), Széchenyi István University, Győr, Hungary"
     orcid: "https://orcid.org/0009-0003-8430-211X"
 repository-code: "https://github.com/malavi-ai/clockbind"
-# doi: 10.5281/zenodo.XXXXXXX                                      # fill after the first Zenodo release
+doi: 10.5281/zenodo.22989932
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22989932
+    description: "Concept DOI: all versions of ClockBind (resolves to the latest)"
+  - type: doi
+    value: 10.5281/zenodo.22989933
+    description: "Version DOI: ClockBind 1.0.0"
 keywords:
   - reproducible research
   - case screening

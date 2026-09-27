@@ -205,3 +205,56 @@ def test_all_analyses_run_and_export(tmp_path):
     doc = A.outputs_to_docx(outs, tmp_path / "o.docx")
     assert doc.stat().st_size > 10000
     assert '"steps"' in A.syntax_file(outs)
+
+
+# ---------------------------------------------------------------- privacy scan (GDPR / KVKK aid)
+def test_privacy_scan_detects_and_ignores():
+    import pandas as pd
+    from clockbind.privacy import classify, scan_dataframe, _hu_tax_ok
+    assert classify("mehdi@example.com") == ["e-mail address"]
+    assert "phone number" in classify("+36 30 123 4567")
+    assert "phone number" in classify("0532 123 45 67")
+    assert "bank account (IBAN)" in classify("HU42 1177 3016 1111 1018 0000 0000")
+    assert "bank account (IBAN)" in classify("DE89370400440532013000")
+    assert "Turkish ID number (TCKN)" in classify("10000000146")
+    assert "payment card number" in classify("4111 1111 1111 1111")
+    # a valid Hungarian tax ID constructed from the checksum rule
+    base = "812345678"; cd = sum(int(c) * (i + 1) for i, c in enumerate(base)) % 11
+    if cd < 10:
+        assert _hu_tax_ok(base + str(cd))
+    for clean in ["-0.1234567890123456", "3.1415926535897932", "Company A", "Firm 3", "EP-D01", "12500", "0.123456789", "2026-09-27", "01.02.2026", "Level 3", "A", "", None, "R003", "DE89370400440532013001"]:
+        assert classify(clean) == [], clean
+    df = pd.DataFrame({"episode_id": ["EP-D01", "EP-D02"], "Müşteri adı": ["Anna Kovács", "Ali Yılmaz"], "contact": ["a@b.co", ""], "amount": ["100", "0.25"]})
+    f = scan_dataframe(df)
+    cols = {(x["column"], x["kind"]) for x in f}
+    assert ("contact", "e-mail address") in cols
+    assert any(c == "Müşteri adı" for c, _ in cols)
+    assert not any(c in ("episode_id", "amount") for c, _ in cols)
+    coded = pd.DataFrame({"company": ["Company A", "Company B", "Company C", "Company D", "Company E"]})
+    assert scan_dataframe(coded) == []  # pseudonymous codes are not flagged
+    assert all(set(x) == {"column", "kind", "count"} for x in f)  # never returns values
+
+
+# ---------------------------------------------------------------- command-line smoke tests (clean-install regressions)
+def test_cli_screen_and_privacy(tmp_path):
+    import json, subprocess, sys
+    import pandas as pd
+    root = Path(__file__).resolve().parents[1]
+    rows = json.loads((root / "webapp" / "demo_rows.json").read_text(encoding="utf-8"))
+    sheet = tmp_path / "demo.xlsx"; pd.DataFrame(rows).to_excel(sheet, index=False)
+    r = subprocess.run([sys.executable, "-m", "clockbind", "screen", "run", "--data", str(sheet),
+                        "--gates", str(root / "examples" / "screening" / "gates_v3_DRAFT.json"), "--out", str(tmp_path / "runs")],
+                       capture_output=True, text=True, cwd=root)
+    assert r.returncode == 2, r.stderr[-800:]          # the demo contains one deliberate conflict (EP-D04)
+    assert "Level 3 – binding clock  3" in r.stdout and "Citable: False" in r.stdout
+    r2 = subprocess.run([sys.executable, "-m", "clockbind", "privacy", "scan", "--data", str(sheet), "--strict"], capture_output=True, text=True, cwd=root)
+    assert r2.returncode == 0 and "No personal-data patterns" in r2.stdout
+    pd.DataFrame({"contact": ["a@b.com"]}).to_csv(tmp_path / "p.csv", index=False)
+    r3 = subprocess.run([sys.executable, "-m", "clockbind", "privacy", "scan", "--data", str(tmp_path / "p.csv"), "--strict"], capture_output=True, text=True, cwd=root)
+    assert r3.returncode == 3 and "a@b.com" not in r3.stdout
+
+
+def test_bundled_copies_match_originals():
+    from clockbind.resources import BUNDLED, PKG, ROOT
+    for name, rel in BUNDLED.items():
+        assert (PKG / "data" / name).read_bytes() == (ROOT / rel).read_bytes(), f"clockbind/data/{name} is stale: run python webapp/build.py"

@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clockbind"
-version = "1.0.0"
+version = "1.0.1"
 description = "ClockBind: reproducible statistics studio for doctoral research — screening, descriptive and inferential statistics, regression with cluster-robust inference, reliability, factor analysis, overlap weighting and conjoint analysis, with provenance and validation against R."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Seyed Mehdi Alavi"}]
 requires-python = ">=3.9"
-dependencies = ["numpy", "pandas", "scipy", "statsmodels", "openpyxl", "matplotlib", "python-docx", "factor_analyzer"]
+dependencies = ["numpy", "pandas", "scipy", "statsmodels", "openpyxl", "matplotlib", "python-docx", "factor_analyzer", "tabulate"]
 
 [project.urls]
 Homepage = "https://github.com/malavi-ai/clockbind"
@@ -30,4 +30,4 @@ phdstat = "clockbind.cli:main"
 include = ["clockbind*"]
 
 [tool.setuptools.package-data]
-clockbind = ["r/*.R", "studio/*.py", "studio/.streamlit/*", "assets/*"]
+clockbind = ["r/*.R", "studio/*.py", "studio/.streamlit/*", "assets/*", "assets/fonts/*", "data/*"]

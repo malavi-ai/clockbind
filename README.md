@@ -1,6 +1,8 @@
 <img src="clockbind/assets/clockbind-logo-horizontal.svg" width="360" alt="ClockBind — Which clock binds?">
 
 # ClockBind
+[![DOI](https://zenodo.org/badge/1390144757.svg)](https://doi.org/10.5281/zenodo.22989932)
+
 **A reproducible statistics studio for doctoral research.** Point-and-click app, command line and syntax files; every procedure validated against R.
 
 
@@ -9,6 +11,7 @@
 | **Studio** | Local app in your browser (like SPSS): open Excel/CSV/SPSS files, choose an analysis from the menu, get tables, charts and a *methods text*, export everything to Word. Data never leave your computer. |
 | **Reproducible** | Every result carries its *syntax* (JSON). `clockbind syntax run` re-creates the whole output from the data file, with a manifest (data hash, software versions, code hash). |
 | **Validated** | `clockbind validate all` compares 50 statistics with established R functions (stats, psych, lavaan, irr, irrCAC, nnet, MASS, sandwich, clubSandwich, pwr) and writes [VALIDATION.md](VALIDATION.md). Current result: **50 of 50 pass**. |
+| **Private** | Everything runs on your device; no telemetry; bundled fonts; a personal-data scan warns before analysis (GDPR / KVKK). See [PRIVACY.md](PRIVACY.md). |
 | **Citable** | MIT licence, `CITATION.cff`, Zenodo DOI per release (see [RELEASE_GUIDE.md](RELEASE_GUIDE.md)). |
 
 ## Analyses
@@ -29,15 +32,21 @@
   - P3 multi-arm overlap weights (diagnostics, estimability gates, CR2 contrasts, cluster bootstrap);
   - P1 conjoint AMCEs with CR2 by respondent.
 
+## Screening app (any device, offline)
+Open https://malavi-ai.github.io/clockbind/ once, then *Add to Home Screen* (iPhone) or *Install* (Chrome/Edge). After the first visit it works without internet. Files are read inside the browser and never uploaded. It covers case screening only; the statistics Studio runs on the Mac (below).
+
 ## Install (Mac)
-1. Double-click `Install_ClockBind_on_Mac.command`.
-2. Double-click `Start_ClockBind_Studio.command`.
+1. Download the latest release from https://github.com/malavi-ai/clockbind/releases/latest (**Source code (zip)**) and unzip it.
+2. In the folder, open **Install_ClockBind_on_Mac.command**. macOS asks because the file is not from the App Store:
+   right-click → **Open** → **Open**. On macOS 15 or later, if there is no Open button: **System Settings → Privacy & Security → Open Anyway**.
+3. When the Terminal says *Done*, **ClockBind** is in your Applications folder (Home → Applications). Drag it to the Dock: one click opens the Studio.
 
-R is optional: it is needed only for CFA (lavaan) and for re-running the validation.
+The Studio runs on your Mac and opens in your browser at `localhost:8501`; it works offline. R is optional (CFA and re-running the validation).
 
-Command line:
+## Command line
 ```
 clockbind studio open                                   # the app
+clockbind privacy scan --data data.xlsx                 # personal-data check (values never shown)
 clockbind syntax list                                   # all analyses
 clockbind syntax run --data data.xlsx --syntax my_syntax.json
 clockbind screen run --data screening.xlsx --gates gates.json
@@ -46,9 +55,11 @@ clockbind validate all                                  # regenerate VALIDATION.
 `phdstat` remains as an alias of `clockbind`.
 
 ## Citing
-> Alavi, S. M. (2026). *ClockBind: a reproducible statistics studio for doctoral research* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+> Alavi, S. M. (2026). *ClockBind: a reproducible statistics studio for doctoral research* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22989933
 
-Source code: https://github.com/malavi-ai/clockbind (the DOI is added after the first Zenodo release).
+Cite the exact version you used. Each release has its own version DOI; the concept DOI https://doi.org/10.5281/zenodo.22989932 always points to the latest version.
+
+Source code: https://github.com/malavi-ai/clockbind
 
 Please also cite the underlying libraries named in each result (statsmodels, SciPy, lavaan, …).
 

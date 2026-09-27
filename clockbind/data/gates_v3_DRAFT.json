@@ -1,0 +1,397 @@
+{
+  "protocol_version": "v3-DRAFT",
+  "frozen": false,
+  "design": "Tiered full-population multiple-case design (USER DECISION D1, 26 Sept 2026)",
+  "note": "Implements USER DECISIONS D1–D13 of 26 Sept 2026. Rename protocol_version to 'v3' (no DRAFT) only when §3.1 wording matches and the author freezes. No target counts exist anywhere in this file.",
+  "id_column": "entry_id",
+  "episode_column": "episode_id",
+  "round_column": "search_round",
+  "reason_column": "reason",
+  "claimed_status_column": "hand_level",
+  "carry_columns": [
+    "org_size"
+  ],
+  "values": {
+    "pass": [
+      "Y"
+    ],
+    "fail": [
+      "N"
+    ],
+    "unknown": [
+      "Unknown",
+      "not documented"
+    ]
+  },
+  "levels": {
+    "S0": "Level 1 – archive typology",
+    "S1": "Level 1 – archive typology",
+    "M2": "Level 2 – mechanism",
+    "S2": "Level 3 – binding clock"
+  },
+  "stages": [
+    {
+      "id": "S0",
+      "name": "Lawful source universe",
+      "unit": "entry",
+      "criteria": [
+        {
+          "id": "S0a",
+          "type": "yn",
+          "column": "S0_distinct_source",
+          "label": "Distinct empirical source",
+          "definition": "Not a duplicate, staging copy or administrative container of another entry.",
+          "entry_specific": true
+        },
+        {
+          "id": "S0b",
+          "type": "yn",
+          "column": "S0_organisational",
+          "label": "Organisational episode",
+          "definition": "Concerns an organisation of any size, not private/personal use (D2: no size restriction; size recorded in org_size)."
+        },
+        {
+          "id": "S0c",
+          "type": "yn",
+          "column": "S0_in_archive_window",
+          "label": "Inside archive window",
+          "definition": "Dated within the frozen archive window 2024-01-01 to 2026-08-24."
+        },
+        {
+          "id": "S0d",
+          "type": "yn",
+          "column": "S0_research_access_cleared",
+          "label": "Lawful research access",
+          "definition": "Source's controller assessment signed and no cross-border restriction pending. Pending (e.g. KVKK) = Unknown: held, not excluded, not read for research."
+        }
+      ]
+    },
+    {
+      "id": "S1",
+      "name": "Analytic archive eligibility",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "S1a",
+          "type": "yn",
+          "column": "S1_material",
+          "label": "Material equipment-capital episode (functional + external floor)",
+          "definition": "Both conditions: (1) FUNCTIONAL — the equipment, system or component is required for the buyer to deliver its core service, i.e. its absence stops or materially reduces service capacity, as documented in a contemporaneous source; (2) FLOOR — the total value of the commitment in the episode is at least HUF 200,000, the Hungarian small-value tangible asset limit (accounting and corporate tax), converted at the ECB reference rate on the invoice/proforma date (USER DECISIONS D14, 26 Sept 2026). Replacement parts and consumables (cables, electrodes, training suits) qualify when both conditions hold (D15); record the type in S1_equipment_type."
+        },
+        {
+          "id": "S1e",
+          "type": "in",
+          "column": "S1_equipment_type",
+          "allowed": [
+            "Device/system",
+            "Replacement part/consumable",
+            "Other"
+          ],
+          "scale": [
+            "Device/system",
+            "Replacement part/consumable",
+            "Other",
+            "Unknown"
+          ],
+          "gate": false,
+          "label": "Equipment type (flag)",
+          "definition": "Reporting flag (D15)."
+        },
+        {
+          "id": "S1b",
+          "type": "yn",
+          "column": "S1_chronology",
+          "label": "Reconstructable chronology",
+          "definition": "At least two dated contemporaneous sources allow the sequence of events to be ordered."
+        },
+        {
+          "id": "S1d",
+          "type": "any_of",
+          "columns": [
+            "S1_finance_architecture",
+            "S1_comparator_role"
+          ],
+          "label": "Financing/payment architecture OR dated comparator role",
+          "definition": "A financing or payment arrangement is documented, or a comparator role is recorded in a dated document that predates the outcome review."
+        },
+        {
+          "id": "S1f",
+          "type": "in",
+          "column": "org_size",
+          "allowed": [
+            "SME",
+            "Large",
+            "Unknown size"
+          ],
+          "scale": [
+            "SME",
+            "Large",
+            "Unknown size"
+          ],
+          "gate": false,
+          "label": "Organisation size (flag)",
+          "definition": "EU Recommendation 2003/361; how verified must be recorded in the reason column. Reporting flag only (D2)."
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "name": "Mechanism eligibility",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "M2a",
+          "type": "yn",
+          "column": "M2_linked_steps",
+          "label": "≥2 linked process steps evidenced",
+          "definition": "At least two consecutive steps of the financing–payment–fulfilment–operational sequence are each supported by a dated source (D11)."
+        },
+        {
+          "id": "M2b",
+          "type": "yn",
+          "column": "M2_state_mature",
+          "label": "Decision/outcome state mature for the mechanism claim",
+          "definition": "The state needed for the mechanism claim (e.g. route chosen, route stalled, payment executed) is documented, not inferred."
+        },
+        {
+          "id": "M2c",
+          "type": "yn",
+          "column": "M2_corroborated",
+          "label": "Corroboration appropriate to the claim",
+          "definition": "The central mechanism step is supported by a transactional/external record or by a source not authored by the researcher's firm."
+        },
+        {
+          "id": "M2d",
+          "type": "yn",
+          "column": "M2_rivals_considered",
+          "label": "Rival mechanisms considered (flag)",
+          "definition": "Rival explanations listed for the mechanism (analysis step, D5).",
+          "gate": false
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Binding-clock eligibility",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "S2a",
+          "type": "yn",
+          "column": "S2_route_evaluated",
+          "label": "Financing route evaluated",
+          "definition": "Episode-level evidence that at least one financing route was evaluated."
+        },
+        {
+          "id": "S2b",
+          "type": "yn",
+          "column": "S2_expected_durations",
+          "label": "Ex-ante expected durations documented",
+          "definition": "Expected durations of the downstream stages are contemporaneous or structurally fixed; realised durations are descriptive only (D12)."
+        },
+        {
+          "id": "S2c",
+          "type": "in",
+          "column": "S2_window_tier",
+          "allowed": [
+            "A",
+            "B"
+          ],
+          "scale": [
+            "A",
+            "B",
+            "C",
+            "none"
+          ],
+          "label": "Window Tier A/B",
+          "definition": "Tier A (contractual/external) or B (documented operational) window; Tier C is Level 2 only."
+        },
+        {
+          "id": "S2d",
+          "type": "yn",
+          "column": "S2_window_independent",
+          "label": "Window established independently of outcome",
+          "definition": "tW is documented in a source dated before the outcome, or set by a third party."
+        },
+        {
+          "id": "S2e",
+          "type": "yn",
+          "column": "S2_required_event",
+          "label": "Required event R explicit",
+          "definition": "The event that had to occur by tW is stated in the source."
+        },
+        {
+          "id": "S2g",
+          "type": "yn",
+          "column": "S2_customer_clocks_independent",
+          "label": "Customer-side clocks independently sourced",
+          "definition": "No customer-side clock (financing usability, payment) is dated solely by a source authored by the researcher's firm (D6)."
+        },
+        {
+          "id": "S2f",
+          "type": "yn",
+          "column": "S2_outcome_mature",
+          "label": "Outcome mature (censoring flag)",
+          "definition": "Flag; immature outcomes stay at Level 3 and are reported as censored (D5).",
+          "gate": false
+        },
+        {
+          "id": "S2h",
+          "type": "yn",
+          "column": "S2_clocks_separable",
+          "label": "Clocks separable (classification input)",
+          "definition": "If not separable the classification result is 'mixed/joint' (D5, D8).",
+          "gate": false
+        },
+        {
+          "id": "S2i",
+          "type": "yn",
+          "column": "S2_rivals_coded",
+          "label": "Rivals coded incl. supplier delay (analysis step)",
+          "definition": "Required analysis step for every Level 3 case, incl. 'supplier delay' (D5, D6).",
+          "gate": false
+        },
+        {
+          "id": "S2k",
+          "type": "in",
+          "column": "S2_window_author",
+          "allowed": [
+            "Buyer",
+            "Seller",
+            "Third party",
+            "Unknown"
+          ],
+          "scale": [
+            "Buyer",
+            "Seller",
+            "Third party",
+            "Unknown"
+          ],
+          "gate": false,
+          "label": "Who set the window (flag)",
+          "definition": "Seller-set windows form a sensitivity stratum."
+        }
+      ]
+    }
+  ],
+  "extra_columns": [
+    {
+      "group": "Materiality (D14)",
+      "column": "Commitment_value_HUF",
+      "hint": "total commitment in the episode, converted at ECB rate on invoice date"
+    },
+    {
+      "group": "Materiality (D14)",
+      "column": "Functional_necessity_source",
+      "hint": "pseudonymised source ID showing the equipment was needed for service"
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Source_Controller",
+      "values": [
+        "Company A",
+        "Company B",
+        "Company C",
+        "Other",
+        "Unknown"
+      ],
+      "hint": "pseudonymous controller codes; key kept privately"
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Joint_Controller"
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Original_Source_Location"
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Research_Access_Status",
+      "values": [
+        "Cleared",
+        "Pending KVKK",
+        "Pending other",
+        "Not cleared"
+      ]
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Cross_Border_Restriction",
+      "values": [
+        "None",
+        "KVKK",
+        "Other",
+        "Unknown"
+      ]
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Source_Role",
+      "values": [
+        "Buyer",
+        "Seller (own firm)",
+        "Bank/payment provider",
+        "Logistics",
+        "External third party",
+        "Internal management"
+      ]
+    },
+    {
+      "group": "Source metadata (D13)",
+      "column": "Independent_of_Researcher",
+      "values": [
+        "Y",
+        "N"
+      ]
+    },
+    {
+      "group": "Typology (D9)",
+      "column": "Funding_source",
+      "hint": "multi-valued, separate with ';': Internal funds; Owner/family; Customer prepayment; Supplier credit; Captive/manufacturer finance; Third-party investor; Bank loan; Leasing; Grant/subsidy (KOSGEB, EU); Factoring; Card/short bridge; Unknown"
+    },
+    {
+      "group": "Typology (D9)",
+      "column": "Settlement_timing",
+      "values": [
+        "Before delivery",
+        "Deposit + balance before delivery",
+        "Split around delivery",
+        "After delivery",
+        "Escrow/LC",
+        "Rental/pay-per-use",
+        "Unknown"
+      ]
+    },
+    {
+      "group": "Typology (D9)",
+      "column": "Instrument",
+      "hint": "e.g. bank transfer, card, cheque, letter of credit, lease contract, trade-in"
+    },
+    {
+      "group": "Typology (D9)",
+      "column": "Cross_border_FX",
+      "values": [
+        "Y",
+        "N",
+        "Unknown"
+      ]
+    },
+    {
+      "group": "Typology",
+      "column": "Mechanism_observed"
+    },
+    {
+      "group": "Typology",
+      "column": "Main_strength"
+    },
+    {
+      "group": "Typology",
+      "column": "Main_weakness"
+    },
+    {
+      "group": "Typology",
+      "column": "Rival_explanations"
+    }
+  ]
+}

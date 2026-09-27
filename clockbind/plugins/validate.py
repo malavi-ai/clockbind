@@ -30,7 +30,9 @@ R_SCRIPT = Path(__file__).resolve().parent.parent / "r" / "validate_weights.R"
 
 
 def cmd_weights(a):
-    if not shutil.which("Rscript"):
+    from ..analysis.scales import _rscript
+    rs = _rscript()
+    if not rs:
         raise SystemExit("Rscript not found. Install R and the packages PSweight, clubSandwich, jsonlite.")
     df = load_data(a.data)
     covs = split_list(a.covariates)
@@ -49,7 +51,7 @@ def cmd_weights(a):
         dpath, wpath, jpath = run.path("validation_data.csv"), run.path("python_weights.csv"), run.path("r_output.json")
         d.to_csv(dpath, index=False)
         pd.DataFrame({"weight": w}).to_csv(wpath, index=False)
-        cmd = ["Rscript", str(R_SCRIPT), str(dpath), a.treatment, ",".join(covs), a.outcome, a.cluster, str(wpath), str(jpath)]
+        cmd = [rs, str(R_SCRIPT), str(dpath), a.treatment, ",".join(covs), a.outcome, a.cluster, str(wpath), str(jpath)]
         r = subprocess.run(cmd, capture_output=True, text=True)
         if r.returncode != 0:
             raise SystemExit("R validation failed:\n" + r.stderr)
@@ -105,9 +107,10 @@ class Validate(Plugin):
 
 
 def cmd_all(a):
-    from ..validation_suite import ROOT, compute, write_report
-    data = Path(a.data) if a.data else ROOT / "validation" / "validation_data.csv"
-    cj = Path(a.conjoint) if a.conjoint else ROOT / "examples" / "conjoint_synthetic.csv"
+    from ..validation_suite import compute, write_report
+    from ..resources import resource
+    data = Path(a.data) if a.data else resource("validation_data.csv")
+    cj = Path(a.conjoint) if a.conjoint else resource("conjoint_synthetic.csv")
     with RunLog(a.out, "validate", "all", vars(a), None) as run:
         run.add_input(data, "validation_data"); run.add_input(cj, "conjoint_data")
         rows, versions = compute(data, cj)

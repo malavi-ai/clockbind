@@ -7,4 +7,6 @@ phdstat_runs/
 **/PRIVATE*/
 **/*CONFIDENTIAL*
 data/
+!clockbind/data/
 .DS_Store
+build/

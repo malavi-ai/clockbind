@@ -1,0 +1,524 @@
+<!--__HEAD__-->
+<style>
+:root{
+  --ground:#EEF1F0; --surface:#FFFFFF; --sunk:#E4E9E8; --ink:#14233A; --muted:#5C6978; --line:#D3DADB;
+  --brass:#A4772B; --brass-soft:#F3E7D0; --l2:#2A7A6D; --l2-soft:#DCEEEA; --l1:#5F7A98; --l1-soft:#E2E9F1;
+  --err:#B3452A; --err-soft:#F7E1DA; --warn:#8C6410; --warn-soft:#F4EAD3; --ok:#2A7A6D; --ok-soft:#DCEEEA;
+  --grey:#8A96A3; --shadow:0 1px 2px rgba(20,35,58,.06),0 6px 20px rgba(20,35,58,.06);
+  --display:"Newsreader",Georgia,"Times New Roman",serif; --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--ground:#0E1622;--surface:#152131;--sunk:#1B293B;--ink:#E6ECF2;--muted:#9AA8B8;--line:#2A3A4E;
+  --brass:#D7A954;--brass-soft:#3A2F1C;--l2:#5CB8A8;--l2-soft:#173532;--l1:#93AAC6;--l1-soft:#1E2C3E;
+  --err:#E5856B;--err-soft:#3B221C;--warn:#D9AE52;--warn-soft:#352B17;--ok:#5CB8A8;--ok-soft:#173532;--grey:#6F7E8F;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--ground:#0E1622;--surface:#152131;--sunk:#1B293B;--ink:#E6ECF2;--muted:#9AA8B8;--line:#2A3A4E;
+  --brass:#D7A954;--brass-soft:#3A2F1C;--l2:#5CB8A8;--l2-soft:#173532;--l1:#93AAC6;--l1-soft:#1E2C3E;
+  --err:#E5856B;--err-soft:#3B221C;--warn:#D9AE52;--warn-soft:#352B17;--ok:#5CB8A8;--ok-soft:#173532;--grey:#6F7E8F;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.55 var(--sans);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:18px 48px;display:grid;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h2{font:600 22px/1.2 var(--display);letter-spacing:-.01em}
+.eyebrow{font:500 11.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:6px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;justify-content:space-between;padding-block:6px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:48px;height:48px;flex:none}
+.brand h1{font:600 31px/1 var(--display);letter-spacing:-.02em}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.proto{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:12.5px;white-space:nowrap}
+.chip b{font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--grey);flex:none}
+.dot.draft{background:var(--warn)}.dot.frozen{background:var(--ok)}.dot.bad{background:var(--err)}
+
+/* panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,2.2vw,24px);box-shadow:var(--shadow);min-width:0}
+.row{display:grid;gap:22px;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+@media (max-width:900px){.row{grid-template-columns:1fr}}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+
+/* load */
+.drop{border:1.5px dashed var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;background:var(--sunk);transition:border-color .15s,background .15s;cursor:pointer}
+.drop.over{border-color:var(--brass);background:var(--brass-soft)}
+.drop strong{font-weight:600}
+.drop small{color:var(--muted)}
+.files{display:grid;gap:10px;margin-top:14px}
+.fileline{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:13.5px}
+.fileline .name{font-family:var(--mono);font-size:12.5px;overflow-wrap:anywhere}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.tag{font:600 10.5px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:var(--warn-soft);color:var(--warn)}
+.privacy{font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;margin-top:14px}
+
+/* verdict */
+.verdict{display:grid;gap:12px}
+.vstate{display:flex;align-items:center;gap:12px}
+.vbadge{font:600 12px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border-radius:8px}
+.vbadge.no{background:var(--err-soft);color:var(--err)}.vbadge.yes{background:var(--ok-soft);color:var(--ok)}
+.reasons{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13.5px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--mono);font-size:12.5px;overflow-wrap:anywhere}
+
+/* dial */
+.dialwrap{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:24px;align-items:center}
+@media (max-width:720px){.dialwrap{grid-template-columns:1fr}}
+.dial{width:100%;max-width:340px;aspect-ratio:1;justify-self:center}
+.dial .ep{cursor:pointer;transition:r .12s}
+.dial .ep:hover,.dial .ep.sel{stroke:var(--ink);stroke-width:2}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:4px;background:var(--surface)}
+.tile .n{font:600 34px/1 var(--display);font-variant-numeric:tabular-nums}
+.tile .l{font-size:13px;color:var(--muted)}
+.tile .sub{font-size:12px;color:var(--muted)}
+.tile.l3{background:var(--brass-soft);border-color:transparent}.tile.l3 .n{color:var(--brass)}
+.tile.l2{background:var(--l2-soft);border-color:transparent}.tile.l2 .n{color:var(--l2)}
+.tile.l1{background:var(--l1-soft);border-color:transparent}.tile.l1 .n{color:var(--l1)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12.5px;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* flow */
+.flow{display:grid;gap:0}
+.fstep{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;align-items:start}
+@media (max-width:720px){.fstep{grid-template-columns:1fr;gap:8px}}
+.fmain{border-left:3px solid var(--ink);padding:10px 14px;background:var(--sunk);border-radius:0 10px 10px 0;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.fmain .n{font:600 24px/1 var(--display);font-variant-numeric:tabular-nums}
+.fmain .t{font-size:13.5px;font-weight:500}
+.fside{display:grid;gap:4px;font-size:12.5px;color:var(--muted);padding-top:6px}
+.fside div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--line);padding-bottom:3px}
+.fside .pend{color:var(--warn)}
+.fconn{height:14px;border-left:3px solid var(--line);margin-left:0}
+
+/* table */
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:6px 11px;font-size:12.5px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.search{border:1px solid var(--line);border-radius:9px;padding:6px 10px;background:var(--surface);min-width:0;width:170px;font-size:13px}
+.tablebox{overflow-x:auto;margin-top:12px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:720px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font:600 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--sunk);position:sticky;top:0}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--sunk)}
+tbody tr.sel{background:var(--brass-soft)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.L3{background:var(--brass-soft);color:var(--brass)}.pill.L2{background:var(--l2-soft);color:var(--l2)}.pill.L1{background:var(--l1-soft);color:var(--l1)}
+.pill.X{background:var(--sunk);color:var(--muted)}
+.pill.pend{outline:1.5px dashed currentColor;outline-offset:-1.5px}
+.st{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;font:600 11px/1 var(--mono)}
+.st.Pass{background:var(--ok-soft);color:var(--ok)}.st.Hold{background:var(--warn-soft);color:var(--warn)}.st.Fail{background:var(--err-soft);color:var(--err)}.st.na{color:var(--grey)}
+td.why{color:var(--muted);font-size:12.5px;max-width:320px}
+
+/* inspector */
+.insp{display:grid;gap:14px}
+.insp h3{font:600 20px/1.2 var(--display)}
+.crit{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:start;font-size:13px}
+.crow .id{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.crow.flag{opacity:.85}
+.stagehead{font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;padding-top:10px;border-top:1px solid var(--line)}
+.empty{color:var(--muted);font-size:13.5px}
+
+/* checks */
+.checks{display:grid;gap:8px}
+.chk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;font-size:13px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
+.chk .sev{font:600 10.5px/1 var(--sans);letter-spacing:.08em;padding:4px 7px;border-radius:5px}
+.chk .sev.ERROR{background:var(--err-soft);color:var(--err)}.chk .sev.WARN{background:var(--warn-soft);color:var(--warn)}
+.chk .where{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.stop{border:1px solid var(--err);background:var(--err-soft);color:var(--err);border-radius:12px;padding:14px 16px;font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:9px 14px;border-radius:9px;font-size:13px;box-shadow:var(--shadow)}
+footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
+footer b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="30" fill="#14233A"/><path d="M 64 20 A 44 44 0 1 1 25.9 42" fill="none" stroke="#E9EEF3" stroke-width="7" stroke-linecap="round"/><path d="M 25.9 42 Q 36 22 64 20" fill="none" stroke="#B8893B" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 11"/><line x1="64" y1="64" x2="64" y2="34" stroke="#E9EEF3" stroke-width="6" stroke-linecap="round"/><line x1="64" y1="64" x2="38" y2="44" stroke="#B8893B" stroke-width="6" stroke-linecap="round"/><circle cx="64" cy="64" r="6.5" fill="#B8893B"/></svg>
+      <div>
+        <h1>ClockBind</h1>
+        <p>Which Clock Binds? · evidence screening studio</p>
+      </div>
+    </div>
+    <div class="proto" id="protoChips"></div>
+  </header>
+
+  <section class="row">
+    <div class="panel">
+      <div class="head"><h2>Screening sheet</h2><span class="eyebrow">Step 1 · load</span></div>
+      <label class="drop" id="drop" for="fileSheet">
+        <strong>Drop the screening sheet here, or click to choose</strong>
+        <small>Excel (.xlsx) or CSV, one row per source entry. The first sheet is read; row 2 of the template (labels) is ignored.</small>
+      </label>
+      <input type="file" id="fileSheet" accept=".xlsx,.xls,.csv" hidden>
+      <div class="files">
+        <div class="fileline"><span>Data: <span class="name" id="dataName">—</span></span><span id="demoTag"></span></div>
+        <div class="fileline">
+          <span>Protocol: <span class="name" id="gatesName">—</span></span>
+          <span class="tools"><button class="btn" id="btnGates" type="button">Load protocol file</button><button class="btn" id="btnDemo" type="button">Reload example</button></span>
+        </div>
+        <input type="file" id="fileGates" accept=".json" hidden>
+      </div>
+      <p class="privacy"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 7V5a4 4 0 1 1 8 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.5" y="7" width="11" height="7.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      Files are read inside this browser only. Nothing is uploaded or stored. Use pseudonymised codes, never customer names.</p>
+    </div>
+
+    <div class="panel verdict" id="verdict"></div>
+  </section>
+
+  <section class="panel">
+    <div class="head"><h2>Evidence levels</h2><span class="eyebrow">Each episode sits at the level its evidence supports</span></div>
+    <div class="dialwrap">
+      <svg class="dial" id="dial" viewBox="0 0 340 340" role="img" aria-label="Dial of episodes by level"></svg>
+      <div>
+        <div class="tiles" id="tiles"></div>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--brass)"></i>Level 3 · binding clock</span>
+          <span><i class="sw" style="background:var(--l2)"></i>Level 2 · mechanism</span>
+          <span><i class="sw" style="background:var(--l1)"></i>Level 1 · archive typology</span>
+          <span><i class="sw" style="border:2px solid var(--muted)"></i>hollow = pending evidence for the next level</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="panel">
+      <div class="head"><h2>Screening flow</h2><span class="eyebrow">Counts computed from the rules</span></div>
+      <div class="flow" id="flow"></div>
+      <div class="tools" style="margin-top:14px"><button class="btn" id="copyFunnel" type="button">Copy flow as table</button></div>
+    </div>
+    <div class="panel insp" id="inspector"></div>
+  </section>
+
+  <section class="panel">
+    <div class="head"><h2>Episodes</h2>
+      <div class="tools">
+        <div class="seg" id="seg" role="group" aria-label="Filter by level">
+          <button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="L3" aria-pressed="false">L3</button><button type="button" data-f="L2" aria-pressed="false">L2</button><button type="button" data-f="L1" aria-pressed="false">L1</button><button type="button" data-f="pend" aria-pressed="false">Pending</button><button type="button" data-f="X" aria-pressed="false">Held / outside</button>
+        </div>
+        <input class="search" id="search" type="search" placeholder="Find code…" aria-label="Find episode code">
+        <button class="btn" id="copyEps" type="button">Copy table</button>
+      </div>
+    </div>
+    <div class="tablebox"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  </section>
+
+  <section class="panel">
+    <div class="head"><h2>Checks</h2><span class="eyebrow" id="checkCount"></span></div>
+    <div class="checks" id="checks"></div>
+  </section>
+
+  <footer>
+    <div><b>ClockBind</b> · engine <span class="mono" id="engVer"></span>. A JavaScript port of the ClockBind screening engine (Python); identical levels, counts and checks on 14 reference cases, including the protocol hash.</div>
+    <div>This page is a working view. The record you cite is a run of <span class="mono">clockbind screen run</span> (ClockBind command line), which writes a manifest, the freeze register check and the run ledger.</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/*__ENGINE__*/
+</script>
+<script>
+const DEFAULT_GATES = /*__GATES__*/;
+const DEMO_ROWS = /*__DEMO__*/;
+const E = window.ClockBindEngine;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// ---- personal-data scan (GDPR / KVKK aid). Mirrors clockbind/privacy.py. Reports column, kind and count only.
+const PII = (() => {
+  const NUMBERLIKE = /^[\d\s\-]+$/, CODE = /^\p{L}+[ _\-]?[A-Z0-9]{1,4}$/u;
+  const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/, PHONE = /^(?:\+|00|0)[\d\s().\-/]{8,}$/, DECIMAL = /^-?\d+[.,]\d+$/;
+  const IBAN = /\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){2,7}(?:\s?[A-Z0-9]{1,4})?\b/;
+  const WORDS = ["name","first name","last name","surname","full name","contact","customer","client","company","firm","owner","address","street","e-mail","email","phone","mobile","telephone","birth","passport","national id","tax id","iban","ad","adı","soyad","soyadı","isim","müşteri","firma","şirket","adres","telefon","doğum","tc kimlik","tckn","vergi no","név","vezetéknév","keresztnév","ügyfél","cég","cím","születési","adóazonosító","taj","nome","cognome","cliente","azienda","indirizzo","telefono","codice fiscale","نام","نام خانوادگی","مشتری","شرکت","آدرس","تلفن","کد ملی"];
+  const ibanOk = (s) => { s = s.replace(/ /g, '').toUpperCase(); if (s.length < 15 || s.length > 34) return false; const r = s.slice(4) + s.slice(0, 4); let m = 0; for (const c of r) { const v = parseInt(c, 36); for (const d of String(v)) m = (m * 10 + +d) % 97; } return m === 1; };
+  const tcknOk = (d) => { if (!/^[1-9]\d{10}$/.test(d)) return false; const n = [...d].map(Number); return (7 * (n[0] + n[2] + n[4] + n[6] + n[8]) - (n[1] + n[3] + n[5] + n[7])) % 10 === n[9] && n.slice(0, 10).reduce((a, b) => a + b, 0) % 10 === n[10]; };
+  const huTaxOk = (d) => { if (!/^8\d{9}$/.test(d)) return false; const n = [...d].map(Number); let s = 0; for (let i = 0; i < 9; i++) s += n[i] * (i + 1); return s % 11 === n[9]; };
+  const luhnOk = (d) => { if (!/^\d{13,19}$/.test(d)) return false; let s = 0, alt = false; for (let i = d.length - 1; i >= 0; i--) { let x = +d[i]; if (alt) x = x > 4 ? x * 2 - 9 : x * 2; s += x; alt = !alt; } return s % 10 === 0; };
+  const mod = (x, m) => ((x % m) + m) % m;
+  function classify(v) {
+    if (v === null || v === undefined) return [];
+    const s = String(v).trim(); if (!s) return [];
+    const k = []; const d = s.replace(/\D/g, '');
+    if (EMAIL.test(s)) k.push('e-mail address');
+    if (PHONE.test(s) && d.length >= 9 && d.length <= 15 && !DECIMAL.test(s)) k.push('phone number');
+    const m = s.toUpperCase().match(IBAN); if (m && ibanOk(m[0])) k.push('bank account (IBAN)');
+    const numericId = NUMBERLIKE.test(s);
+    if (numericId && tcknOk(d) && s.length <= 14) k.push('Turkish ID number (TCKN)');
+    if (numericId && huTaxOk(d) && s.length <= 13) k.push('Hungarian tax ID');
+    if (numericId && luhnOk(d) && s.length <= 23 && !k.includes('phone number')) k.push('payment card number');
+    return k;
+  }
+  const norm = (x) => String(x).replace(/[_\-.]+/g, ' ').trim().toLowerCase();
+  const CODES = new Set(["y","n","u","yes","no","unknown","true","false","pass","fail","hold","na","n/a","none","missing","other"]);
+  function headerHint(col) {
+    const c = norm(col); const words = new Set(c.split(/\s+/));
+    return WORDS.map(norm).some((w) => (w.includes(' ') ? c.includes(w) : words.has(w)));
+  }
+  function freeText(values) {
+    const vals = values.filter((v) => v !== undefined && v !== null && String(v).trim() !== '').map((v) => String(v).trim());
+    const words = vals.filter((v) => !CODES.has(v.toLowerCase()) && !CODE.test(v) && (v.match(/\p{L}/gu) || []).length >= 3);
+    return (new Set(words).size > 3 || words.some((v) => v.includes(' '))) ? words.length : 0;
+  }
+  function scan(rows) {
+    const out = []; if (!rows || !rows.length) return out;
+    const cols = [...new Set(rows.flatMap((r) => Object.keys(r)))];
+    for (const col of cols) {
+      const counts = {};
+      for (const r of rows) for (const k of classify(r[col])) counts[k] = (counts[k] || 0) + 1;
+      for (const [k, n] of Object.entries(counts)) out.push({ column: col, kind: k, count: n });
+      const nText = headerHint(col) ? freeText(rows.map((r) => r[col])) : 0;
+      if (nText) out.push({ column: col, kind: 'names or identifiers (column name and content)', count: nText });
+    }
+    return out;
+  }
+  return { classify, scan, headerHint, freeText };
+})();
+const state = { pii: [], gates: DEFAULT_GATES, gatesName: 'Built-in protocol v3 (draft)', rows: DEMO_ROWS, dataName: 'ClockBind_SYNTHETIC_demo_v3.xlsx', demo: true, result: null, stop: null, hash: null, filter: 'all', q: '', sel: null };
+
+function levelKey(lv) { if (!lv) return 'X'; if (lv.startsWith('Level 3')) return 'L3'; if (lv.startsWith('Level 2')) return 'L2'; if (lv.startsWith('Level 1')) return 'L1'; return 'X'; }
+function shortLevel(lv) { const k = levelKey(lv); return k === 'X' ? (lv.startsWith('Held') ? 'Held at S0' : 'Outside') : k.replace('L', 'Level '); }
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), 2200); }
+
+async function sha256(text) {
+  try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join(''); }
+  catch { return null; }
+}
+
+async function run() {
+  state.stop = null; state.result = null;
+  state.hash = await sha256(E.gatesCanonical(state.gates));
+  try {
+    const r = E.applyGates(state.rows, state.gates);
+    r.funnel = E.funnel(r.entries, r.episodes, state.gates);
+    state.result = r;
+  } catch (e) { if (e instanceof E.StopError) state.stop = e.message; else { state.stop = 'Unexpected error: ' + e.message; console.error(e); } }
+  if (state.sel && !(state.result?.episodes || []).some((x) => x[state.gates.episode_column] === state.sel)) state.sel = null;
+  render();
+}
+
+function render() {
+  const g = state.gates;
+  $('dataName').textContent = state.dataName;
+  $('demoTag').innerHTML = state.demo ? '<span class="tag">Example data · synthetic</span>' : '';
+  $('gatesName').textContent = state.gatesName;
+  $('engVer').textContent = E.VERSION;
+  const hashOk = !g.frozen || (state.hash && g.sha256 === state.hash);
+  $('protoChips').innerHTML =
+    `<span class="chip"><span class="dot ${g.frozen ? (hashOk ? 'frozen' : 'bad') : 'draft'}"></span><b>${esc(g.protocol_version)}</b> ${g.frozen ? (hashOk ? 'frozen ' + esc((g.frozen_on || '').slice(0, 10)) : 'edited after freeze') : 'draft'}</span>` +
+    `<span class="chip mono" title="${esc(state.hash || '')}">sha256 ${esc((state.hash || 'n/a').slice(0, 12))}</span>`;
+  renderVerdict(hashOk); renderDial(); renderTiles(); renderFlow(); renderTable(); renderInspector(); renderChecks();
+}
+
+function renderVerdict(hashOk) {
+  const g = state.gates, r = state.result;
+  const reasons = [];
+  if (state.stop) reasons.push(state.stop);
+  if (!g.frozen) reasons.push('The protocol is a draft. Freeze it before reporting any count.');
+  if (g.frozen && !hashOk) reasons.push('The protocol file was edited after freezing. Save it as a new version and freeze again.');
+  const nErr = r ? r.problems.filter((p) => p.level === 'ERROR').length : 0;
+  if (nErr) reasons.push(`${nErr} error${nErr > 1 ? 's' : ''} in the sheet (see Checks).`);
+  if (state.demo) reasons.push('Example data is loaded, not your screening sheet.');
+  if (state.pii.length) reasons.push(`Possible personal data in: ${[...new Set(state.pii.map((x) => x.column))].join(', ')}. Replace with pseudonymised codes (GDPR / KVKK) and reload.`);
+  const ok = !reasons.length;
+  const eps = r ? r.episodes.length : 0;
+  $('verdict').innerHTML = `
+    <div class="head" style="margin:0"><h2>Can these counts be reported?</h2><span class="eyebrow">Step 2 · verdict</span></div>
+    <div class="vstate"><span class="vbadge ${ok ? 'yes' : 'no'}">${ok ? 'Ready to cite' : 'Not citable yet'}</span>
+      <span style="font-size:13.5px;color:var(--muted)">${ok ? 'Confirm with a CLI run so it enters the ledger.' : 'Fix the items below, then reload.'}</span></div>
+    ${reasons.length ? `<ul class="reasons">${reasons.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    <dl class="kv">
+      <dt>Design</dt><dd style="font-family:var(--sans)">${esc(g.design || '—')}</dd>
+      <dt>Source entries</dt><dd>${r ? r.entries.length : '—'}</dd>
+      <dt>Episodes</dt><dd>${r ? eps : '—'}</dd>
+      <dt>Target counts</dt><dd style="font-family:var(--sans)">None. Counts follow from the rules.</dd>
+    </dl>`;
+}
+
+function epsByLevel() {
+  const r = state.result; if (!r) return { L3: [], L2: [], L1: [], X: [] };
+  const out = { L3: [], L2: [], L1: [], X: [] };
+  for (const e of r.episodes) out[levelKey(e.level || '')].push(e);
+  return out;
+}
+
+function renderDial() {
+  const ep = state.gates.episode_column, b = epsByLevel();
+  const C = 170, rings = [{ k: 'L1', r: 138, col: 'var(--l1)' }, { k: 'L2', r: 98, col: 'var(--l2)' }, { k: 'L3', r: 58, col: 'var(--brass)' }];
+  let s = `<circle cx="${C}" cy="${C}" r="164" fill="var(--sunk)"/>`;
+  for (let i = 0; i < 60; i++) {
+    const a = (i / 60) * 2 * Math.PI - Math.PI / 2, long = i % 5 === 0;
+    const r1 = 164, r2 = long ? 154 : 159;
+    s += `<line x1="${C + r1 * Math.cos(a)}" y1="${C + r1 * Math.sin(a)}" x2="${C + r2 * Math.cos(a)}" y2="${C + r2 * Math.sin(a)}" stroke="var(--line)" stroke-width="${long ? 2 : 1}"/>`;
+  }
+  for (const ring of rings) s += `<circle cx="${C}" cy="${C}" r="${ring.r}" fill="none" stroke="${ring.col}" stroke-opacity=".28" stroke-width="16"/>`;
+  for (const ring of rings) {
+    const list = b[ring.k]; const n = list.length;
+    list.forEach((e, i) => {
+      const a = (n === 1 ? 0 : (i / n) * 2 * Math.PI) - Math.PI / 2 + (ring.k === 'L2' ? 0.18 : ring.k === 'L3' ? 0.4 : 0);
+      const x = C + ring.r * Math.cos(a), y = C + ring.r * Math.sin(a);
+      const pend = (e.level || '').includes('pending');
+      const id = e[ep];
+      s += `<circle class="ep${state.sel === id ? ' sel' : ''}" data-id="${esc(id)}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="${pend ? 'var(--surface)' : ring.col}" stroke="${ring.col}" stroke-width="${pend ? 2.5 : 0}"><title>${esc(id)} · ${esc(e.level)}</title></circle>`;
+    });
+  }
+  const l3 = b.L3.length;
+  s += `<line x1="${C}" y1="${C}" x2="${C}" y2="${C - 118}" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" opacity=".85"/>`;
+  s += `<line x1="${C}" y1="${C}" x2="${C + 44}" y2="${C + 26}" stroke="var(--brass)" stroke-width="5" stroke-linecap="round"/>`;
+  s += `<circle cx="${C}" cy="${C}" r="24" fill="var(--surface)" stroke="var(--brass)" stroke-width="2"/>`;
+  s += `<text x="${C}" y="${C + 7}" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-weight="600" font-size="20" fill="var(--brass)">${l3}</text>`;
+  $('dial').innerHTML = s;
+  $('dial').querySelectorAll('.ep').forEach((el) => el.addEventListener('click', () => select(el.dataset.id)));
+}
+
+function renderTiles() {
+  const r = state.result, b = epsByLevel();
+  const pend = (list) => list.filter((e) => (e.level || '').includes('pending')).length;
+  const t = (cls, n, l, sub) => `<div class="tile ${cls}"><span class="n">${n}</span><span class="l">${l}</span>${sub ? `<span class="sub">${sub}</span>` : ''}</div>`;
+  $('tiles').innerHTML = !r ? '<p class="empty">No result.</p>' :
+    t('l3', b.L3.length, 'Level 3 · binding clock', 'Tier A/B window, independent sources') +
+    t('l2', b.L2.length, 'Level 2 · mechanism', pend(b.L2) ? `${pend(b.L2)} pending Level 3 evidence` : 'process tracing') +
+    t('l1', b.L1.length, 'Level 1 · archive typology', pend(b.L1) ? `${pend(b.L1)} pending Level 2 evidence` : 'descriptive only') +
+    t('', b.X.length, 'Held or outside archive', `${r.entries.length} source entries in total`);
+}
+
+function renderFlow() {
+  const r = state.result; if (!r) { $('flow').innerHTML = `<div class="stop">${esc(state.stop || 'No result')}</div>`; return; }
+  const rows = r.funnel.filter((x) => x.kind !== 'level');
+  let html = '', pending = [];
+  const flush = (main, first) => {
+    html += `${first ? '' : '<div class="fconn"></div>'}<div class="fstep"><div class="fmain"><span class="t">${esc(main.count)}</span><span class="n">${main.n}</span></div><div class="fside">${pending.map((p) => `<div class="${p.count.startsWith('Pending') || p.count.includes('held') || p.count.includes('Held') ? 'pend' : ''}"><span>${esc(p.count)}</span><span class="mono">${p.n}</span></div>`).join('')}</div></div>`;
+    pending = [];
+  };
+  let first = true;
+  for (const x of rows) { if (x.kind === 'side') pending.push(x); else { flush(x, first); first = false; } }
+  $('flow').innerHTML = html;
+}
+
+function stagesEp() { return state.gates.stages.filter((s) => (s.unit || 'episode') === 'episode'); }
+
+function whyLine(e) {
+  const lab = E.criterionLabels(state.gates);
+  for (const st of stagesEp()) {
+    const s = e[`${st.id}_status`];
+    if (s === 'Fail') return `Stops at ${st.id}: ${lab[e[`${st.id}_first_failed`]] || e[`${st.id}_first_failed`]}`;
+    if (s === 'Hold') return `Waiting at ${st.id}: ${lab[e[`${st.id}_first_held`]] || e[`${st.id}_first_held`]}`;
+  }
+  if (e.S0_episode_status === 'Hold') return 'Access or evidence pending at S0';
+  if (e.S0_episode_status === 'Fail') return 'Outside the analytic archive';
+  return 'All gates passed';
+}
+
+function filtered() {
+  const r = state.result; if (!r) return [];
+  const ep = state.gates.episode_column, q = state.q.trim().toLowerCase();
+  return r.episodes.filter((e) => {
+    const k = levelKey(e.level || ''), pend = (e.level || '').includes('pending');
+    if (state.filter === 'pend' && !pend) return false;
+    if (['L1', 'L2', 'L3', 'X'].includes(state.filter) && k !== state.filter) return false;
+    return !q || String(e[ep]).toLowerCase().includes(q);
+  });
+}
+
+function renderTable() {
+  const ep = state.gates.episode_column, st = stagesEp();
+  $('thead').innerHTML = `<tr><th>Episode</th><th>Level</th><th title="Stage 0">S0</th>${st.map((s) => `<th title="${esc(s.name)}">${esc(s.id)}</th>`).join('')}<th>Why it sits here</th></tr>`;
+  const mark = (s) => (s === 'Pass' ? '✓' : s === 'Hold' ? '?' : s === 'Fail' ? '✕' : '·');
+  const list = filtered();
+  $('tbody').innerHTML = list.length ? list.map((e) => {
+    const k = levelKey(e.level || ''), pend = (e.level || '').includes('pending');
+    return `<tr data-id="${esc(e[ep])}" class="${state.sel === e[ep] ? 'sel' : ''}"><td class="mono">${esc(e[ep])}</td>
+      <td><span class="pill ${k}${pend ? ' pend' : ''}">${esc(shortLevel(e.level || ''))}${pend ? ' · pending' : ''}</span></td>
+      <td><span class="st ${e.S0_episode_status === 'n/a' ? 'na' : e.S0_episode_status}">${mark(e.S0_episode_status)}</span></td>
+      ${st.map((s) => { const v = e[`${s.id}_status`]; return `<td><span class="st ${v === 'n/a' ? 'na' : v}" title="${esc(v)}">${mark(v)}</span></td>`; }).join('')}
+      <td class="why">${esc(whyLine(e))}</td></tr>`;
+  }).join('') : `<tr><td colspan="${4 + st.length}" class="empty">No episodes match this filter.</td></tr>`;
+  $('tbody').querySelectorAll('tr[data-id]').forEach((tr) => tr.addEventListener('click', () => select(tr.dataset.id)));
+}
+
+function select(id) { state.sel = id; renderDial(); renderTable(); renderInspector(); }
+
+function renderInspector() {
+  const r = state.result, ep = state.gates.episode_column;
+  const e = r && (r.episodes.find((x) => x[ep] === state.sel) || [...r.episodes].sort((a, b) => levelKey(a.level) < levelKey(b.level) ? 1 : -1).find((x) => levelKey(x.level) === 'L3') || r.episodes[0]);
+  if (!e) { $('inspector').innerHTML = '<p class="empty">Select an episode to see every criterion.</p>'; return; }
+  if (!state.sel) state.sel = e[ep];
+  const g = state.gates, k = levelKey(e.level || ''), pend = (e.level || '').includes('pending');
+  const mark = (s) => (s === 'Pass' ? '✓' : s === 'Hold' ? '?' : s === 'Fail' ? '✕' : '·');
+  let crit = '';
+  for (const st of g.stages) {
+    const entry = (st.unit || 'episode') === 'entry';
+    crit += `<div class="stagehead">${esc(st.id)} · ${esc(st.name)}${entry ? ' (per source entry)' : ''}</div>`;
+    if (entry) { crit += `<div class="crow"><span class="st ${e.S0_episode_status}">${mark(e.S0_episode_status)}</span><span>Entries used: <span class="mono">${esc(e.entries_used || '—')}</span>${e.entries_held_S0 ? `<br>Held: <span class="mono">${esc(e.entries_held_S0)}</span>` : ''}${e.entries_excluded_S0 ? `<br>Excluded: <span class="mono">${esc(e.entries_excluded_S0)}</span>` : ''}</span><span></span></div>`; continue; }
+    for (const crits of E.paths(st)) for (const c of crits) {
+      const v = e[`${st.id}:${c.id}`] || 'n/a';
+      crit += `<div class="crow${E.isGate(c) ? '' : ' flag'}"><span class="st ${v === 'n/a' || v === '' ? 'na' : v}">${mark(v)}</span><span>${esc(c.label || c.id)}${E.isGate(c) ? '' : ' <span class="tag" style="background:var(--sunk);color:var(--muted)">flag</span>'}</span><span class="id">${esc(c.id)}</span></div>`;
+    }
+  }
+  $('inspector').innerHTML = `
+    <div class="head" style="margin:0"><h2>Episode <span class="mono" style="font-size:18px">${esc(e[ep])}</span></h2><span class="pill ${k}${pend ? ' pend' : ''}">${esc(shortLevel(e.level || ''))}${pend ? ' · pending' : ''}</span></div>
+    <p style="margin:0;font-size:13.5px;color:var(--muted)">${esc(whyLine(e))}. ${e.org_size ? 'Size: ' + esc(e.org_size) + '.' : ''} ${e.rounds ? 'Found in: ' + esc(e.rounds) + '.' : ''}</p>
+    <div class="crit">${crit}</div>`;
+}
+
+function renderChecks() {
+  const r = state.result;
+  if (!r) { $('checks').innerHTML = `<div class="stop">${esc(state.stop || '')}</div>`; $('checkCount').textContent = 'run stopped'; return; }
+  const p = state.pii.map((x) => ({ level: 'WARNING', where: `column “${x.column}”`, problem: `Looks like ${x.kind} (${x.count} cell${x.count === 1 ? '' : 's'}). Values are not shown. Replace with codes before use (GDPR / KVKK).` })).concat(r.problems); const ne = p.filter((x) => x.level === 'ERROR').length, nw = p.length - ne;
+  $('checkCount').textContent = `${ne} error${ne === 1 ? '' : 's'} · ${nw} warning${nw === 1 ? '' : 's'}`;
+  $('checks').innerHTML = p.length ? p.map((x) => `<div class="chk"><span class="sev ${x.level}">${x.level}</span><div><div class="where">${esc(x.where)}</div>${esc(x.problem)}</div></div>`).join('') : '<p class="empty">No problems found. Every value is valid and every episode is consistent.</p>';
+}
+
+async function copyText(text, label, btn) {
+  try { await navigator.clipboard.writeText(text); toast(label + ' copied'); }
+  catch { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast(label + ' copied'); } catch { toast('Copy blocked. Select the table manually.'); } ta.remove(); }
+}
+$('copyFunnel').addEventListener('click', () => { const r = state.result; if (!r) return; copyText(['stage\tkind\tcount\tn', ...r.funnel.map((x) => `${x.stage}\t${x.kind}\t${x.count.trim()}\t${x.n}`)].join('\n'), 'Flow'); });
+$('copyEps').addEventListener('click', () => {
+  const r = state.result; if (!r) return; const ep = state.gates.episode_column, st = stagesEp();
+  const head = ['episode', 'level', 'S0', ...st.map((s) => s.id), 'reason'];
+  copyText([head.join('\t'), ...filtered().map((e) => [e[ep], e.level, e.S0_episode_status, ...st.map((s) => e[`${s.id}_status`]), whyLine(e)].join('\t'))].join('\n'), 'Episodes table');
+});
+
+$('seg').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (!b) return; state.filter = b.dataset.f; $('seg').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); renderTable(); });
+$('search').addEventListener('input', (ev) => { state.q = ev.target.value; renderTable(); });
+
+function readSheet(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      let rows;
+      if (/\.csv$/i.test(file.name)) { const wb = XLSX.read(ev.target.result, { type: 'string', raw: true }); rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '', raw: false }); }
+      else { const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' }); rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '', raw: false }); }
+      state.rows = rows; state.pii = PII.scan(rows); state.dataName = file.name; state.demo = false; state.sel = null; run();
+    } catch (e) { state.stop = `Could not read ${file.name}: ${e.message}`; state.result = null; render(); }
+  };
+  if (/\.csv$/i.test(file.name)) reader.readAsText(file); else reader.readAsArrayBuffer(file);
+}
+$('fileSheet').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) readSheet(f); ev.target.value = ''; });
+const drop = $('drop');
+['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (ev) => { ev.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (ev) => { ev.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (ev) => { const f = ev.dataTransfer.files[0]; if (!f) return; if (/\.json$/i.test(f.name)) readGates(f); else readSheet(f); });
+function readGates(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => { try { const g = JSON.parse(ev.target.result); if (!g.stages || !g.id_column) throw new Error('not a ClockBind protocol file'); state.gates = g; state.gatesName = file.name; state.sel = null; run(); } catch (e) { toast('Protocol not loaded: ' + e.message); } };
+  reader.readAsText(file);
+}
+$('btnGates').addEventListener('click', () => $('fileGates').click());
+$('fileGates').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) readGates(f); ev.target.value = ''; });
+$('btnDemo').addEventListener('click', () => { state.gates = DEFAULT_GATES; state.gatesName = 'Built-in protocol v3 (draft)'; state.rows = DEMO_ROWS; state.pii = []; state.dataName = 'ClockBind_SYNTHETIC_demo_v3.xlsx'; state.demo = true; state.sel = null; run(); });
+
+run();
+</script>

@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ClockBind</title><link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAALY0lEQVR4nOSbCXRTVRrH/zdtkzS0TduklK7UtJStIirYBgqIQMsqMCwjjIo4CriirKJyXEZxOzoM4gguDOLIgQF0kMVBQGFA2rLLjkJbaAulS9KW7kvu3PtCXxLakpetFOZ3Tk7vmr775bvf/e533/WGBAIi9cFeCpIio3QICOkGSsMIEMLSKrQFKK2kQAF7nnxC6UkTpT/W15EdZblpBntdyY0qtdq+/ggwvUkJeZY19MYtBBNIPaFYYpI1vGE4l1HWUjuvFsqJJjbpMaLA90yqg9ngZbjFEJ6ZQE8omeobGF1QVZJzvLl2zQpAG6ufC0qWEkL8cKsjjIGO8Q2KKqky5mZcX329AGSaWP1KAjKHDZ7gNoGYGaoKigysNOZuhzBDzNgIIFinnykjZD5uVwhJUgZFck1IF4saExpd0mCW3cYkdcvNd0eglLJFggwzZO37kefNAoiLU2hNIReYhELx/wDF5SKTXIfsXdXC0qYxhbzYmoMPZN7DpD4KJHSOhixqGAqueqG42IgigwGFRQZkZefiXGY2PAZBWLCsZgZzEhZ7m/OYCQ9xZwQwsieQZwS+TqNMBQmSO1H01dUCdecQUH8A/ce83qRfTt5l/LRrH3ayz+FfT3LVhTtha+Q89mexV3BMYhKRyV6Ah1g0DggPIohtT5BroMgrIegRRdAlzDz7vJUB0HRObdJPHeCPnj26YeyDqZg0YRS8fbxx6MgJuA0Cf6U6fJuXKrjjs2zBS4YbuCsKmJzIlhYvihyDeYAj7gLk3ub0wWyKXCNBQRlF+yAFVMExkOtGwkelha+vssXv9VUqkdS7J4Y8kIwTp84K08QtEFkxYU7PLpYaABcJDaB4fyKBl8w82JnfUBRXAPd2pBjcnSCrEPj2MEV9Q8vuRXRUOCIjwtA38R6kDO6P8A7tm2238p/r8fGyr1BdUwvXoLuJRtfnDNOAznARtZLik0fNKyifrwu/o8gucs2XitN1ROqg/njskfFQXachJ0//hqlPzUdFRSWchT3mWS/mHb3F1n6lM19wh5aiaxgEta6pJ/CVM2eqHbBiD3Aiz3VH0mAsxYHDx/D9lh2I6RiJmOhIsa59iAb99L3xn+27UVPrrCZQHzYF+jhlXuNDKV4dRSBjKr/uAMXGI3CYZH0v4e/etIOS2nMb8MqcpxHCBt/IufPZmDJ9LkpKy+AMTnt9yfHmwXNSE+AwD9yvx/IlbwsfnpbC9p/2Yvwjz+BCTp5YFhcbg1WffYigwAA4g9MC+Pk0RYPJrDw7T8NhunaKazZtjyLmMD365Bzk5uWLZbG6aLzzxjw4g9MCyGIGbv464M2NFBukabDbKCo2YMq02TZC6NenN8aOSoWjOCSAcK0fPn+hG/76TA+0U/ogvxT47QpuCvkFRXjqxVdtyhbMmoEOoSFwBIcE8OajOvhWnkZI3XG892QXsZyw3UXvGEAfSyFrxShCZlYOPlzyhZhv56fC26/NgSNIFkBEeChCtRZDU9tg6dq/M8HMFIJnBsnw2mggSOVev/1GrPh6HY6fPCvmucfYuLpIQbIApj48ATEDZiMo7gFo4odgbVqNWFdebRkw9/nfGU+Yf9B6Qpj7yjuosfIKHxo3QnJfSQII8PdjBiYFMrkKMQPnoSxkFDKOnBHrD10g2HrMJOb9lAQvjyQYezfPeV4QfOe47t9bxfyAfknQaIIk9ZUkgEkTR0GpVIj5L1etbdJmdTrBku0mVNeZB8xDiuN6E7w0nKCdwvNC2Lh5u5iWyWRMC0ZK6idJANwfbyTvUj5zSH5ptt3+LIJXN7Atr9Ey4IRINiXGEXTUeFYIp86cw/nMC2J+4tjhkBLXtSsAhUKOTszbamTbzv/eMDiRX0aw8FuKjExLm2A/gtdHEwzq5lkhbNi4TUxrtcGIj7vDbh+7AkjoGi+oVCPWFrclatmW9+MdbNu614S6evOgfVhMYGqyDM+x0KvcyzOC2H/oqE0+KjLMbh+7x113drfdKR87YV8Ajew4RfD7FYrZqWYt4CTqCCKD+EFeCaqM2ddamuAOrD1DTlRkuN0+dgWQYCUAY0kp8q8UwhEuFBMsYHbhuUFme8CJYAIIp5txZv1mId8LciTFAunn4RJXyyuEXWGg2uyvREvQALtTQKsJFtOXLhfAGSpqCN7dSvHtQSpEIfjKaG2ffEgtnugHKL1dnxrWWhAZ3sFue7sCqK+rE9NeXq6cmRAWEmNL6J7rRn8NpZwgVO26H11bZ3GIfORyu+3tToEaKwFYG0NnySz07GYhSK0W0wZDid32EjSg3tLYDadmV0opqmubqjov43WuolZb9ivcZtnD7ohq692rAdUsdvjFHr5/sJTxNC/jda5iHRmSogF2p8DFi5fEdIcOju21W4Jb+4xMEyICzQPOKzGfGLlKcFCgjfdXbDTa7WP3J03ff1hM89B0IttuugM+4FwjhI87Bs9J7HWXTd7aNW4JuwLg53LWW81k/b1oq/S1eraq6mocOnrSbh+7AmhoMDEX81fLP0mSHmxobe5n2+BG9u47CJPJvocpyaql77cE/Tt30qF7105oa3SJj2UG0LIESj1rkCSALdt+Rp2VPzDj8T+hrfEQO0G2ZvfeDEn9JAmAn8Z+t+lHMT9wQJJwbtdW4Jue8aOHivldbPBST5AlL+yfr1wrzim+1Ex7fBLaCi/Nmm6z/C1eukJyX8kCuHT5Cjb/8JOYH55yP4vA3o2bTY+ELjbGb/MPO/E7Oy+UikOu3bIVq8VoEJf44vcXOnwQ4U5CWNTno3cthyMNDQ1YsuwrOIJDArhwMQ/Lvlwt5v392uHTxX+BUqFAa6NW+2Plsg8QZvUDrN2whcUsHTuqcti5X7p8lY2F5XG3lcs/EB6otVCpfLHi7+8L7ww0cvb3THy09Es4ilO7m9kvL0Jmdo6Y52GzDd98ijusHshT8PV+/defsL86sex81kU8NmMeqqqqHf4+pwTA/9HTLywUQlCNcFX816qlHjOM3OY8OfUhrFm5BB2jI8RyHgGaMm0Oysquwhm8VMFRC+DEXYCyq+XCVNAn3iPG4Hx8fDB6xGBhWuSwByssKoY7uLdnAt57a75w/G0dlco4eBTTn39Z0r6/OZhBLyUanT6bSddpr8aXnRgten0uUgb1a1KXfuAo8x/W2LjSUpHLfTBy6EBMnjgGXTvH2tRxf+Szf6wR7JErL1Dyl6S4ANKZABLhIpMnPoi5M6cJD349l/IL8AvzzffsO4A0JozKyqoWv4cvq5MmPIhxo1NtfPtGSlnUd9aCRUy4TryU1AS6mwTr9MtkhEyHG4hgUVg+TyeMGXbDduU8fM3mbGnpVbZtrWFxvABhSfXzb9fkdThr+J7kg799jsJC90wtE6XLSXCMfqjMi/wANxLaXosnpvwRf2D+uVJhPzJ7I/g7Qeu+24o16zcJaXdiaqDDmAPdTa7RqQvYNFDDzWjZEfXwlIEYkHwfku5zbHX49fhprF63SXBtPQELwpUVn6/VCjsIja7Pu2yV8ehNEe689NP3QjyLJ/DApR9TeX+m8py8vCvIZafOedc+F3Muo7yiAp6EGcD3ijP3vSQIQLgep6b8YOrmOfatSyEpK9EVFp4qFxbVoqJfrrKV5WF+nQS3OeYrM6bJfPA8L16aqirJOa8KiqpltmAwbmOY1zDLkJku7uhsbo1VGXP3Ms+QO/T34DaEL3uGzDSblwubXJysNOZsUgVGlTMrOeR2uTtIubvITugNWWmvXV/X7M3RypKcNKYJx1gymYA49xZyG4GNPZsdTP+5ODNtVXP1dn9h4Q4xyPOs6c2PfzkEPWKiWMpU/oYBQskq7hd3d4iCKkaAkl5sYiSwrt1ZsRZtgyL2U59iBu44CD1YQ2q2lJ87IulVlv8BAAD//55keAIAAAAGSURBVAMAfYHyQnGYwRsAAAAASUVORK5CYII=">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ClockBind">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#14233A">
+<style>
+#cb-bar{position:sticky;top:0;z-index:50;background:#14233A;color:#E9EEF3;font:500 13px/1.2 "IBM Plex Sans",system-ui,-apple-system,sans-serif;padding:8px 16px;padding-top:max(8px,env(safe-area-inset-top))}
+#cb-bar .in{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#cb-bar a,#cb-bar button{appearance:none;border:1px solid rgba(233,238,243,.28);background:transparent;color:#E9EEF3;border-radius:999px;padding:7px 12px;font:inherit;text-decoration:none;cursor:pointer;white-space:nowrap}
+#cb-bar a:hover,#cb-bar button:hover{background:rgba(233,238,243,.1)}
+#cb-bar .pri{background:#B8893B;border-color:#B8893B;color:#14233A;font-weight:600}
+#cb-bar .cb-st{margin-left:auto;opacity:.85;font:500 12px/1.2 "IBM Plex Sans",system-ui,sans-serif;white-space:nowrap;color:#E9EEF3;letter-spacing:0;text-transform:none}
+#cb-sheet{position:fixed;inset:0;background:rgba(20,35,58,.55);display:none;align-items:flex-end;justify-content:center;z-index:60;padding:16px}
+#cb-sheet.on{display:flex}
+#cb-sheet .card{background:#fff;color:#14233A;border-radius:18px;max-width:440px;width:100%;padding:20px 20px 16px;font:15px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+#cb-sheet h3{font:600 20px "Newsreader",Georgia,serif;margin:0 0 8px}
+#cb-sheet ol{padding-left:20px;margin:8px 0 14px}
+#cb-sheet button{width:100%;border:0;background:#14233A;color:#fff;border-radius:12px;padding:12px;font:600 15px inherit}
+@media print{#cb-bar,#cb-sheet{display:none!important}}
+</style>
+<style>@font-face{font-family:'Newsreader';font-style:normal;font-weight:200 800;font-display:swap;src:url(fonts/Newsreader-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:200 800;font-display:swap;src:url(fonts/Newsreader-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/IBMPlexSans-Regular.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/IBMPlexSans-Medium.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/IBMPlexSans-SemiBold.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/IBMPlexMono-Regular.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/IBMPlexMono-Medium.woff2) format('woff2');}</style>
+<meta name="generator" content="ClockBind 1.0.1">
+</head><body>
+<div id="cb-bar"><div class="in">
+<button class="pri" id="cb-install" type="button">Install · works offline</button>
+<a href="https://github.com/malavi-ai/clockbind/releases/latest" target="_blank" rel="noopener">Download for Mac</a>
+<a href="https://doi.org/10.5281/zenodo.22989932" target="_blank" rel="noopener">Cite · DOI</a>
+<a href="https://github.com/malavi-ai/clockbind" target="_blank" rel="noopener">Source</a>
+<span class="cb-st" id="cb-status">Online</span>
+</div></div>
+<div id="cb-sheet" role="dialog" aria-modal="true" aria-labelledby="cb-sheet-h"><div class="card">
+<h3 id="cb-sheet-h">Install ClockBind</h3>
+<div id="cb-sheet-body"></div>
+<button type="button" id="cb-sheet-close">OK</button>
+</div></div>
+<script src="xlsx.full.min.js"></script>
+<style>
+:root{
+  --ground:#EEF1F0; --surface:#FFFFFF; --sunk:#E4E9E8; --ink:#14233A; --muted:#5C6978; --line:#D3DADB;
+  --brass:#A4772B; --brass-soft:#F3E7D0; --l2:#2A7A6D; --l2-soft:#DCEEEA; --l1:#5F7A98; --l1-soft:#E2E9F1;
+  --err:#B3452A; --err-soft:#F7E1DA; --warn:#8C6410; --warn-soft:#F4EAD3; --ok:#2A7A6D; --ok-soft:#DCEEEA;
+  --grey:#8A96A3; --shadow:0 1px 2px rgba(20,35,58,.06),0 6px 20px rgba(20,35,58,.06);
+  --display:"Newsreader",Georgia,"Times New Roman",serif; --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--ground:#0E1622;--surface:#152131;--sunk:#1B293B;--ink:#E6ECF2;--muted:#9AA8B8;--line:#2A3A4E;
+  --brass:#D7A954;--brass-soft:#3A2F1C;--l2:#5CB8A8;--l2-soft:#173532;--l1:#93AAC6;--l1-soft:#1E2C3E;
+  --err:#E5856B;--err-soft:#3B221C;--warn:#D9AE52;--warn-soft:#352B17;--ok:#5CB8A8;--ok-soft:#173532;--grey:#6F7E8F;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--ground:#0E1622;--surface:#152131;--sunk:#1B293B;--ink:#E6ECF2;--muted:#9AA8B8;--line:#2A3A4E;
+  --brass:#D7A954;--brass-soft:#3A2F1C;--l2:#5CB8A8;--l2-soft:#173532;--l1:#93AAC6;--l1-soft:#1E2C3E;
+  --err:#E5856B;--err-soft:#3B221C;--warn:#D9AE52;--warn-soft:#352B17;--ok:#5CB8A8;--ok-soft:#173532;--grey:#6F7E8F;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:15px/1.55 var(--sans);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:18px 48px;display:grid;gap:22px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h2{font:600 22px/1.2 var(--display);letter-spacing:-.01em}
+.eyebrow{font:500 11.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:6px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;justify-content:space-between;padding-block:6px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:48px;height:48px;flex:none}
+.brand h1{font:600 31px/1 var(--display);letter-spacing:-.02em}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.proto{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:12.5px;white-space:nowrap}
+.chip b{font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--grey);flex:none}
+.dot.draft{background:var(--warn)}.dot.frozen{background:var(--ok)}.dot.bad{background:var(--err)}
+
+/* panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,2.2vw,24px);box-shadow:var(--shadow);min-width:0}
+.row{display:grid;gap:22px;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+@media (max-width:900px){.row{grid-template-columns:1fr}}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+
+/* load */
+.drop{border:1.5px dashed var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;background:var(--sunk);transition:border-color .15s,background .15s;cursor:pointer}
+.drop.over{border-color:var(--brass);background:var(--brass-soft)}
+.drop strong{font-weight:600}
+.drop small{color:var(--muted)}
+.files{display:grid;gap:10px;margin-top:14px}
+.fileline{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:13.5px}
+.fileline .name{font-family:var(--mono);font-size:12.5px;overflow-wrap:anywhere}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:7px 12px;cursor:pointer;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.tag{font:600 10.5px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:var(--warn-soft);color:var(--warn)}
+.privacy{font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:flex-start;margin-top:14px}
+
+/* verdict */
+.verdict{display:grid;gap:12px}
+.vstate{display:flex;align-items:center;gap:12px}
+.vbadge{font:600 12px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border-radius:8px}
+.vbadge.no{background:var(--err-soft);color:var(--err)}.vbadge.yes{background:var(--ok-soft);color:var(--ok)}
+.reasons{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13.5px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--mono);font-size:12.5px;overflow-wrap:anywhere}
+
+/* dial */
+.dialwrap{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:24px;align-items:center}
+@media (max-width:720px){.dialwrap{grid-template-columns:1fr}}
+.dial{width:100%;max-width:340px;aspect-ratio:1;justify-self:center}
+.dial .ep{cursor:pointer;transition:r .12s}
+.dial .ep:hover,.dial .ep.sel{stroke:var(--ink);stroke-width:2}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:4px;background:var(--surface)}
+.tile .n{font:600 34px/1 var(--display);font-variant-numeric:tabular-nums}
+.tile .l{font-size:13px;color:var(--muted)}
+.tile .sub{font-size:12px;color:var(--muted)}
+.tile.l3{background:var(--brass-soft);border-color:transparent}.tile.l3 .n{color:var(--brass)}
+.tile.l2{background:var(--l2-soft);border-color:transparent}.tile.l2 .n{color:var(--l2)}
+.tile.l1{background:var(--l1-soft);border-color:transparent}.tile.l1 .n{color:var(--l1)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12.5px;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sw{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* flow */
+.flow{display:grid;gap:0}
+.fstep{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;align-items:start}
+@media (max-width:720px){.fstep{grid-template-columns:1fr;gap:8px}}
+.fmain{border-left:3px solid var(--ink);padding:10px 14px;background:var(--sunk);border-radius:0 10px 10px 0;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.fmain .n{font:600 24px/1 var(--display);font-variant-numeric:tabular-nums}
+.fmain .t{font-size:13.5px;font-weight:500}
+.fside{display:grid;gap:4px;font-size:12.5px;color:var(--muted);padding-top:6px}
+.fside div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dotted var(--line);padding-bottom:3px}
+.fside .pend{color:var(--warn)}
+.fconn{height:14px;border-left:3px solid var(--line);margin-left:0}
+
+/* table */
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:6px 11px;font-size:12.5px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.search{border:1px solid var(--line);border-radius:9px;padding:6px 10px;background:var(--surface);min-width:0;width:170px;font-size:13px}
+.tablebox{overflow-x:auto;margin-top:12px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:720px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font:600 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--sunk);position:sticky;top:0}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--sunk)}
+tbody tr.sel{background:var(--brass-soft)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.L3{background:var(--brass-soft);color:var(--brass)}.pill.L2{background:var(--l2-soft);color:var(--l2)}.pill.L1{background:var(--l1-soft);color:var(--l1)}
+.pill.X{background:var(--sunk);color:var(--muted)}
+.pill.pend{outline:1.5px dashed currentColor;outline-offset:-1.5px}
+.st{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;font:600 11px/1 var(--mono)}
+.st.Pass{background:var(--ok-soft);color:var(--ok)}.st.Hold{background:var(--warn-soft);color:var(--warn)}.st.Fail{background:var(--err-soft);color:var(--err)}.st.na{color:var(--grey)}
+td.why{color:var(--muted);font-size:12.5px;max-width:320px}
+
+/* inspector */
+.insp{display:grid;gap:14px}
+.insp h3{font:600 20px/1.2 var(--display)}
+.crit{display:grid;gap:6px}
+.crow{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:start;font-size:13px}
+.crow .id{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.crow.flag{opacity:.85}
+.stagehead{font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:6px;padding-top:10px;border-top:1px solid var(--line)}
+.empty{color:var(--muted);font-size:13.5px}
+
+/* checks */
+.checks{display:grid;gap:8px}
+.chk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;font-size:13px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
+.chk .sev{font:600 10.5px/1 var(--sans);letter-spacing:.08em;padding:4px 7px;border-radius:5px}
+.chk .sev.ERROR{background:var(--err-soft);color:var(--err)}.chk .sev.WARN{background:var(--warn-soft);color:var(--warn)}
+.chk .where{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.stop{border:1px solid var(--err);background:var(--err-soft);color:var(--err);border-radius:12px;padding:14px 16px;font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:9px 14px;border-radius:9px;font-size:13px;box-shadow:var(--shadow)}
+footer{font-size:12.5px;color:var(--muted);display:grid;gap:6px}
+footer b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="30" fill="#14233A"/><path d="M 64 20 A 44 44 0 1 1 25.9 42" fill="none" stroke="#E9EEF3" stroke-width="7" stroke-linecap="round"/><path d="M 25.9 42 Q 36 22 64 20" fill="none" stroke="#B8893B" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 11"/><line x1="64" y1="64" x2="64" y2="34" stroke="#E9EEF3" stroke-width="6" stroke-linecap="round"/><line x1="64" y1="64" x2="38" y2="44" stroke="#B8893B" stroke-width="6" stroke-linecap="round"/><circle cx="64" cy="64" r="6.5" fill="#B8893B"/></svg>
+      <div>
+        <h1>ClockBind</h1>
+        <p>Which Clock Binds? · evidence screening studio</p>
+      </div>
+    </div>
+    <div class="proto" id="protoChips"></div>
+  </header>
+
+  <section class="row">
+    <div class="panel">
+      <div class="head"><h2>Screening sheet</h2><span class="eyebrow">Step 1 · load</span></div>
+      <label class="drop" id="drop" for="fileSheet">
+        <strong>Drop the screening sheet here, or click to choose</strong>
+        <small>Excel (.xlsx) or CSV, one row per source entry. The first sheet is read; row 2 of the template (labels) is ignored.</small>
+      </label>
+      <input type="file" id="fileSheet" accept=".xlsx,.xls,.csv" hidden>
+      <div class="files">
+        <div class="fileline"><span>Data: <span class="name" id="dataName">—</span></span><span id="demoTag"></span></div>
+        <div class="fileline">
+          <span>Protocol: <span class="name" id="gatesName">—</span></span>
+          <span class="tools"><button class="btn" id="btnGates" type="button">Load protocol file</button><button class="btn" id="btnDemo" type="button">Reload example</button></span>
+        </div>
+        <input type="file" id="fileGates" accept=".json" hidden>
+      </div>
+      <p class="privacy"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="flex:none;margin-top:2px"><path d="M4 7V5a4 4 0 1 1 8 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.5" y="7" width="11" height="7.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      Files are read inside this browser only. Nothing is uploaded or stored. Use pseudonymised codes, never customer names.</p>
+    </div>
+
+    <div class="panel verdict" id="verdict"></div>
+  </section>
+
+  <section class="panel">
+    <div class="head"><h2>Evidence levels</h2><span class="eyebrow">Each episode sits at the level its evidence supports</span></div>
+    <div class="dialwrap">
+      <svg class="dial" id="dial" viewBox="0 0 340 340" role="img" aria-label="Dial of episodes by level"></svg>
+      <div>
+        <div class="tiles" id="tiles"></div>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--brass)"></i>Level 3 · binding clock</span>
+          <span><i class="sw" style="background:var(--l2)"></i>Level 2 · mechanism</span>
+          <span><i class="sw" style="background:var(--l1)"></i>Level 1 · archive typology</span>
+          <span><i class="sw" style="border:2px solid var(--muted)"></i>hollow = pending evidence for the next level</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="panel">
+      <div class="head"><h2>Screening flow</h2><span class="eyebrow">Counts computed from the rules</span></div>
+      <div class="flow" id="flow"></div>
+      <div class="tools" style="margin-top:14px"><button class="btn" id="copyFunnel" type="button">Copy flow as table</button></div>
+    </div>
+    <div class="panel insp" id="inspector"></div>
+  </section>
+
+  <section class="panel">
+    <div class="head"><h2>Episodes</h2>
+      <div class="tools">
+        <div class="seg" id="seg" role="group" aria-label="Filter by level">
+          <button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="L3" aria-pressed="false">L3</button><button type="button" data-f="L2" aria-pressed="false">L2</button><button type="button" data-f="L1" aria-pressed="false">L1</button><button type="button" data-f="pend" aria-pressed="false">Pending</button><button type="button" data-f="X" aria-pressed="false">Held / outside</button>
+        </div>
+        <input class="search" id="search" type="search" placeholder="Find code…" aria-label="Find episode code">
+        <button class="btn" id="copyEps" type="button">Copy table</button>
+      </div>
+    </div>
+    <div class="tablebox"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  </section>
+
+  <section class="panel">
+    <div class="head"><h2>Checks</h2><span class="eyebrow" id="checkCount"></span></div>
+    <div class="checks" id="checks"></div>
+  </section>
+
+  <footer>
+    <div><b>ClockBind</b> · engine <span class="mono" id="engVer"></span>. A JavaScript port of the ClockBind screening engine (Python); identical levels, counts and checks on 14 reference cases, including the protocol hash.</div>
+    <div>This page is a working view. The record you cite is a run of <span class="mono">clockbind screen run</span> (ClockBind command line), which writes a manifest, the freeze register check and the run ledger.</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ClockBind engine — JavaScript port of phdstat `screen` (v0.3.2) apply_gates / funnel.
+   Pure functions, no DOM. Parity-tested against the Python engine. */
+(function (root) {
+  const PASS = 'Pass', FAIL = 'Fail', HOLD = 'Hold', NA = 'n/a', CONFLICT = 'CONFLICT';
+
+  class StopError extends Error {}
+
+  const norm = (v) => (v === null || v === undefined || (typeof v === 'number' && isNaN(v))) ? '' : String(v).replace(/\s+/g, ' ').trim();
+  const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+  const sortedSet = (arr) => [...new Set(arr)].filter((x) => x !== '').sort(cmp);
+  const cf = (s) => s.toLowerCase();
+  const pyList = (a) => '[' + a.map((x) => `'${x}'`).join(', ') + ']';
+
+  const paths = (st) => (st.paths ? st.paths.map((p) => p.criteria) : [st.criteria]);
+  const pathNames = (st) => (st.paths ? st.paths.map((p) => p.name) : [st.name]);
+  const cols = (c) => (c.type === 'any_of' ? c.columns : [c.column]);
+  const isGate = (c) => c.gate !== false;
+  const vals = (g) => { const v = g.values || {}; return [v.pass || ['Y'], v.fail || ['N'], v.unknown || ['Unknown']]; };
+
+  function criterionColumns(g, unit) {
+    const out = [];
+    for (const st of g.stages) {
+      if (unit && (st.unit || 'episode') !== unit) continue;
+      for (const crits of paths(st)) for (const c of crits) for (const col of cols(c)) if (!out.includes(col)) out.push(col);
+    }
+    return out;
+  }
+
+  function columnSpecs(g) {
+    const [yes, no, unk] = vals(g);
+    const spec = {};
+    for (const st of g.stages) for (const crits of paths(st)) for (const c of crits) {
+      const t = c.type || 'yn';
+      let allowed;
+      if (t === 'yn' || t === 'any_of') allowed = [...yes, ...no, ...unk];
+      else if (t === 'in') allowed = [...new Set([...(c.scale || c.allowed), ...unk])];
+      else allowed = null;
+      for (const col of cols(c)) {
+        if (spec[col] && spec[col][0] && allowed) spec[col] = [[...new Set([...spec[col][0], ...allowed])], c];
+        else spec[col] = [allowed, c];
+      }
+    }
+    return spec;
+  }
+
+  function criterionLabels(g) {
+    const out = {};
+    for (const st of g.stages) for (const crits of paths(st)) for (const c of crits) out[c.id] = c.label || c.id;
+    return out;
+  }
+
+  // ---------------------------------------------------------------- hashing (matches Python json.dumps(sort_keys=True, ensure_ascii=False))
+  function pyJson(v) {
+    if (v === null || v === undefined) return 'null';
+    if (typeof v === 'boolean') return v ? 'true' : 'false';
+    if (typeof v === 'number') return Number.isInteger(v) ? String(v) : String(v);
+    if (typeof v === 'string') return JSON.stringify(v).replace(/[\u007f]/g, (ch) => '\\u' + ch.charCodeAt(0).toString(16).padStart(4, '0'));
+    if (Array.isArray(v)) return '[' + v.map(pyJson).join(', ') + ']';
+    const keys = Object.keys(v).sort(cmp);
+    return '{' + keys.map((k) => pyJson(k) + ': ' + pyJson(v[k])).join(', ') + '}';
+  }
+  function gatesCanonical(g) { const core = {}; for (const k of Object.keys(g)) if (k !== 'sha256') core[k] = g[k]; return pyJson(core); }
+
+  // ---------------------------------------------------------------- cleaning
+  function clean(rowsIn, g, problems) {
+    const idc = g.id_column, ep = g.episode_column;
+    const columns = rowsIn.length ? Object.keys(rowsIn[0]) : [];
+    for (const col of [idc, ep]) if (rowsIn.length && !columns.includes(col)) throw new StopError(`Column '${col}' not found. Columns: ${columns.join(', ')}`);
+    let rows = rowsIn.map((r) => { const o = {}; for (const k of Object.keys(r)) o[k] = norm(r[k]); return o; });
+    rows = rows.filter((r) => (r[idc] || '') !== '');
+    const seen = new Set(), dup = [];
+    for (const r of rows) { const k = cf(r[idc]); if (seen.has(k) && !dup.includes(k)) dup.push(k); seen.add(k); }
+    if (dup.length) throw new StopError(`Duplicate entry IDs (case-insensitive): ${dup.join(', ')}. Fix the sheet; no count is produced.`);
+    const groups = new Map();
+    for (const r of rows) { if (!r[ep]) continue; const k = cf(r[ep]); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); }
+    for (const [, grp] of [...groups.entries()].sort((a, b) => cmp(a[0], b[0]))) {
+      const forms = sortedSet(grp.map((r) => r[ep]));
+      if (forms.length > 1) {
+        problems.push({ level: 'ERROR', where: forms[0], problem: `Episode ID written in different forms ${pyList(forms)}; merged as '${forms[0]}'. Correct the sheet.` });
+        for (const r of grp) r[ep] = forms[0];
+      }
+    }
+    const spec = columnSpecs(g);
+    for (const col of criterionColumns(g)) {
+      if (!columns.includes(col)) {
+        if (g.frozen) throw new StopError(`Frozen protocol requires column '${col}', which is missing from the data.`);
+        problems.push({ level: 'ERROR', where: 'columns', problem: `Criterion column '${col}' is missing from the data (treated as Unknown; exploratory only)` });
+        for (const r of rows) r[col] = '';
+        continue;
+      }
+      const [allowed] = spec[col];
+      if (allowed === null) {
+        for (const r of rows) if (r[col] !== '' && isNaN(Number(r[col]))) { problems.push({ level: 'ERROR', where: r[idc], problem: `'${col}' = '${r[col]}' is not a number (treated as Unknown)` }); r[col] = ''; }
+        continue;
+      }
+      const canon = {}; for (const a of allowed) canon[cf(a)] = a;
+      for (const r of rows) {
+        const v = r[col]; if (v === '') continue;
+        if (canon[cf(v)] !== undefined) { r[col] = canon[cf(v)]; continue; }
+        problems.push({ level: 'ERROR', where: r[idc], problem: `'${col}' = '${v}' is not an allowed value ${pyList(allowed)} (treated as Unknown)` });
+        r[col] = '';
+      }
+    }
+    return rows;
+  }
+
+  // ---------------------------------------------------------------- evaluation
+  function evalCriterion(c, row, g) {
+    const [yesA, noA, unkA] = vals(g); const yes = new Set(yesA), no = new Set(noA), unk = new Set(unkA);
+    const t = c.type || 'yn';
+    const vs = cols(c).map((col) => norm(row[col]));
+    if (vs.some((v) => v === CONFLICT)) return HOLD;
+    if (t === 'yn') { const v = vs[0]; return yes.has(v) ? PASS : no.has(v) ? FAIL : HOLD; }
+    if (t === 'in') { const v = vs[0]; if (v === '' || unk.has(v)) return HOLD; return c.allowed.includes(v) ? PASS : FAIL; }
+    if (t === 'any_of') { if (vs.some((v) => yes.has(v))) return PASS; return vs.every((v) => no.has(v)) ? FAIL : HOLD; }
+    if (t === 'min') { const v = vs[0] === '' ? NaN : Number(vs[0]); return isNaN(v) ? HOLD : v >= c.value ? PASS : FAIL; }
+    throw new StopError(`Unknown criterion type ${t}`);
+  }
+
+  function evalStage(stage, row, g) {
+    const results = []; let best = null;
+    const names = pathNames(stage), ps = paths(stage);
+    ps.forEach((crits, i) => {
+      const res = {}; for (const c of crits) res[c.id] = evalCriterion(c, row, g);
+      const gates = crits.filter(isGate);
+      const fails = gates.filter((c) => res[c.id] === FAIL).map((c) => c.id);
+      const holds = gates.filter((c) => res[c.id] === HOLD).map((c) => c.id);
+      const status = fails.length ? FAIL : holds.length ? HOLD : PASS;
+      const out = { status, path: names[i], first_failed: fails[0] || '', first_held: holds[0] || '', failed: fails.join(';'), missing: holds.join(';'), scores: res };
+      results.push(out);
+      const rank = { [PASS]: 0, [HOLD]: 1, [FAIL]: 2 }[status];
+      if (best === null || rank < best[0]) best = [rank, out];
+    });
+    const out = Object.assign({}, best[1]);
+    if (results.length > 1) out.all_paths = results.map((r) => `${r.path}: ${r.status}` + (r.failed ? ` fail[${r.failed}]` : '') + (r.missing ? ` held[${r.missing}]` : '')).join(' || ');
+    return out;
+  }
+
+  function stageCols(prefix, res, frame, multi) {
+    frame.forEach((r, i) => {
+      const x = res[i];
+      r[`${prefix}_status`] = x ? x.status : NA;
+      r[`${prefix}_path`] = x && x.status === PASS ? x.path : '';
+      r[`${prefix}_first_failed`] = x ? x.first_failed : '';
+      r[`${prefix}_first_held`] = x ? x.first_held : '';
+      r[`${prefix}_failed`] = x ? x.failed : '';
+      r[`${prefix}_missing`] = x ? x.missing : '';
+      if (multi) r[`${prefix}_all_paths`] = x ? (x.all_paths || '') : '';
+    });
+  }
+
+  function applyGates(rowsIn, g) {
+    const idc = g.id_column, ep = g.episode_column;
+    const problems = [];
+    const rows = clean(rowsIn, g, problems);
+    const entryStages = g.stages.filter((s) => (s.unit || 'episode') === 'entry');
+    const epStages = g.stages.filter((s) => (s.unit || 'episode') === 'episode');
+
+    for (const r of rows) r._state = PASS;
+    for (const st of entryStages) {
+      const res = rows.map((r) => (r._state === PASS ? evalStage(st, r, g) : null));
+      stageCols(st.id, res, rows, !!st.paths);
+      rows.forEach((r) => { const s = r[`${st.id}_status`]; if (s !== NA) r._state = s; });
+    }
+    for (const r of rows) if (r._state !== FAIL && r[ep] === '') problems.push({ level: 'ERROR', where: r[idc], problem: 'Entry is not excluded at Stage 0 but has no episode ID' });
+
+    const entrySpecific = new Set();
+    for (const st of entryStages) for (const crits of paths(st)) for (const c of crits) if (c.entry_specific) entrySpecific.add(c.id);
+    const byEpSorted = new Map();
+    for (const r of rows) { if (!r[ep]) continue; if (!byEpSorted.has(r[ep])) byEpSorted.set(r[ep], []); byEpSorted.get(r[ep]).push(r); }
+    const epKeysSorted = [...byEpSorted.keys()].sort(cmp);
+    for (const st of entryStages) for (const crits of paths(st)) for (const c of crits) {
+      if (entrySpecific.has(c.id)) continue;
+      for (const eid of epKeysSorted) {
+        const vs = sortedSet(byEpSorted.get(eid).map((r) => r[c.column] || ''));
+        if (vs.length > 1) problems.push({ level: 'ERROR', where: eid, problem: `Entries of this episode disagree on ${c.id} (${c.label || ''}): ${pyList(vs)}` });
+      }
+    }
+
+    const epCols = criterionColumns(g, 'episode');
+    const order = []; const groups = new Map();
+    for (const r of rows) { if (!r[ep]) continue; if (!groups.has(r[ep])) { groups.set(r[ep], []); order.push(r[ep]); } groups.get(r[ep]).push(r); }
+    const columns = rows.length ? Object.keys(rows[0]) : [];
+    const extras = [...(g.carry_columns || []), ...[g.reason_column, g.claimed_status_column].filter(Boolean)];
+    let eps = order.map((eid) => {
+      const grp = groups.get(eid);
+      const states = new Set(grp.map((r) => r._state));
+      const s0 = states.has(PASS) ? PASS : states.has(HOLD) ? HOLD : FAIL;
+      const usable = grp.filter((r) => r._state !== FAIL);
+      const excl = grp.filter((r) => r._state === FAIL);
+      const r = { [ep]: eid, S0_episode_status: s0, n_entries: grp.length,
+        entries_used: usable.map((x) => x[idc]).join(';'), entries_excluded_S0: excl.map((x) => x[idc]).join(';'),
+        entries_held_S0: grp.filter((x) => x._state === HOLD).map((x) => x[idc]).join(';') };
+      if (g.round_column && columns.includes(g.round_column)) r.rounds = sortedSet(grp.map((x) => x[g.round_column])).join(';');
+      for (const c of epCols) {
+        const v = sortedSet(usable.map((x) => x[c] || ''));
+        const dropped = sortedSet(excl.map((x) => x[c] || ''));
+        if (dropped.length && !v.length) problems.push({ level: 'ERROR', where: eid, problem: `'${c}' is coded only on entries excluded at Stage 0 (${r.entries_excluded_S0}); move it to a retained entry` });
+        if (v.length > 1) problems.push({ level: 'ERROR', where: eid, problem: `Conflicting values for '${c}' across entries: ${pyList(v)} (episode held on this criterion)` });
+        r[c] = v.length === 1 ? v[0] : (!v.length ? '' : CONFLICT);
+      }
+      for (const x of extras) if (columns.includes(x)) r[x] = sortedSet(grp.map((y) => y[x])).join(' | ');
+      return r;
+    });
+    if (!eps.length) problems.push({ level: 'ERROR', where: 'episodes', problem: 'No episodes could be formed from the data' });
+
+    let alive = eps.map((e) => e.S0_episode_status === PASS);
+    for (const st of epStages) {
+      const res = eps.map((e, i) => (alive[i] ? evalStage(st, e, g) : null));
+      stageCols(st.id, res, eps, !!st.paths);
+      const ids = []; for (const crits of paths(st)) for (const c of crits) if (!ids.includes(c.id)) ids.push(c.id);
+      eps.forEach((e, i) => { for (const cid of ids) e[`${st.id}:${cid}`] = res[i] ? (res[i].scores[cid] || '') : ''; });
+      alive = alive.map((a, i) => a && eps[i][`${st.id}_status`] === PASS);
+    }
+
+    const levels = g.levels;
+    const final = (r) => {
+      if (r.S0_episode_status === FAIL) return 'Outside analytic archive (S0)';
+      if (r.S0_episode_status === HOLD) return 'Held at S0 (access/evidence)';
+      for (const st of epStages) {
+        const s = r[`${st.id}_status`];
+        if (s === FAIL) return `Not passed ${st.id}`;
+        if (s === HOLD) return `Held at ${st.id} (evidence missing)`;
+      }
+      const last = epStages[epStages.length - 1];
+      return `Passed ${last.id}` + (last.paths ? ` (${r[last.id + '_path']})` : '');
+    };
+    const level = (r) => {
+      if (r.S0_episode_status === FAIL) return 'Outside analytic archive';
+      if (r.S0_episode_status === HOLD) return 'Held at S0 (not yet analysable)';
+      let lab = levels[entryStages.length ? entryStages[entryStages.length - 1].id : 'base'] || 'Level 1';
+      for (const st of epStages) {
+        const s = r[`${st.id}_status`];
+        if (s === PASS) { const bp = st.levels_by_path || {}; lab = bp[r[`${st.id}_path`]] || levels[st.id] || lab; continue; }
+        if (s === HOLD) lab += ` (pending evidence at ${st.id})`;
+        break;
+      }
+      return lab;
+    };
+    for (const e of eps) { e.final_status = final(e); if (levels) e.level = level(e); }
+
+    const rc = g.reason_column;
+    if (rc && eps.length && eps.some((e) => rc in e)) {
+      const miss = eps.filter((e) => /^(Not passed|Outside)/.test(e.final_status) && !(e[rc] || '')).map((e) => e[ep]);
+      if (miss.length) problems.push({ level: 'WARN', where: `${miss.length} episodes`, problem: 'No written reason for not reaching the next level: ' + miss.join(', ') });
+    }
+    const cs = g.claimed_status_column;
+    if (cs && eps.length && eps.some((e) => cs in e)) {
+      for (const r of eps) {
+        const c = (r[cs] || '').trim(); if (!c) continue;
+        if (levels && c.toLowerCase().startsWith('level')) {
+          const got = r.level.split(' (')[0];
+          const want = c.split(' (')[0].toLowerCase();
+          if (!got.toLowerCase().startsWith(want) && !c.toLowerCase().startsWith(got.toLowerCase())) problems.push({ level: 'ERROR', where: r[ep], problem: `Hand-typed level '${c}' disagrees with the gates: '${r.level}'` });
+        } else if (c.toLowerCase().includes('core') !== r.final_status.startsWith('Passed')) {
+          problems.push({ level: 'ERROR', where: r[ep], problem: `Hand-typed status '${c}' disagrees with the gates: '${r.final_status}'` });
+        }
+      }
+    }
+    for (const r of rows) delete r._state;
+    return { entries: rows, episodes: eps, problems };
+  }
+
+  // ---------------------------------------------------------------- funnel
+  function valueCounts(arr) { const m = new Map(); for (const a of arr) m.set(a, (m.get(a) || 0) + 1); return [...m.entries()].sort((a, b) => b[1] - a[1]); }
+
+  function funnel(entries, eps, g) {
+    const lab = criterionLabels(g); const nested = !!g.levels; const rows = [];
+    const add = (stage, kind, count, n) => rows.push({ stage, kind, count, n });
+    add('entries', 'main', 'Source entries listed', entries.length);
+    for (const st of g.stages.filter((s) => (s.unit || 'episode') === 'entry')) {
+      const s = (r) => r[`${st.id}_status`];
+      for (const [fc, n] of valueCounts(entries.filter((r) => s(r) === FAIL).map((r) => r[`${st.id}_first_failed`]))) add(st.id, 'side', `Entries excluded: ${lab[fc] || fc}`, n);
+      for (const [fc, n] of valueCounts(entries.filter((r) => s(r) === HOLD).map((r) => r[`${st.id}_first_held`]))) add(st.id, 'side', `Entries held: ${lab[fc] || fc}`, n);
+      add(st.id, 'main', `Entries passing ${st.id} (${st.name})`, entries.filter((r) => s(r) === PASS).length);
+    }
+    if (eps.length) {
+      add('episodes', 'main', 'Distinct episodes (all entries)', eps.length);
+      for (const [k, name] of [[FAIL, 'Episodes outside analytic archive'], [HOLD, 'Episodes held at S0 (access/evidence)']]) {
+        const n = eps.filter((e) => e.S0_episode_status === k).length; if (n) add('episodes', 'side', name, n);
+      }
+      add('episodes', 'main', 'Episodes in analytic archive', eps.filter((e) => e.S0_episode_status === PASS).length);
+      const verb = nested ? 'Remain at lower level' : 'Excluded';
+      for (const st of g.stages.filter((s) => (s.unit || 'episode') === 'episode')) {
+        const s = (e) => e[`${st.id}_status`];
+        for (const [fc, n] of valueCounts(eps.filter((e) => s(e) === FAIL).map((e) => e[`${st.id}_first_failed`]))) add(st.id, 'side', `${verb}: ${lab[fc] || fc}`, n);
+        for (const [fc, n] of valueCounts(eps.filter((e) => s(e) === HOLD).map((e) => e[`${st.id}_first_held`]))) add(st.id, 'side', `Pending evidence: ${lab[fc] || fc}`, n);
+        if (st.paths) for (const [p, n] of valueCounts(eps.filter((e) => s(e) === PASS).map((e) => e[`${st.id}_path`]))) add(st.id, 'side', `Passing via path: ${p}`, n);
+        add(st.id, 'main', `Episodes passing ${st.id} (${st.name})`, eps.filter((e) => s(e) === PASS).length);
+      }
+      if (nested) {
+        const base = valueCounts(eps.map((e) => e.level.replace(/ \(pending.*\)$/, ''))).sort((a, b) => cmp(a[0], b[0]));
+        for (const [lv, n] of base) add('levels', 'level', lv, n);
+        const pend = valueCounts(eps.filter((e) => e.level.includes('pending')).map((e) => e.level)).sort((a, b) => cmp(a[0], b[0]));
+        for (const [lv, n] of pend) add('levels', 'level', `  of which ${lv}`, n);
+      }
+    }
+    return rows;
+  }
+
+  const api = { PASS, FAIL, HOLD, NA, StopError, applyGates, funnel, criterionLabels, criterionColumns, columnSpecs, gatesCanonical, paths, pathNames, cols, isGate, VERSION: '0.4.0' };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.ClockBindEngine = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+const DEFAULT_GATES = {"protocol_version":"v3-DRAFT","frozen":false,"design":"Tiered full-population multiple-case design (USER DECISION D1, 26 Sept 2026)","note":"Implements USER DECISIONS D1–D13 of 26 Sept 2026. Rename protocol_version to 'v3' (no DRAFT) only when §3.1 wording matches and the author freezes. No target counts exist anywhere in this file.","id_column":"entry_id","episode_column":"episode_id","round_column":"search_round","reason_column":"reason","claimed_status_column":"hand_level","carry_columns":["org_size"],"values":{"pass":["Y"],"fail":["N"],"unknown":["Unknown","not documented"]},"levels":{"S0":"Level 1 – archive typology","S1":"Level 1 – archive typology","M2":"Level 2 – mechanism","S2":"Level 3 – binding clock"},"stages":[{"id":"S0","name":"Lawful source universe","unit":"entry","criteria":[{"id":"S0a","type":"yn","column":"S0_distinct_source","label":"Distinct empirical source","definition":"Not a duplicate, staging copy or administrative container of another entry.","entry_specific":true},{"id":"S0b","type":"yn","column":"S0_organisational","label":"Organisational episode","definition":"Concerns an organisation of any size, not private/personal use (D2: no size restriction; size recorded in org_size)."},{"id":"S0c","type":"yn","column":"S0_in_archive_window","label":"Inside archive window","definition":"Dated within the frozen archive window 2024-01-01 to 2026-08-24."},{"id":"S0d","type":"yn","column":"S0_research_access_cleared","label":"Lawful research access","definition":"Source's controller assessment signed and no cross-border restriction pending. Pending (e.g. KVKK) = Unknown: held, not excluded, not read for research."}]},{"id":"S1","name":"Analytic archive eligibility","unit":"episode","criteria":[{"id":"S1a","type":"yn","column":"S1_material","label":"Material equipment-capital episode (functional + external floor)","definition":"Both conditions: (1) FUNCTIONAL — the equipment, system or component is required for the buyer to deliver its core service, i.e. its absence stops or materially reduces service capacity, as documented in a contemporaneous source; (2) FLOOR — the total value of the commitment in the episode is at least HUF 200,000, the Hungarian small-value tangible asset limit (accounting and corporate tax), converted at the ECB reference rate on the invoice/proforma date (USER DECISIONS D14, 26 Sept 2026). Replacement parts and consumables (cables, electrodes, training suits) qualify when both conditions hold (D15); record the type in S1_equipment_type."},{"id":"S1e","type":"in","column":"S1_equipment_type","allowed":["Device/system","Replacement part/consumable","Other"],"scale":["Device/system","Replacement part/consumable","Other","Unknown"],"gate":false,"label":"Equipment type (flag)","definition":"Reporting flag (D15)."},{"id":"S1b","type":"yn","column":"S1_chronology","label":"Reconstructable chronology","definition":"At least two dated contemporaneous sources allow the sequence of events to be ordered."},{"id":"S1d","type":"any_of","columns":["S1_finance_architecture","S1_comparator_role"],"label":"Financing/payment architecture OR dated comparator role","definition":"A financing or payment arrangement is documented, or a comparator role is recorded in a dated document that predates the outcome review."},{"id":"S1f","type":"in","column":"org_size","allowed":["SME","Large","Unknown size"],"scale":["SME","Large","Unknown size"],"gate":false,"label":"Organisation size (flag)","definition":"EU Recommendation 2003/361; how verified must be recorded in the reason column. Reporting flag only (D2)."}]},{"id":"M2","name":"Mechanism eligibility","unit":"episode","criteria":[{"id":"M2a","type":"yn","column":"M2_linked_steps","label":"≥2 linked process steps evidenced","definition":"At least two consecutive steps of the financing–payment–fulfilment–operational sequence are each supported by a dated source (D11)."},{"id":"M2b","type":"yn","column":"M2_state_mature","label":"Decision/outcome state mature for the mechanism claim","definition":"The state needed for the mechanism claim (e.g. route chosen, route stalled, payment executed) is documented, not inferred."},{"id":"M2c","type":"yn","column":"M2_corroborated","label":"Corroboration appropriate to the claim","definition":"The central mechanism step is supported by a transactional/external record or by a source not authored by the researcher's firm."},{"id":"M2d","type":"yn","column":"M2_rivals_considered","label":"Rival mechanisms considered (flag)","definition":"Rival explanations listed for the mechanism (analysis step, D5).","gate":false}]},{"id":"S2","name":"Binding-clock eligibility","unit":"episode","criteria":[{"id":"S2a","type":"yn","column":"S2_route_evaluated","label":"Financing route evaluated","definition":"Episode-level evidence that at least one financing route was evaluated."},{"id":"S2b","type":"yn","column":"S2_expected_durations","label":"Ex-ante expected durations documented","definition":"Expected durations of the downstream stages are contemporaneous or structurally fixed; realised durations are descriptive only (D12)."},{"id":"S2c","type":"in","column":"S2_window_tier","allowed":["A","B"],"scale":["A","B","C","none"],"label":"Window Tier A/B","definition":"Tier A (contractual/external) or B (documented operational) window; Tier C is Level 2 only."},{"id":"S2d","type":"yn","column":"S2_window_independent","label":"Window established independently of outcome","definition":"tW is documented in a source dated before the outcome, or set by a third party."},{"id":"S2e","type":"yn","column":"S2_required_event","label":"Required event R explicit","definition":"The event that had to occur by tW is stated in the source."},{"id":"S2g","type":"yn","column":"S2_customer_clocks_independent","label":"Customer-side clocks independently sourced","definition":"No customer-side clock (financing usability, payment) is dated solely by a source authored by the researcher's firm (D6)."},{"id":"S2f","type":"yn","column":"S2_outcome_mature","label":"Outcome mature (censoring flag)","definition":"Flag; immature outcomes stay at Level 3 and are reported as censored (D5).","gate":false},{"id":"S2h","type":"yn","column":"S2_clocks_separable","label":"Clocks separable (classification input)","definition":"If not separable the classification result is 'mixed/joint' (D5, D8).","gate":false},{"id":"S2i","type":"yn","column":"S2_rivals_coded","label":"Rivals coded incl. supplier delay (analysis step)","definition":"Required analysis step for every Level 3 case, incl. 'supplier delay' (D5, D6).","gate":false},{"id":"S2k","type":"in","column":"S2_window_author","allowed":["Buyer","Seller","Third party","Unknown"],"scale":["Buyer","Seller","Third party","Unknown"],"gate":false,"label":"Who set the window (flag)","definition":"Seller-set windows form a sensitivity stratum."}]}],"extra_columns":[{"group":"Materiality (D14)","column":"Commitment_value_HUF","hint":"total commitment in the episode, converted at ECB rate on invoice date"},{"group":"Materiality (D14)","column":"Functional_necessity_source","hint":"pseudonymised source ID showing the equipment was needed for service"},{"group":"Source metadata (D13)","column":"Source_Controller","values":["Company A","Company B","Company C","Other","Unknown"],"hint":"pseudonymous controller codes; key kept privately"},{"group":"Source metadata (D13)","column":"Joint_Controller"},{"group":"Source metadata (D13)","column":"Original_Source_Location"},{"group":"Source metadata (D13)","column":"Research_Access_Status","values":["Cleared","Pending KVKK","Pending other","Not cleared"]},{"group":"Source metadata (D13)","column":"Cross_Border_Restriction","values":["None","KVKK","Other","Unknown"]},{"group":"Source metadata (D13)","column":"Source_Role","values":["Buyer","Seller (own firm)","Bank/payment provider","Logistics","External third party","Internal management"]},{"group":"Source metadata (D13)","column":"Independent_of_Researcher","values":["Y","N"]},{"group":"Typology (D9)","column":"Funding_source","hint":"multi-valued, separate with ';': Internal funds; Owner/family; Customer prepayment; Supplier credit; Captive/manufacturer finance; Third-party investor; Bank loan; Leasing; Grant/subsidy (KOSGEB, EU); Factoring; Card/short bridge; Unknown"},{"group":"Typology (D9)","column":"Settlement_timing","values":["Before delivery","Deposit + balance before delivery","Split around delivery","After delivery","Escrow/LC","Rental/pay-per-use","Unknown"]},{"group":"Typology (D9)","column":"Instrument","hint":"e.g. bank transfer, card, cheque, letter of credit, lease contract, trade-in"},{"group":"Typology (D9)","column":"Cross_border_FX","values":["Y","N","Unknown"]},{"group":"Typology","column":"Mechanism_observed"},{"group":"Typology","column":"Main_strength"},{"group":"Typology","column":"Main_weakness"},{"group":"Typology","column":"Rival_explanations"}]};
+const DEMO_ROWS = [{"entry_id":"R001","episode_id":"EP-D01","search_round":"Round 1 – original register","register_source":"SYNTH-001","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"Unknown size","S1_equipment_type":"Device/system","reason":"","Funding_source":"Card/short bridge","Settlement_timing":"Deposit + balance before delivery","Source_Role":"Buyer","Research_Access_Status":""},{"entry_id":"R002","episode_id":"EP-D02","search_round":"Round 1 – original register","register_source":"SYNTH-002","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"","Funding_source":"Customer prepayment; Supplier credit","Settlement_timing":"After delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R003","episode_id":"EP-D03","search_round":"Round 1 – original register","register_source":"SYNTH-003","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"B","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"N","S2_rivals_coded":"Y","S2_window_author":"Buyer","org_size":"Unknown size","S1_equipment_type":"Device/system","reason":"","Funding_source":"Card/short bridge","Settlement_timing":"After delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R004","episode_id":"EP-D04","search_round":"Round 1 – original register","register_source":"SYNTH-004","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"C","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Seller","org_size":"Unknown size","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Card/short bridge","Settlement_timing":"Deposit + balance before delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R005","episode_id":"EP-D04","search_round":"Round 1 – original register","register_source":"SYNTH-005","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"A","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R006","episode_id":"EP-D05","search_round":"Round 1 – original register","register_source":"SYNTH-006","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"C","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Seller","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Customer prepayment; Supplier credit","Settlement_timing":"Deposit + balance before delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R007","episode_id":"EP-D06","search_round":"Round 1 – original register","register_source":"SYNTH-007","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"C","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Seller","org_size":"SME","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Bank loan","Settlement_timing":"Split around delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R008","episode_id":"EP-D07","search_round":"Round 1 – original register","register_source":"SYNTH-008","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"B","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Unknown","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"Split around delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R009","episode_id":"EP-D08","search_round":"Round 1 – original register","register_source":"SYNTH-009","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"B","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Unknown","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Leasing","Settlement_timing":"Before delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R010","episode_id":"EP-D08","search_round":"Round 1 – original register","register_source":"SYNTH-010","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R011","episode_id":"EP-D09","search_round":"Round 1 – original register","register_source":"SYNTH-011","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"N","S2_expected_durations":"Y","S2_window_tier":"none","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Leasing","Settlement_timing":"Split around delivery","Source_Role":"Buyer","Research_Access_Status":""},{"entry_id":"R012","episode_id":"EP-D10","search_round":"Round 1 – original register","register_source":"SYNTH-012","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"N","S2_expected_durations":"Y","S2_window_tier":"none","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"Unknown size","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Bank loan","Settlement_timing":"Deposit + balance before delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R013","episode_id":"EP-D11","search_round":"Round 1 – original register","register_source":"SYNTH-013","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"N","S2_expected_durations":"Y","S2_window_tier":"none","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"Large","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Leasing","Settlement_timing":"After delivery","Source_Role":"Buyer","Research_Access_Status":""},{"entry_id":"R014","episode_id":"EP-D12","search_round":"Round 1 – original register","register_source":"SYNTH-014","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"N","M2_state_mature":"Y","M2_corroborated":"Unknown","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"Before delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R015","episode_id":"EP-D12","search_round":"Round 1 – original register","register_source":"SYNTH-015","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R016","episode_id":"EP-D13","search_round":"Round 1 – original register","register_source":"SYNTH-016","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"N","M2_state_mature":"Y","M2_corroborated":"Unknown","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"After delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R017","episode_id":"EP-D14","search_round":"Round 1 – original register","register_source":"SYNTH-017","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"N","M2_state_mature":"Y","M2_corroborated":"Unknown","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"Large","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Leasing","Settlement_timing":"Split around delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R018","episode_id":"EP-D15","search_round":"Round 1 – original register","register_source":"SYNTH-018","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Bank loan","Settlement_timing":"After delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R019","episode_id":"EP-D16","search_round":"Round 1 – original register","register_source":"SYNTH-019","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Third-party investor","Settlement_timing":"Before delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R020","episode_id":"EP-D16","search_round":"Round 1 – original register","register_source":"SYNTH-020","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R021","episode_id":"EP-D17","search_round":"Round 1 – original register","register_source":"SYNTH-021","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Customer prepayment; Supplier credit","Settlement_timing":"Split around delivery","Source_Role":"Buyer","Research_Access_Status":""},{"entry_id":"R022","episode_id":"EP-D18","search_round":"Round 1 – original register","register_source":"SYNTH-022","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Third-party investor","Settlement_timing":"After delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R023","episode_id":"EP-D19","search_round":"Round 1 – original register","register_source":"SYNTH-023","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"N","S1_comparator_role":"Y","M2_linked_steps":"N","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"Deposit + balance before delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R024","episode_id":"EP-D20","search_round":"Round 1 – original register","register_source":"SYNTH-024","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"N","S1_comparator_role":"Y","M2_linked_steps":"N","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Leasing","Settlement_timing":"After delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R025","episode_id":"EP-D20","search_round":"Round 1 – original register","register_source":"SYNTH-025","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R026","episode_id":"EP-D21","search_round":"Round 1 – original register","register_source":"SYNTH-026","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Unknown","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Leasing","Settlement_timing":"Before delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R027","episode_id":"EP-D22","search_round":"Round 1 – original register","register_source":"SYNTH-027","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Unknown","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"Split around delivery","Source_Role":"Buyer","Research_Access_Status":""},{"entry_id":"R028","episode_id":"EP-D23","search_round":"Round 2 – mailbox sweep 26 Sept 2026","register_source":"SYNTH-028","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Third-party investor","Settlement_timing":"Deposit + balance before delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R029","episode_id":"EP-D24","search_round":"Round 2 – mailbox sweep 26 Sept 2026","register_source":"SYNTH-029","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"N","M2_state_mature":"Y","M2_corroborated":"Unknown","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Device/system","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"After delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R030","episode_id":"EP-D24","search_round":"Round 2 – mailbox sweep 26 Sept 2026","register_source":"SYNTH-030","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R031","episode_id":"EP-D25","search_round":"Round 2 – mailbox sweep 26 Sept 2026","register_source":"SYNTH-031","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"Y","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"C","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Seller","org_size":"SME","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Bank loan","Settlement_timing":"Split around delivery","Source_Role":"Bank/payment provider","Research_Access_Status":""},{"entry_id":"R032","episode_id":"EP-D26","search_round":"Round 2 – mailbox sweep 26 Sept 2026","register_source":"SYNTH-032","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"Unknown size","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Internal funds","Settlement_timing":"Before delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R033","episode_id":"EP-D27","search_round":"Round 2 – mailbox sweep 26 Sept 2026","register_source":"SYNTH-033","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"N","S1_chronology":"Y","S1_finance_architecture":"Y","S1_comparator_role":"N","M2_linked_steps":"Y","M2_state_mature":"Y","M2_corroborated":"Y","M2_rivals_considered":"Y","S2_route_evaluated":"Y","S2_expected_durations":"Y","S2_window_tier":"A","S2_window_independent":"Y","S2_required_event":"Y","S2_customer_clocks_independent":"Y","S2_outcome_mature":"Y","S2_clocks_separable":"Y","S2_rivals_coded":"Y","S2_window_author":"Third party","org_size":"SME","S1_equipment_type":"Replacement part/consumable","reason":"See evidence log (synthetic)","Funding_source":"Customer prepayment; Supplier credit","Settlement_timing":"Split around delivery","Source_Role":"Seller (own firm)","Research_Access_Status":""},{"entry_id":"R034","episode_id":"EP-D28","search_round":"Round 1 – original register","register_source":"SYNTH-034","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Unknown","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":"Pending KVKK"},{"entry_id":"R035","episode_id":"EP-D29","search_round":"Round 1 – original register","register_source":"SYNTH-035","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"Y","S0_organisational":"N","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"Private-use inquiry","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""},{"entry_id":"R036","episode_id":"EP-D30","search_round":"Round 1 – original register","register_source":"SYNTH-036","source_author":"","description_pseudonymised":"synthetic example","S0_distinct_source":"N","S0_organisational":"Y","S0_in_archive_window":"Y","S0_research_access_cleared":"Y","S1_material":"","S1_chronology":"","S1_finance_architecture":"","S1_comparator_role":"","M2_linked_steps":"","M2_state_mature":"","M2_corroborated":"","M2_rivals_considered":"","S2_route_evaluated":"","S2_expected_durations":"","S2_window_tier":"","S2_window_independent":"","S2_required_event":"","S2_customer_clocks_independent":"","S2_outcome_mature":"","S2_clocks_separable":"","S2_rivals_coded":"","S2_window_author":"","org_size":"","S1_equipment_type":"","reason":"Duplicate package","Funding_source":"","Settlement_timing":"","Source_Role":"","Research_Access_Status":""}];
+const E = window.ClockBindEngine;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// ---- personal-data scan (GDPR / KVKK aid). Mirrors clockbind/privacy.py. Reports column, kind and count only.
+const PII = (() => {
+  const NUMBERLIKE = /^[\d\s\-]+$/, CODE = /^\p{L}+[ _\-]?[A-Z0-9]{1,4}$/u;
+  const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/, PHONE = /^(?:\+|00|0)[\d\s().\-/]{8,}$/, DECIMAL = /^-?\d+[.,]\d+$/;
+  const IBAN = /\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){2,7}(?:\s?[A-Z0-9]{1,4})?\b/;
+  const WORDS = ["name","first name","last name","surname","full name","contact","customer","client","company","firm","owner","address","street","e-mail","email","phone","mobile","telephone","birth","passport","national id","tax id","iban","ad","adı","soyad","soyadı","isim","müşteri","firma","şirket","adres","telefon","doğum","tc kimlik","tckn","vergi no","név","vezetéknév","keresztnév","ügyfél","cég","cím","születési","adóazonosító","taj","nome","cognome","cliente","azienda","indirizzo","telefono","codice fiscale","نام","نام خانوادگی","مشتری","شرکت","آدرس","تلفن","کد ملی"];
+  const ibanOk = (s) => { s = s.replace(/ /g, '').toUpperCase(); if (s.length < 15 || s.length > 34) return false; const r = s.slice(4) + s.slice(0, 4); let m = 0; for (const c of r) { const v = parseInt(c, 36); for (const d of String(v)) m = (m * 10 + +d) % 97; } return m === 1; };
+  const tcknOk = (d) => { if (!/^[1-9]\d{10}$/.test(d)) return false; const n = [...d].map(Number); return (7 * (n[0] + n[2] + n[4] + n[6] + n[8]) - (n[1] + n[3] + n[5] + n[7])) % 10 === n[9] && n.slice(0, 10).reduce((a, b) => a + b, 0) % 10 === n[10]; };
+  const huTaxOk = (d) => { if (!/^8\d{9}$/.test(d)) return false; const n = [...d].map(Number); let s = 0; for (let i = 0; i < 9; i++) s += n[i] * (i + 1); return s % 11 === n[9]; };
+  const luhnOk = (d) => { if (!/^\d{13,19}$/.test(d)) return false; let s = 0, alt = false; for (let i = d.length - 1; i >= 0; i--) { let x = +d[i]; if (alt) x = x > 4 ? x * 2 - 9 : x * 2; s += x; alt = !alt; } return s % 10 === 0; };
+  const mod = (x, m) => ((x % m) + m) % m;
+  function classify(v) {
+    if (v === null || v === undefined) return [];
+    const s = String(v).trim(); if (!s) return [];
+    const k = []; const d = s.replace(/\D/g, '');
+    if (EMAIL.test(s)) k.push('e-mail address');
+    if (PHONE.test(s) && d.length >= 9 && d.length <= 15 && !DECIMAL.test(s)) k.push('phone number');
+    const m = s.toUpperCase().match(IBAN); if (m && ibanOk(m[0])) k.push('bank account (IBAN)');
+    const numericId = NUMBERLIKE.test(s);
+    if (numericId && tcknOk(d) && s.length <= 14) k.push('Turkish ID number (TCKN)');
+    if (numericId && huTaxOk(d) && s.length <= 13) k.push('Hungarian tax ID');
+    if (numericId && luhnOk(d) && s.length <= 23 && !k.includes('phone number')) k.push('payment card number');
+    return k;
+  }
+  const norm = (x) => String(x).replace(/[_\-.]+/g, ' ').trim().toLowerCase();
+  const CODES = new Set(["y","n","u","yes","no","unknown","true","false","pass","fail","hold","na","n/a","none","missing","other"]);
+  function headerHint(col) {
+    const c = norm(col); const words = new Set(c.split(/\s+/));
+    return WORDS.map(norm).some((w) => (w.includes(' ') ? c.includes(w) : words.has(w)));
+  }
+  function freeText(values) {
+    const vals = values.filter((v) => v !== undefined && v !== null && String(v).trim() !== '').map((v) => String(v).trim());
+    const words = vals.filter((v) => !CODES.has(v.toLowerCase()) && !CODE.test(v) && (v.match(/\p{L}/gu) || []).length >= 3);
+    return (new Set(words).size > 3 || words.some((v) => v.includes(' '))) ? words.length : 0;
+  }
+  function scan(rows) {
+    const out = []; if (!rows || !rows.length) return out;
+    const cols = [...new Set(rows.flatMap((r) => Object.keys(r)))];
+    for (const col of cols) {
+      const counts = {};
+      for (const r of rows) for (const k of classify(r[col])) counts[k] = (counts[k] || 0) + 1;
+      for (const [k, n] of Object.entries(counts)) out.push({ column: col, kind: k, count: n });
+      const nText = headerHint(col) ? freeText(rows.map((r) => r[col])) : 0;
+      if (nText) out.push({ column: col, kind: 'names or identifiers (column name and content)', count: nText });
+    }
+    return out;
+  }
+  return { classify, scan, headerHint, freeText };
+})();
+const state = { pii: [], gates: DEFAULT_GATES, gatesName: 'Built-in protocol v3 (draft)', rows: DEMO_ROWS, dataName: 'ClockBind_SYNTHETIC_demo_v3.xlsx', demo: true, result: null, stop: null, hash: null, filter: 'all', q: '', sel: null };
+
+function levelKey(lv) { if (!lv) return 'X'; if (lv.startsWith('Level 3')) return 'L3'; if (lv.startsWith('Level 2')) return 'L2'; if (lv.startsWith('Level 1')) return 'L1'; return 'X'; }
+function shortLevel(lv) { const k = levelKey(lv); return k === 'X' ? (lv.startsWith('Held') ? 'Held at S0' : 'Outside') : k.replace('L', 'Level '); }
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), 2200); }
+
+async function sha256(text) {
+  try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join(''); }
+  catch { return null; }
+}
+
+async function run() {
+  state.stop = null; state.result = null;
+  state.hash = await sha256(E.gatesCanonical(state.gates));
+  try {
+    const r = E.applyGates(state.rows, state.gates);
+    r.funnel = E.funnel(r.entries, r.episodes, state.gates);
+    state.result = r;
+  } catch (e) { if (e instanceof E.StopError) state.stop = e.message; else { state.stop = 'Unexpected error: ' + e.message; console.error(e); } }
+  if (state.sel && !(state.result?.episodes || []).some((x) => x[state.gates.episode_column] === state.sel)) state.sel = null;
+  render();
+}
+
+function render() {
+  const g = state.gates;
+  $('dataName').textContent = state.dataName;
+  $('demoTag').innerHTML = state.demo ? '<span class="tag">Example data · synthetic</span>' : '';
+  $('gatesName').textContent = state.gatesName;
+  $('engVer').textContent = E.VERSION;
+  const hashOk = !g.frozen || (state.hash && g.sha256 === state.hash);
+  $('protoChips').innerHTML =
+    `<span class="chip"><span class="dot ${g.frozen ? (hashOk ? 'frozen' : 'bad') : 'draft'}"></span><b>${esc(g.protocol_version)}</b> ${g.frozen ? (hashOk ? 'frozen ' + esc((g.frozen_on || '').slice(0, 10)) : 'edited after freeze') : 'draft'}</span>` +
+    `<span class="chip mono" title="${esc(state.hash || '')}">sha256 ${esc((state.hash || 'n/a').slice(0, 12))}</span>`;
+  renderVerdict(hashOk); renderDial(); renderTiles(); renderFlow(); renderTable(); renderInspector(); renderChecks();
+}
+
+function renderVerdict(hashOk) {
+  const g = state.gates, r = state.result;
+  const reasons = [];
+  if (state.stop) reasons.push(state.stop);
+  if (!g.frozen) reasons.push('The protocol is a draft. Freeze it before reporting any count.');
+  if (g.frozen && !hashOk) reasons.push('The protocol file was edited after freezing. Save it as a new version and freeze again.');
+  const nErr = r ? r.problems.filter((p) => p.level === 'ERROR').length : 0;
+  if (nErr) reasons.push(`${nErr} error${nErr > 1 ? 's' : ''} in the sheet (see Checks).`);
+  if (state.demo) reasons.push('Example data is loaded, not your screening sheet.');
+  if (state.pii.length) reasons.push(`Possible personal data in: ${[...new Set(state.pii.map((x) => x.column))].join(', ')}. Replace with pseudonymised codes (GDPR / KVKK) and reload.`);
+  const ok = !reasons.length;
+  const eps = r ? r.episodes.length : 0;
+  $('verdict').innerHTML = `
+    <div class="head" style="margin:0"><h2>Can these counts be reported?</h2><span class="eyebrow">Step 2 · verdict</span></div>
+    <div class="vstate"><span class="vbadge ${ok ? 'yes' : 'no'}">${ok ? 'Ready to cite' : 'Not citable yet'}</span>
+      <span style="font-size:13.5px;color:var(--muted)">${ok ? 'Confirm with a CLI run so it enters the ledger.' : 'Fix the items below, then reload.'}</span></div>
+    ${reasons.length ? `<ul class="reasons">${reasons.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    <dl class="kv">
+      <dt>Design</dt><dd style="font-family:var(--sans)">${esc(g.design || '—')}</dd>
+      <dt>Source entries</dt><dd>${r ? r.entries.length : '—'}</dd>
+      <dt>Episodes</dt><dd>${r ? eps : '—'}</dd>
+      <dt>Target counts</dt><dd style="font-family:var(--sans)">None. Counts follow from the rules.</dd>
+    </dl>`;
+}
+
+function epsByLevel() {
+  const r = state.result; if (!r) return { L3: [], L2: [], L1: [], X: [] };
+  const out = { L3: [], L2: [], L1: [], X: [] };
+  for (const e of r.episodes) out[levelKey(e.level || '')].push(e);
+  return out;
+}
+
+function renderDial() {
+  const ep = state.gates.episode_column, b = epsByLevel();
+  const C = 170, rings = [{ k: 'L1', r: 138, col: 'var(--l1)' }, { k: 'L2', r: 98, col: 'var(--l2)' }, { k: 'L3', r: 58, col: 'var(--brass)' }];
+  let s = `<circle cx="${C}" cy="${C}" r="164" fill="var(--sunk)"/>`;
+  for (let i = 0; i < 60; i++) {
+    const a = (i / 60) * 2 * Math.PI - Math.PI / 2, long = i % 5 === 0;
+    const r1 = 164, r2 = long ? 154 : 159;
+    s += `<line x1="${C + r1 * Math.cos(a)}" y1="${C + r1 * Math.sin(a)}" x2="${C + r2 * Math.cos(a)}" y2="${C + r2 * Math.sin(a)}" stroke="var(--line)" stroke-width="${long ? 2 : 1}"/>`;
+  }
+  for (const ring of rings) s += `<circle cx="${C}" cy="${C}" r="${ring.r}" fill="none" stroke="${ring.col}" stroke-opacity=".28" stroke-width="16"/>`;
+  for (const ring of rings) {
+    const list = b[ring.k]; const n = list.length;
+    list.forEach((e, i) => {
+      const a = (n === 1 ? 0 : (i / n) * 2 * Math.PI) - Math.PI / 2 + (ring.k === 'L2' ? 0.18 : ring.k === 'L3' ? 0.4 : 0);
+      const x = C + ring.r * Math.cos(a), y = C + ring.r * Math.sin(a);
+      const pend = (e.level || '').includes('pending');
+      const id = e[ep];
+      s += `<circle class="ep${state.sel === id ? ' sel' : ''}" data-id="${esc(id)}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="${pend ? 'var(--surface)' : ring.col}" stroke="${ring.col}" stroke-width="${pend ? 2.5 : 0}"><title>${esc(id)} · ${esc(e.level)}</title></circle>`;
+    });
+  }
+  const l3 = b.L3.length;
+  s += `<line x1="${C}" y1="${C}" x2="${C}" y2="${C - 118}" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" opacity=".85"/>`;
+  s += `<line x1="${C}" y1="${C}" x2="${C + 44}" y2="${C + 26}" stroke="var(--brass)" stroke-width="5" stroke-linecap="round"/>`;
+  s += `<circle cx="${C}" cy="${C}" r="24" fill="var(--surface)" stroke="var(--brass)" stroke-width="2"/>`;
+  s += `<text x="${C}" y="${C + 7}" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-weight="600" font-size="20" fill="var(--brass)">${l3}</text>`;
+  $('dial').innerHTML = s;
+  $('dial').querySelectorAll('.ep').forEach((el) => el.addEventListener('click', () => select(el.dataset.id)));
+}
+
+function renderTiles() {
+  const r = state.result, b = epsByLevel();
+  const pend = (list) => list.filter((e) => (e.level || '').includes('pending')).length;
+  const t = (cls, n, l, sub) => `<div class="tile ${cls}"><span class="n">${n}</span><span class="l">${l}</span>${sub ? `<span class="sub">${sub}</span>` : ''}</div>`;
+  $('tiles').innerHTML = !r ? '<p class="empty">No result.</p>' :
+    t('l3', b.L3.length, 'Level 3 · binding clock', 'Tier A/B window, independent sources') +
+    t('l2', b.L2.length, 'Level 2 · mechanism', pend(b.L2) ? `${pend(b.L2)} pending Level 3 evidence` : 'process tracing') +
+    t('l1', b.L1.length, 'Level 1 · archive typology', pend(b.L1) ? `${pend(b.L1)} pending Level 2 evidence` : 'descriptive only') +
+    t('', b.X.length, 'Held or outside archive', `${r.entries.length} source entries in total`);
+}
+
+function renderFlow() {
+  const r = state.result; if (!r) { $('flow').innerHTML = `<div class="stop">${esc(state.stop || 'No result')}</div>`; return; }
+  const rows = r.funnel.filter((x) => x.kind !== 'level');
+  let html = '', pending = [];
+  const flush = (main, first) => {
+    html += `${first ? '' : '<div class="fconn"></div>'}<div class="fstep"><div class="fmain"><span class="t">${esc(main.count)}</span><span class="n">${main.n}</span></div><div class="fside">${pending.map((p) => `<div class="${p.count.startsWith('Pending') || p.count.includes('held') || p.count.includes('Held') ? 'pend' : ''}"><span>${esc(p.count)}</span><span class="mono">${p.n}</span></div>`).join('')}</div></div>`;
+    pending = [];
+  };
+  let first = true;
+  for (const x of rows) { if (x.kind === 'side') pending.push(x); else { flush(x, first); first = false; } }
+  $('flow').innerHTML = html;
+}
+
+function stagesEp() { return state.gates.stages.filter((s) => (s.unit || 'episode') === 'episode'); }
+
+function whyLine(e) {
+  const lab = E.criterionLabels(state.gates);
+  for (const st of stagesEp()) {
+    const s = e[`${st.id}_status`];
+    if (s === 'Fail') return `Stops at ${st.id}: ${lab[e[`${st.id}_first_failed`]] || e[`${st.id}_first_failed`]}`;
+    if (s === 'Hold') return `Waiting at ${st.id}: ${lab[e[`${st.id}_first_held`]] || e[`${st.id}_first_held`]}`;
+  }
+  if (e.S0_episode_status === 'Hold') return 'Access or evidence pending at S0';
+  if (e.S0_episode_status === 'Fail') return 'Outside the analytic archive';
+  return 'All gates passed';
+}
+
+function filtered() {
+  const r = state.result; if (!r) return [];
+  const ep = state.gates.episode_column, q = state.q.trim().toLowerCase();
+  return r.episodes.filter((e) => {
+    const k = levelKey(e.level || ''), pend = (e.level || '').includes('pending');
+    if (state.filter === 'pend' && !pend) return false;
+    if (['L1', 'L2', 'L3', 'X'].includes(state.filter) && k !== state.filter) return false;
+    return !q || String(e[ep]).toLowerCase().includes(q);
+  });
+}
+
+function renderTable() {
+  const ep = state.gates.episode_column, st = stagesEp();
+  $('thead').innerHTML = `<tr><th>Episode</th><th>Level</th><th title="Stage 0">S0</th>${st.map((s) => `<th title="${esc(s.name)}">${esc(s.id)}</th>`).join('')}<th>Why it sits here</th></tr>`;
+  const mark = (s) => (s === 'Pass' ? '✓' : s === 'Hold' ? '?' : s === 'Fail' ? '✕' : '·');
+  const list = filtered();
+  $('tbody').innerHTML = list.length ? list.map((e) => {
+    const k = levelKey(e.level || ''), pend = (e.level || '').includes('pending');
+    return `<tr data-id="${esc(e[ep])}" class="${state.sel === e[ep] ? 'sel' : ''}"><td class="mono">${esc(e[ep])}</td>
+      <td><span class="pill ${k}${pend ? ' pend' : ''}">${esc(shortLevel(e.level || ''))}${pend ? ' · pending' : ''}</span></td>
+      <td><span class="st ${e.S0_episode_status === 'n/a' ? 'na' : e.S0_episode_status}">${mark(e.S0_episode_status)}</span></td>
+      ${st.map((s) => { const v = e[`${s.id}_status`]; return `<td><span class="st ${v === 'n/a' ? 'na' : v}" title="${esc(v)}">${mark(v)}</span></td>`; }).join('')}
+      <td class="why">${esc(whyLine(e))}</td></tr>`;
+  }).join('') : `<tr><td colspan="${4 + st.length}" class="empty">No episodes match this filter.</td></tr>`;
+  $('tbody').querySelectorAll('tr[data-id]').forEach((tr) => tr.addEventListener('click', () => select(tr.dataset.id)));
+}
+
+function select(id) { state.sel = id; renderDial(); renderTable(); renderInspector(); }
+
+function renderInspector() {
+  const r = state.result, ep = state.gates.episode_column;
+  const e = r && (r.episodes.find((x) => x[ep] === state.sel) || [...r.episodes].sort((a, b) => levelKey(a.level) < levelKey(b.level) ? 1 : -1).find((x) => levelKey(x.level) === 'L3') || r.episodes[0]);
+  if (!e) { $('inspector').innerHTML = '<p class="empty">Select an episode to see every criterion.</p>'; return; }
+  if (!state.sel) state.sel = e[ep];
+  const g = state.gates, k = levelKey(e.level || ''), pend = (e.level || '').includes('pending');
+  const mark = (s) => (s === 'Pass' ? '✓' : s === 'Hold' ? '?' : s === 'Fail' ? '✕' : '·');
+  let crit = '';
+  for (const st of g.stages) {
+    const entry = (st.unit || 'episode') === 'entry';
+    crit += `<div class="stagehead">${esc(st.id)} · ${esc(st.name)}${entry ? ' (per source entry)' : ''}</div>`;
+    if (entry) { crit += `<div class="crow"><span class="st ${e.S0_episode_status}">${mark(e.S0_episode_status)}</span><span>Entries used: <span class="mono">${esc(e.entries_used || '—')}</span>${e.entries_held_S0 ? `<br>Held: <span class="mono">${esc(e.entries_held_S0)}</span>` : ''}${e.entries_excluded_S0 ? `<br>Excluded: <span class="mono">${esc(e.entries_excluded_S0)}</span>` : ''}</span><span></span></div>`; continue; }
+    for (const crits of E.paths(st)) for (const c of crits) {
+      const v = e[`${st.id}:${c.id}`] || 'n/a';
+      crit += `<div class="crow${E.isGate(c) ? '' : ' flag'}"><span class="st ${v === 'n/a' || v === '' ? 'na' : v}">${mark(v)}</span><span>${esc(c.label || c.id)}${E.isGate(c) ? '' : ' <span class="tag" style="background:var(--sunk);color:var(--muted)">flag</span>'}</span><span class="id">${esc(c.id)}</span></div>`;
+    }
+  }
+  $('inspector').innerHTML = `
+    <div class="head" style="margin:0"><h2>Episode <span class="mono" style="font-size:18px">${esc(e[ep])}</span></h2><span class="pill ${k}${pend ? ' pend' : ''}">${esc(shortLevel(e.level || ''))}${pend ? ' · pending' : ''}</span></div>
+    <p style="margin:0;font-size:13.5px;color:var(--muted)">${esc(whyLine(e))}. ${e.org_size ? 'Size: ' + esc(e.org_size) + '.' : ''} ${e.rounds ? 'Found in: ' + esc(e.rounds) + '.' : ''}</p>
+    <div class="crit">${crit}</div>`;
+}
+
+function renderChecks() {
+  const r = state.result;
+  if (!r) { $('checks').innerHTML = `<div class="stop">${esc(state.stop || '')}</div>`; $('checkCount').textContent = 'run stopped'; return; }
+  const p = state.pii.map((x) => ({ level: 'WARNING', where: `column “${x.column}”`, problem: `Looks like ${x.kind} (${x.count} cell${x.count === 1 ? '' : 's'}). Values are not shown. Replace with codes before use (GDPR / KVKK).` })).concat(r.problems); const ne = p.filter((x) => x.level === 'ERROR').length, nw = p.length - ne;
+  $('checkCount').textContent = `${ne} error${ne === 1 ? '' : 's'} · ${nw} warning${nw === 1 ? '' : 's'}`;
+  $('checks').innerHTML = p.length ? p.map((x) => `<div class="chk"><span class="sev ${x.level}">${x.level}</span><div><div class="where">${esc(x.where)}</div>${esc(x.problem)}</div></div>`).join('') : '<p class="empty">No problems found. Every value is valid and every episode is consistent.</p>';
+}
+
+async function copyText(text, label, btn) {
+  try { await navigator.clipboard.writeText(text); toast(label + ' copied'); }
+  catch { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast(label + ' copied'); } catch { toast('Copy blocked. Select the table manually.'); } ta.remove(); }
+}
+$('copyFunnel').addEventListener('click', () => { const r = state.result; if (!r) return; copyText(['stage\tkind\tcount\tn', ...r.funnel.map((x) => `${x.stage}\t${x.kind}\t${x.count.trim()}\t${x.n}`)].join('\n'), 'Flow'); });
+$('copyEps').addEventListener('click', () => {
+  const r = state.result; if (!r) return; const ep = state.gates.episode_column, st = stagesEp();
+  const head = ['episode', 'level', 'S0', ...st.map((s) => s.id), 'reason'];
+  copyText([head.join('\t'), ...filtered().map((e) => [e[ep], e.level, e.S0_episode_status, ...st.map((s) => e[`${s.id}_status`]), whyLine(e)].join('\t'))].join('\n'), 'Episodes table');
+});
+
+$('seg').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (!b) return; state.filter = b.dataset.f; $('seg').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); renderTable(); });
+$('search').addEventListener('input', (ev) => { state.q = ev.target.value; renderTable(); });
+
+function readSheet(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      let rows;
+      if (/\.csv$/i.test(file.name)) { const wb = XLSX.read(ev.target.result, { type: 'string', raw: true }); rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '', raw: false }); }
+      else { const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' }); rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '', raw: false }); }
+      state.rows = rows; state.pii = PII.scan(rows); state.dataName = file.name; state.demo = false; state.sel = null; run();
+    } catch (e) { state.stop = `Could not read ${file.name}: ${e.message}`; state.result = null; render(); }
+  };
+  if (/\.csv$/i.test(file.name)) reader.readAsText(file); else reader.readAsArrayBuffer(file);
+}
+$('fileSheet').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) readSheet(f); ev.target.value = ''; });
+const drop = $('drop');
+['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (ev) => { ev.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (ev) => { ev.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (ev) => { const f = ev.dataTransfer.files[0]; if (!f) return; if (/\.json$/i.test(f.name)) readGates(f); else readSheet(f); });
+function readGates(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => { try { const g = JSON.parse(ev.target.result); if (!g.stages || !g.id_column) throw new Error('not a ClockBind protocol file'); state.gates = g; state.gatesName = file.name; state.sel = null; run(); } catch (e) { toast('Protocol not loaded: ' + e.message); } };
+  reader.readAsText(file);
+}
+$('btnGates').addEventListener('click', () => $('fileGates').click());
+$('fileGates').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) readGates(f); ev.target.value = ''; });
+$('btnDemo').addEventListener('click', () => { state.gates = DEFAULT_GATES; state.gatesName = 'Built-in protocol v3 (draft)'; state.rows = DEMO_ROWS; state.pii = []; state.dataName = 'ClockBind_SYNTHETIC_demo_v3.xlsx'; state.demo = true; state.sel = null; run(); });
+
+run();
+</script>
+<script>(function(){
+var st=document.getElementById("cb-status"),btn=document.getElementById("cb-install"),sheet=document.getElementById("cb-sheet"),body=document.getElementById("cb-sheet-body"),deferred=null;
+var standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+function show(h){body.innerHTML=h;sheet.classList.add("on");}
+document.getElementById("cb-sheet-close").onclick=function(){sheet.classList.remove("on");};
+sheet.onclick=function(e){if(e.target===sheet)sheet.classList.remove("on");};
+function status(){var ready=navigator.serviceWorker&&navigator.serviceWorker.controller;st.textContent=(navigator.onLine?"Online":"Offline")+(ready?" · ready offline ✓":"");}
+addEventListener("online",status);addEventListener("offline",status);
+if(standalone){btn.style.display="none";}
+addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;});
+btn.onclick=function(){
+ if(deferred){deferred.prompt();deferred.userChoice.finally(function(){deferred=null;});return;}
+ var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+ if(ios){show("<p>In <b>Safari</b>:</p><ol><li>Tap <b>Share</b> (the square with the arrow).</li><li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol><p>The ClockBind icon then opens the app, with or without internet.</p>");}
+ else if(/Safari/.test(navigator.userAgent)&&!/Chrome|Chromium|Edg/.test(navigator.userAgent)){show("<p>In <b>Safari on the Mac</b>: menu <b>File</b> &rarr; <b>Add to Dock</b>.</p><p>Or open this page in Chrome or Edge and press this button again.</p>");}
+ else{show("<p>Use the browser menu: <b>Install ClockBind</b> (Chrome/Edge: the install icon in the address bar, or &#8942; &rarr; <b>Install</b>). On Android: &#8942; &rarr; <b>Add to Home screen</b>.</p>");}
+};
+if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").then(function(reg){try{reg.update();}catch(e){}navigator.serviceWorker.ready.then(function(){setTimeout(status,300);});}).catch(function(){});navigator.serviceWorker.addEventListener("controllerchange",status);});}
+status();
+})();</script>
+
+</body></html>

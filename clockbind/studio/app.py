@@ -16,6 +16,7 @@ from clockbind.analysis.core import data_hash
 
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
 ROOT = Path(__file__).resolve().parents[2]
+from clockbind.resources import resource
 
 st.set_page_config(page_title="ClockBind Studio", page_icon=str(ASSETS / "clockbind-icon-512.png") if (ASSETS / "clockbind-icon-512.png").exists() else None, layout="wide")
 
@@ -23,9 +24,10 @@ from clockbind.analysis.style import BRAND
 _C = {"ink": "#14233A", "accent": "#A4772B", "second": "#2A7A6D", "error": "#B3452A", "muted": "#5C6978", "line": "#D3DADB", "background": "#EEF1F0", **BRAND.get("colors", {})}
 _F = {"display": "Newsreader", "body": "IBM Plex Sans", "mono": "IBM Plex Mono", **BRAND.get("fonts", {})}
 st.markdown(f"<style>:root{{--cb-ink:{_C['ink']};--cb-accent:{_C['accent']};--cb-second:{_C['second']};--cb-bg:{_C['background']};}}</style>", unsafe_allow_html=True)
+from clockbind.fontcss import font_css as _font_css
+st.markdown("<style>" + _font_css("inline") + "</style>", unsafe_allow_html=True)  # fonts bundled: no request to Google
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap');
 html, body, [class*="css"], .stMarkdown, .stText, p, li, label, input, textarea { font-family: "IBM Plex Sans", system-ui, sans-serif; }
 h1, h2, h3 { font-family: "Newsreader", Georgia, serif !important; font-weight: 600 !important; letter-spacing: -0.015em; color: var(--cb-ink); }
 code, pre, .stCode { font-family: "IBM Plex Mono", ui-monospace, monospace !important; }
@@ -45,6 +47,7 @@ ss.setdefault("outputs", [])
 ss.setdefault("df", None)
 ss.setdefault("data_name", None)
 ss.setdefault("labels", {})
+ss.setdefault("pii", [])
 
 
 # ----------------------------------------------------------------- data loading
@@ -74,13 +77,15 @@ with st.sidebar:
     if up is not None and up.name != ss.data_name:
         try:
             ss.df, meta = load_file(up); ss.data_name = up.name; ss.labels = meta
+            from clockbind.privacy import scan_dataframe
+            ss.pii = scan_dataframe(ss.df)
         except Exception as e:
             st.error(f"Could not read the file: {e}")
     if st.button("Load example data (synthetic)"):
-        ss.df = pd.read_csv(ROOT / "validation" / "validation_data.csv") if (ROOT / "validation" / "validation_data.csv").exists() else None
-        ss.data_name = "validation_data.csv (synthetic example)"; ss.labels = {}
+        ss.df = pd.read_csv(resource("validation_data.csv"))
+        ss.data_name = "validation_data.csv (synthetic example)"; ss.labels = {}; ss.pii = []
     if st.button("Run demo analyses"):
-        ss.df = pd.read_csv(ROOT / "validation" / "validation_data.csv"); ss.data_name = "validation_data.csv (synthetic example)"; ss.labels = {}
+        ss.df = pd.read_csv(resource("validation_data.csv")); ss.data_name = "validation_data.csv (synthetic example)"; ss.labels = {}; ss.pii = []
         for n_, p_ in [("descriptives", {"variables": "y,x1", "by": "g2"}), ("t_independent", {"variables": "y", "group": "g2"}),
                        ("regression_linear", {"y": "y", "x": "x1,x2,x3", "categorical": "g2", "se": "CR2", "cluster": "firm"}), ("reliability", {"items": "q1,q2,q3"})]:
             ss.outputs.append(run(n_, ss.df, p_))
@@ -91,6 +96,8 @@ with st.sidebar:
         st.caption(f"**{ss.data_name}**  \n{len(ss.df):,} rows · {ss.df.shape[1]} variables  \nsha256 {data_hash(ss.df)[:12]}")
     st.caption(f"Results in this session: {len(ss.outputs)}")
     st.caption("Data stay on this computer. Use pseudonymised codes.")
+    if ss.df is not None and ss.get("pii"):
+        st.warning("Possible personal data in: " + ", ".join(sorted({x["column"] for x in ss.pii})) + ". See the Data page.")
 
 
 # ----------------------------------------------------------------- rendering
@@ -142,6 +149,11 @@ if page == "Data":
         st.markdown("<div class='cb-card'>Open a data file from the sidebar, or load the synthetic example. Excel, CSV and SPSS (.sav) files are supported. Nothing leaves this computer.</div>", unsafe_allow_html=True)
     else:
         df = ss.df
+        if ss.get("pii"):
+            from clockbind.privacy import ADVICE
+            st.warning(ADVICE)
+            st.dataframe(pd.DataFrame(ss.pii).rename(columns={"column": "Column", "kind": "Looks like", "count": "Cells"}), hide_index=True, width="stretch")
+            st.caption("Only column names and counts are shown. Replace these columns with codes (or drop them) before analysis; keep the code key in a separate, protected file.")
         m = st.columns(4)
         m[0].metric("Rows", f"{len(df):,}"); m[1].metric("Variables", df.shape[1]); m[2].metric("Missing cells", f"{int(df.isna().sum().sum()):,}"); m[3].metric("Complete rows", f"{int(df.dropna().shape[0]):,}")
         t1, t2 = st.tabs(["Data", "Variables"])
@@ -232,13 +244,19 @@ elif page == "Output":
 else:
     st.markdown("<span class='cb-eyebrow'>Cite &amp; validation</span>", unsafe_allow_html=True)
     st.title("How to cite ClockBind")
-    st.markdown(f"<div class='cb-card'>Alavi, S. M. (2026). <i>ClockBind: a reproducible statistics studio for doctoral research</i> (Version {__version__}) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.<b>XXXXXXX</b><br><span class='cb-eyebrow'>Add the DOI after the first Zenodo release. Also cite the libraries listed under each result.</span></div>", unsafe_allow_html=True)
-    v = ROOT / "VALIDATION.md"
-    if v.exists():
+    st.markdown(f"<div class='cb-card'>Alavi, S. M. (2026). <i>ClockBind: a reproducible statistics studio for doctoral research</i> (Version {__version__}) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22989932<br><span class='cb-eyebrow'>Concept DOI (all versions). For a paper, cite the version DOI of the release you used, listed on Zenodo; 1.0.0 is https://doi.org/10.5281/zenodo.22989933. Also cite the libraries listed under each result.</span></div>", unsafe_allow_html=True)
+    try:
+        v = resource("VALIDATION.md")
+    except FileNotFoundError:
+        v = None
+    if v:
         txt = v.read_text(encoding="utf-8")
         ok = "pass" in txt
         st.markdown(txt)
-    a = ROOT / "AI_ASSISTANCE.md"
-    if a.exists():
+    try:
+        a = resource("AI_ASSISTANCE.md")
+    except FileNotFoundError:
+        a = None
+    if a:
         with st.expander("Disclosure of AI assistance"):
             st.markdown(a.read_text(encoding="utf-8"))

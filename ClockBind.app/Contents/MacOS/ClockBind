@@ -1,0 +1,20 @@
+#!/bin/bash
+# ClockBind.app — opens ClockBind Studio in the browser. Runs locally; data never leave this Mac.
+ENV="$HOME/.clockbind-env"
+URL="http://localhost:8501"
+dialog() { osascript -e "display dialog \"$1\" buttons {\"OK\"} default button 1 with title \"ClockBind\" with icon $2" >/dev/null 2>&1; }
+healthy() { curl -s --max-time 2 "$URL/_stcore/health" 2>/dev/null | grep -q ok; }
+if [ ! -x "$ENV/bin/clockbind" ]; then
+  dialog "ClockBind is not installed yet.\n\nIn the unzipped ClockBind folder, open Install_ClockBind_on_Mac.command (first time: right-click → Open). It installs ClockBind and puts this app in your Applications folder." note
+  exit 0
+fi
+if healthy; then open "$URL"; exit 0; fi
+if curl -s --max-time 2 -o /dev/null "$URL"; then
+  dialog "Port 8501 is used by another program. Close it and open ClockBind again." caution; exit 1
+fi
+nohup "$ENV/bin/clockbind" studio open --headless >"$HOME/.clockbind-studio.log" 2>&1 &
+for _ in $(seq 1 180); do
+  if healthy; then open "$URL"; exit 0; fi
+  sleep 0.5
+done
+dialog "ClockBind Studio did not start within 90 seconds. The log is in your home folder: .clockbind-studio.log" caution
