@@ -29,3 +29,15 @@ def font_css(mode: str = "inline", prefix: str = "fonts/") -> str:
         r = f"unicode-range:{rng};" if rng else ""
         out.append(f"@font-face{{font-family:'{fam}';font-style:normal;font-weight:{w};font-display:swap;src:url({src}) format('woff2');{r}}}")
     return "\n".join(out)
+
+
+_ARABIC = "U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC"
+
+
+def persian_font_css() -> str:
+    """Vazirmatn (SIL Open Font Licence) for Persian text, embedded; used by the Studio."""
+    out = []
+    for w in (400, 500, 700):
+        src = "data:font/woff2;base64," + base64.b64encode((FONT_DIR / f"Vazirmatn-arabic-{w}.woff2").read_bytes()).decode()
+        out.append(f"@font-face{{font-family:'Vazirmatn';font-style:normal;font-weight:{w};font-display:swap;src:url({src}) format('woff2');unicode-range:{_ARABIC};}}")
+    return "\n".join(out)

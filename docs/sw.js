@@ -1,7 +1,7 @@
 // ClockBind offline service worker. VERSION and FILES are filled in by webapp/build.py (content hash),
 // so every new release replaces the cache automatically.
-const VERSION = "clockbind-1.0.1-b256782668";
-const FILES = ["./", "fonts/IBMPlexMono-Medium.woff2", "fonts/IBMPlexMono-Regular.woff2", "fonts/IBMPlexSans-Medium.woff2", "fonts/IBMPlexSans-Regular.woff2", "fonts/IBMPlexSans-SemiBold.woff2", "fonts/LICENSE-IBM-Plex.txt", "fonts/LICENSE-Newsreader.txt", "fonts/Newsreader-latin-ext.woff2", "fonts/Newsreader-latin.woff2", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "xlsx.full.min.js"];
+const VERSION = "clockbind-1.2.0-d44e2cc1b7";
+const FILES = ["./", "fonts/IBMPlexMono-Medium.woff2", "fonts/IBMPlexMono-Regular.woff2", "fonts/IBMPlexSans-Medium.woff2", "fonts/IBMPlexSans-Regular.woff2", "fonts/IBMPlexSans-SemiBold.woff2", "fonts/LICENSE-IBM-Plex.txt", "fonts/LICENSE-Newsreader.txt", "fonts/LICENSE-Vazirmatn.txt", "fonts/Newsreader-latin-ext.woff2", "fonts/Newsreader-latin.woff2", "fonts/Vazirmatn-arabic-400.woff2", "fonts/Vazirmatn-arabic-500.woff2", "fonts/Vazirmatn-arabic-700.woff2", "icon-180.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "xlsx.full.min.js"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(FILES.map((f) => new Request(f, { cache: "reload" })))));
   self.skipWaiting();

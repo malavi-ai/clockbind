@@ -40,7 +40,39 @@ code, pre, .stCode { font-family: "IBM Plex Mono", ui-monospace, monospace !impo
 .cb-pill.ok { background: #DCEEEA; color: #2A7A6D; }
 .cb-pill.warn { background: #F7E1DA; color: #B3452A; }
 div[data-testid="stMetricValue"] { font-family: "Newsreader", Georgia, serif; font-weight: 600; }
+.block-container { padding-top: 2.2rem; max-width: 1240px; }
+[data-testid="stSidebar"] { background: linear-gradient(180deg, #14233A 0%, #101C2F 100%); }
+.stButton > button, .stDownloadButton > button { border-radius: 10px; font-weight: 500; transition: transform .15s, box-shadow .15s; }
+.stButton > button:hover, .stDownloadButton > button:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -12px rgba(20,35,58,.45); }
+.stButton > button[kind="primary"] { background: linear-gradient(180deg, #C99A45, #A4772B); border: 0; color: #14233A; font-weight: 600; }
+div[data-testid="stVerticalBlockBorderWrapper"] { border-radius: 16px !important; box-shadow: 0 1px 1px rgba(20,35,58,.04), 0 18px 40px -22px rgba(20,35,58,.22); background: #fff; }
+.cb-hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+.cb-hero h1 { margin: 4px 0 0 !important; }
+.cb-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 10px 0 18px; }
+@media (max-width: 900px) { .cb-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.cb-stat { position: relative; background: #fff; border: 1px solid #D5DCE1; border-radius: 12px; padding: 12px 14px 12px 18px; overflow: hidden; }
+.cb-stat::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: #8A96A3; }
+.cb-stat.ok::before { background: #2A7A6D; } .cb-stat.warn::before { background: #8C6410; } .cb-stat.bad::before { background: #B3452A; } .cb-stat.gold::before { background: linear-gradient(#C99A45, #A4772B); }
+.cb-stat .k { font: 500 11px/1.2 "IBM Plex Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #5A6778; }
+.cb-stat .v { font: 600 22px/1.2 "Newsreader", Georgia, serif; color: #14233A; }
+.cb-note { font-size: 13px; color: #5A6778; }
 </style>""", unsafe_allow_html=True)
+
+# ----------------------------------------------------------------- shell: profile, language, home and research tasks
+from clockbind.studio import shell as _shell
+from clockbind.fontcss import persian_font_css as _fa_css
+st.markdown("<style>" + _fa_css() + "</style>", unsafe_allow_html=True)
+st.markdown(_shell.css(_shell.lang()), unsafe_allow_html=True)
+_profile = _shell.gate()
+if _profile is None:
+    st.stop()
+st.markdown(_shell.css(_shell.lang()), unsafe_allow_html=True)  # language may have changed with the profile
+_pg = _shell.topbar(_profile)
+_PAGES = {"home": _shell.page_home, "check": _shell.page_check, "clock": _shell.page_clock, "privacy": _shell.page_privacy,
+          "reports": _shell.page_reports, "settings": _shell.page_settings}
+if _pg in _PAGES:
+    _PAGES[_pg](_profile)
+    st.stop()
 
 ss = st.session_state
 ss.setdefault("outputs", [])
@@ -230,21 +262,154 @@ elif page == "Output":
     if not ss.outputs:
         st.markdown("<div class='cb-card'>Results appear here as you run analyses. Export them as a Word document, or save the syntax file to re-run everything later with <code>clockbind syntax run</code>.</div>", unsafe_allow_html=True)
     else:
-        b = st.columns([1, 1, 1, 3])
+        b = st.columns([1, 1, 1, 1, 2])
         buf = io.BytesIO()
         tmp = Path("/tmp") / "clockbind_output.docx"
         outputs_to_docx(ss.outputs, tmp, title=f"ClockBind output — {ss.data_name or ''}")
         b[0].download_button("Word (.docx)", tmp.read_bytes(), file_name=f"ClockBind_output_{_dt.date.today()}.docx")
-        b[1].download_button("Syntax (.json)", syntax_file(ss.outputs), file_name=f"ClockBind_syntax_{_dt.date.today()}.json")
-        if b[2].button("Clear all"):
+        from clockbind.pdfreport import outputs_to_pdf
+        pdf = io.BytesIO()
+        outputs_to_pdf(ss.outputs, pdf, title=f"ClockBind output: {ss.data_name or ''}")
+        b[1].download_button("PDF report", pdf.getvalue(), file_name=f"ClockBind_output_{_dt.date.today()}.pdf", mime="application/pdf")
+        b[2].download_button("Syntax (.json)", syntax_file(ss.outputs), file_name=f"ClockBind_syntax_{_dt.date.today()}.json")
+        if b[3].button("Clear all"):
             ss.outputs = []; st.rerun()
         for i, o in list(enumerate(ss.outputs))[::-1]:
             show_output(o, i)
 
+elif page == "Research checks":
+    import tempfile
+    from clockbind.workbook_check import check_workbook
+    from clockbind.binding import evaluate_all
+
+    st.markdown("<div class='cb-hero'><div><span class='cb-eyebrow'>Bridge study · integrity before analysis</span><h1>Research checks</h1></div>"
+                "<span class='cb-pill ok'>Files stay on this computer</span></div>", unsafe_allow_html=True)
+
+    def _stats(cards):
+        st.markdown("<div class='cb-stats'>" + "".join(f"<div class='cb-stat {c}'><div class='k'>{k}</div><div class='v'>{v}</div></div>" for c, k, v in cards) + "</div>", unsafe_allow_html=True)
+
+    def _xlsx(df):
+        b = io.BytesIO()
+        df.to_excel(b, index=False)
+        return b.getvalue()
+
+    def _tmp(up):
+        f = tempfile.NamedTemporaryFile(delete=False, suffix=Path(up.name).suffix)
+        f.write(up.getvalue()); f.close()
+        return f.name
+
+    t1, t2, t3 = st.tabs(["Validate workbook", "Which clock binds?", "Personal-data scan"])
+    # results are kept in the session, so a download click (which reruns the page) does not clear them
+    with t1:
+        with st.container(border=True):
+            st.markdown("Checks formulas, uncalculated cells, entries outside dropdown lists, links between sheets, override logs, "
+                        "verdict consistency and personal data. It reports locations only.")
+            wb = st.file_uploader("Screening workbook (.xlsx)", type=["xlsx"], key="wb_check")
+            if wb is not None and st.button("Validate workbook", type="primary", key="btn_wb"):
+                with st.spinner("Checking every sheet…"):
+                    try:
+                        rep = check_workbook(_tmp(wb))
+                        df = rep.frame()
+                        from clockbind.pdfreport import build_pdf
+                        nf, nw, npass = rep.count("FAIL"), rep.count("WARN"), rep.count("PASS")
+                        show = df[df["level"].isin(["FAIL", "WARN"])]
+                        pdf = io.BytesIO()
+                        build_pdf(pdf, "Workbook integrity check", [("kv", [("FAIL", nf), ("WARN", nw), ("PASS", npass)]),
+                                  ("h", "Problems to fix"), ("table", show if len(show) else None, "Locations only; cell contents are never shown."),
+                                  ("h", "All checks"), ("table", df)], subtitle=wb.name)
+                        ss.rc_wb = {"name": wb.name, "df": df, "counts": (nf, nw, npass), "pdf": pdf.getvalue()}
+                    except Exception as e:
+                        ss.rc_wb = {"error": f"The file could not be checked ({type(e).__name__}: {e}). Open it in Excel, save it as .xlsx and retry."}
+            r = ss.get("rc_wb")
+            if r and "error" in r:
+                st.error(r["error"])
+            elif r:
+                nf, nw, npass = r["counts"]
+                _stats([("bad" if nf else "ok", "Fail", nf), ("warn" if nw else "ok", "Warn", nw), ("ok", "Pass", npass), ("gold", "Workbook", r["name"][:18] + ("…" if len(r["name"]) > 18 else ""))])
+                show = r["df"][r["df"]["level"].isin(["FAIL", "WARN"])]
+                if len(show):
+                    st.dataframe(show, width="stretch", hide_index=True)
+                else:
+                    st.success("Nothing to fix: every check passed.")
+                with st.expander("All checks, including notes on archived sheets"):
+                    st.dataframe(r["df"], width="stretch", hide_index=True)
+                d1, d2, _ = st.columns([1, 1, 3])
+                d1.download_button("PDF report", r["pdf"], file_name="workbook_check.pdf", mime="application/pdf", key="dl_wb_pdf")
+                d2.download_button("CSV", r["df"].to_csv(index=False).encode("utf-8"), file_name="workbook_check.csv", key="dl_wb_csv")
+    with t2:
+        with st.container(border=True):
+            st.markdown("Counterfactual critical path with ex-ante durations. Verdicts are computed at the earliest and latest date bounds; "
+                        "if they differ, the episode is **Indeterminate** (sign-stability rule).")
+            tl = st.file_uploader("Timeline workbook (sheets Episodes and Steps)", type=["xlsx"], key="tl")
+            c1, c2, _ = st.columns([1, 1, 2])
+            run_tl = c1.button("Compute verdicts", type="primary", key="btn_tl", disabled=tl is None)
+            import contextlib as _cl
+            from clockbind.plugins.binding import cmd_template
+            buf = io.BytesIO()
+            class _A: pass
+            _a = _A(); _a.output = buf
+            with _cl.redirect_stdout(io.StringIO()):
+                cmd_template(_a)
+            c2.download_button("Blank timeline template", buf.getvalue(), file_name="timeline_template.xlsx", key="dl_tpl")
+            if tl is not None and run_tl:
+                try:
+                    x = pd.read_excel(tl, sheet_name=None, dtype=object)
+                    low = {k.strip().lower(): v for k, v in x.items()}
+                    if "episodes" not in low or "steps" not in low:
+                        raise ValueError("the workbook needs two sheets named Episodes and Steps; download the template to see the layout")
+                    res = evaluate_all(low["episodes"], low["steps"])
+                    vc = res["verdict"].value_counts() if len(res) else pd.Series(dtype=int)
+                    from clockbind.pdfreport import build_pdf
+                    pdf = io.BytesIO()
+                    cols = [c for c in ["episode", "verdict", "binding_clocks", "sign_stable", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
+                    build_pdf(pdf, "Which clock binds?", [("h", "Verdicts"), ("table", vc.rename_axis("verdict").reset_index(name="episodes")),
+                              ("h", "Per episode"), ("table", res[cols])], subtitle=tl.name, landscape_pages=True)
+                    ss.rc_tl = {"name": tl.name, "res": res, "pdf": pdf.getvalue()}
+                except Exception as e:
+                    ss.rc_tl = {"error": f"Verdicts could not be computed: {e}"}
+            r = ss.get("rc_tl")
+            if r and "error" in r:
+                st.error(r["error"])
+            elif r:
+                res = r["res"]
+                vc = res["verdict"].value_counts() if len(res) else pd.Series(dtype=int)
+                fin = int(vc.get("Finance-binding", 0)); ind = int(vc.get("Indeterminate", 0)); nb = int(vc.get("Non-binding", 0))
+                _stats([("gold", "Episodes", len(res)), ("warn" if fin else "ok", "Finance-binding", fin),
+                        ("ok", "Other verdicts", int(len(res) - fin - ind - nb)), ("warn" if ind else "ok", "Indeterminate", ind)])
+                st.dataframe(res, width="stretch", hide_index=True)
+                d1, d2, _ = st.columns([1, 1, 3])
+                d1.download_button("PDF report", r["pdf"], file_name="binding_verdicts.pdf", mime="application/pdf", key="dl_tl_pdf")
+                d2.download_button("Excel", _xlsx(res), file_name="binding_verdicts.xlsx", key="dl_tl_xlsx")
+                st.caption("Verdicts apply the registered rule. The researcher records them in the assessment sheet; any override needs a reason and date.")
+    with t3:
+        with st.container(border=True):
+            st.markdown("GDPR / KVKK aid. Looks for e-mails, phone numbers, IBANs, card numbers, Turkish ID numbers, Hungarian tax IDs and "
+                        "name-like columns in every sheet. Values are never shown.")
+            pf = st.file_uploader("Data file (.xlsx, .csv)", type=["xlsx", "csv"], key="pii_file")
+            if pf is not None and st.button("Scan for personal data", type="primary", key="btn_pii"):
+                try:
+                    from clockbind.privacy import scan_dataframe
+                    from clockbind.plugins.privacy import _read as _read_all
+                    sheets = _read_all(_tmp(pf))
+                    found = [{"sheet": name, **f} for name, d in sheets.items() for f in scan_dataframe(d)]
+                    ss.rc_pii = {"name": pf.name, "found": found, "n": len(sheets)}
+                except Exception as e:
+                    ss.rc_pii = {"error": f"The file could not be read ({type(e).__name__}: {e})."}
+            r = ss.get("rc_pii")
+            if r and "error" in r:
+                st.error(r["error"])
+            elif r:
+                _stats([("bad" if r["found"] else "ok", "Findings", len(r["found"])), ("ok", "Sheets scanned", r["n"]), ("gold", "File", r["name"][:22]), ("ok", "Values shown", "None")])
+                if r["found"]:
+                    st.dataframe(pd.DataFrame(r["found"]), width="stretch", hide_index=True)
+                    st.warning("Replace these columns with pseudonymised codes before analysis or sharing.")
+                else:
+                    st.success("No personal-data patterns found. This does not prove the file is anonymous.")
+
 else:
     st.markdown("<span class='cb-eyebrow'>Cite &amp; validation</span>", unsafe_allow_html=True)
     st.title("How to cite ClockBind")
-    st.markdown(f"<div class='cb-card'>Alavi, S. M. (2026). <i>ClockBind: a reproducible statistics studio for doctoral research</i> (Version {__version__}) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22989932<br><span class='cb-eyebrow'>Concept DOI (all versions). For a paper, cite the version DOI of the release you used, listed on Zenodo; 1.0.0 is https://doi.org/10.5281/zenodo.22989933. Also cite the libraries listed under each result.</span></div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='cb-card'>Alavi, S. M. (2026). <i>ClockBind: a reproducible statistics studio for doctoral research</i> (Version {__version__}) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22989932<br><span class='cb-eyebrow'>Concept DOI (all versions). For a paper, cite the version DOI of the release you used, listed on Zenodo; 1.0.1 is https://doi.org/10.5281/zenodo.22992952. Also cite the libraries listed under each result.</span></div>", unsafe_allow_html=True)
     try:
         v = resource("VALIDATION.md")
     except FileNotFoundError:

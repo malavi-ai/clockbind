@@ -96,7 +96,8 @@ def _norm(x: str) -> str:
     return re.sub(r"[_\-.]+", " ", str(x)).strip().lower()
 
 
-CODES = {"y", "n", "u", "yes", "no", "unknown", "true", "false", "pass", "fail", "hold", "na", "n/a", "none", "missing", "other"}
+CODES = {"y", "n", "u", "yes", "no", "unknown", "true", "false", "pass", "fail", "hold", "held", "na", "n/a", "none", "missing", "other",
+         "pending", "human pending", "user decision", "not documented", "not reviewed", "complete", "completed", "not applicable"}
 
 
 def header_hint(col: str) -> bool:

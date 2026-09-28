@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clockbind"
-version = "1.0.1"
-description = "ClockBind: reproducible statistics studio for doctoral research — screening, descriptive and inferential statistics, regression with cluster-robust inference, reliability, factor analysis, overlap weighting and conjoint analysis, with provenance and validation against R."
+version = "1.2.0"
+description = "ClockBind: reproducible statistics studio for doctoral research — screening, descriptive and inferential statistics, regression with cluster-robust inference, reliability, factor analysis, overlap weighting and conjoint analysis, which-clock-binds verdicts and workbook validation, with provenance, validation against R and a local MCP server for chat apps."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Seyed Mehdi Alavi"}]
 requires-python = ">=3.9"
-dependencies = ["numpy", "pandas", "scipy", "statsmodels", "openpyxl", "matplotlib", "python-docx", "factor_analyzer", "tabulate"]
+dependencies = ["numpy", "pandas", "scipy", "statsmodels", "openpyxl", "matplotlib", "python-docx", "factor_analyzer", "tabulate", "reportlab>=3.6"]
 
 [project.urls]
 Homepage = "https://github.com/malavi-ai/clockbind"
@@ -19,12 +19,14 @@ Source = "https://github.com/malavi-ai/clockbind"
 [project.optional-dependencies]
 spss = ["pyreadstat"]
 studio = ["streamlit"]
-test = ["pytest"]
-all = ["pyreadstat", "streamlit", "pytest"]
+mcp = ["mcp>=1.2,<2; python_version >= '3.10'"]
+test = ["pytest", "mcp>=1.2,<2; python_version >= '3.10'"]
+all = ["pyreadstat", "streamlit", "pytest", "mcp>=1.2,<2; python_version >= '3.10'"]
 
 [project.scripts]
 clockbind = "clockbind.cli:main"
 phdstat = "clockbind.cli:main"
+clockbind-mcp = "clockbind.mcp_server:main"
 
 [tool.setuptools.packages.find]
 include = ["clockbind*"]

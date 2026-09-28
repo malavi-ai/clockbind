@@ -69,7 +69,9 @@ def build():
     (ROOT / "clockbind" / "assets" / "ClockBind.html").write_text(single, encoding="utf-8")
     # 2) artifact fragment (claude.ai wraps it; cdnjs is allowed there)
     (W / "dist").mkdir(exist_ok=True)
-    frag = "<title>ClockBind</title>\n<style>" + font_css("inline") + "</style>\n" + body().replace("<!--__HEAD__-->", CDN)
+    # downloads and printing are blocked inside the claude.ai viewer, so export buttons are hidden there
+    frag = ("<title>ClockBind</title>\n<style>" + font_css("inline") + ".exp{display:none!important}</style>\n"
+            + body().replace("<!--__HEAD__-->", CDN))
     (W / "dist" / "artifact.html").write_text(frag, encoding="utf-8")
     # 3) PWA in docs/
     D = ROOT / "docs"

@@ -232,6 +232,8 @@ def test_privacy_scan_detects_and_ignores():
     assert not any(c in ("episode_id", "amount") for c, _ in cols)
     coded = pd.DataFrame({"company": ["Company A", "Company B", "Company C", "Company D", "Company E"]})
     assert scan_dataframe(coded) == []  # pseudonymous codes are not flagged
+    status = pd.DataFrame({"customer-side date has outside source?": ["HUMAN PENDING"] * 6, "Decision owner": ["USER DECISION", "Not documented", "PENDING", "Held", "COMPLETE", "N/A"]})
+    assert scan_dataframe(status) == []  # status labels are not personal data
     assert all(set(x) == {"column", "kind", "count"} for x in f)  # never returns values
 
 
@@ -258,3 +260,19 @@ def test_bundled_copies_match_originals():
     from clockbind.resources import BUNDLED, PKG, ROOT
     for name, rel in BUNDLED.items():
         assert (PKG / "data" / name).read_bytes() == (ROOT / rel).read_bytes(), f"clockbind/data/{name} is stale: run python webapp/build.py"
+
+
+def test_outside_episode_with_placeholder_criteria_gives_no_error():
+    """One row per episode, criteria still PENDING, access refused -> Outside, and no 'coded only on excluded entries' error."""
+    import json
+    from pathlib import Path
+    import pandas as pd
+    from clockbind.plugins.screen import apply_gates
+    g = json.loads((Path(__file__).resolve().parents[1] / "examples" / "screening" / "gates_v3.3_DRAFT.json").read_text(encoding="utf-8"))
+    cols = {c["column"] for st in g["stages"] for c in st["criteria"]}
+    row = {c: "PENDING" for c in cols}
+    row.update({"Episode ID": "T01", "Source code": "S01", "Episode extraction complete?": "COMPLETE", "Original docs checked?": "Yes",
+                "Access cleared?": "No", "Organisational episode?": "Yes", "Archive-window eligible?": "Yes"})
+    _, eps, probs = apply_gates(pd.DataFrame([row]).astype(str), g)
+    assert eps.iloc[0]["level"].startswith("Outside")
+    assert not (probs["level"] == "ERROR").any(), probs.to_string()

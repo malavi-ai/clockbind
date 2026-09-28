@@ -13,8 +13,24 @@ fi
 if [ ! -f "$PKG/pyproject.toml" ] || [ ! -d "$PKG/clockbind" ]; then
   echo "This installer must stay inside the unzipped ClockBind folder."; read -n 1; exit 1
 fi
+# Use the newest Python 3 on this Mac (3.10 or later is needed for the chat tools; Apple's built-in 3.9 still runs the rest).
+PY=python3
+for cand in /opt/homebrew/bin/python3 /usr/local/bin/python3 /Library/Frameworks/Python.framework/Versions/Current/bin/python3 \
+            /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11 /usr/local/bin/python3.10; do
+  if [ -x "$cand" ] && "$cand" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; then PY="$cand"; break; fi
+done
+PYV=$("$PY" -c 'import sys; print("%d.%d" % sys.version_info[:2])')
+echo "Using Python $PYV ($PY)"
+if ! "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)'; then
+  echo "Note: the chat tools (Claude Desktop) need Python 3.10 or later. Everything else works with $PYV."
+  echo "      For the chat tools, install Python from https://www.python.org/downloads/ and run this installer again."
+fi
+# a previous environment made with another Python version is replaced
+if [ -x "$HOME/.clockbind-env/bin/python" ] && [ "$("$HOME/.clockbind-env/bin/python" -c 'import sys; print("%d.%d" % sys.version_info[:2])')" != "$PYV" ]; then
+  rm -rf "$HOME/.clockbind-env"
+fi
 echo "Installing (this can take a few minutes)…"
-python3 -m venv "$HOME/.clockbind-env" \
+"$PY" -m venv "$HOME/.clockbind-env" \
   && "$HOME/.clockbind-env/bin/python" -m pip install --upgrade pip >/dev/null \
   && "$HOME/.clockbind-env/bin/python" -m pip install --upgrade "${PKG}[all]" \
   || { echo ""; echo "Installation failed. Send a screenshot of this window."; read -n 1; exit 1; }
@@ -28,6 +44,15 @@ if [ -d "$PKG/ClockBind.app" ]; then
   xattr -dr com.apple.quarantine "$HOME/Applications/ClockBind.app" 2>/dev/null
   chmod +x "$HOME/Applications/ClockBind.app/Contents/MacOS/ClockBind"
   APP_MSG="ClockBind is now in your Applications folder (Finder → Go → Home → Applications). Drag it to the Dock for a one-click button."
+fi
+# Optional: connect ClockBind to Claude Desktop as a local tool server (a backup of the config is kept).
+if "$HOME/.clockbind-env/bin/python" -c "import mcp" 2>/dev/null && { [ -d "/Applications/Claude.app" ] || [ -d "$HOME/Applications/Claude.app" ] || [ -d "$HOME/Library/Application Support/Claude" ]; }; then
+  echo ""
+  read -r -p "Connect ClockBind to Claude Desktop, so its tools appear in your chats? [y/N] " ANSWER
+  case "$ANSWER" in
+    [yY]*) "$HOME/.clockbind-env/bin/clockbind" connect claude-desktop ;;
+    *) echo "Skipped. You can do it later with:  clockbind connect claude-desktop" ;;
+  esac
 fi
 echo ""
 echo "Done. $("$HOME/.clockbind-env/bin/clockbind" --version 2>/dev/null) is installed."

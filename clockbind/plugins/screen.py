@@ -296,8 +296,10 @@ def apply_gates(df: pd.DataFrame, g: dict):
             r["rounds"] = ";".join(sorted(set(grp[g["round_column"]]) - {""}))
         for c in ep_cols:
             vals = sorted(set(usable[c]) - {""}) if c in usable else []
-            dropped = sorted(set(grp.loc[grp["_entry_state"] == FAIL, c]) - {""}) if c in grp else []
-            if dropped and not vals:
+            placeholders = {str(x) for x in g.get("values", {}).get("unknown", [])}
+            dropped = sorted(set(grp.loc[grp["_entry_state"] == FAIL, c]) - {""} - placeholders) if c in grp else []
+            # only a problem when the episode keeps other entries; an episode excluded as a whole simply sits outside
+            if dropped and not vals and len(usable):
                 problems.append({"level": "ERROR", "where": str(eid), "problem": f"'{c}' is coded only on entries excluded at Stage 0 ({r['entries_excluded_S0']}); move it to a retained entry"})
             if len(vals) > 1:
                 problems.append({"level": "ERROR", "where": str(eid), "problem": f"Conflicting values for '{c}' across entries: {vals} (episode held on this criterion)"})
@@ -524,6 +526,33 @@ def cmd_run(a):
         md = run.path("funnel.md")
         md.write_text(fun.to_markdown(index=False) + f"\n\nChecks: {n_err} errors, {int((probs['level'] == 'WARN').sum())} warnings. Citable: {citable}\n", encoding="utf-8")
         run.add_output(md)
+        try:
+            import matplotlib
+            matplotlib.use("Agg")
+            import matplotlib.pyplot as plt
+            main = fun[fun["kind"].isin(["main", "level"])]
+            fig, ax = plt.subplots(figsize=(8, 0.42 * len(main) + 0.8))
+            cols = ["#A4772B" if "Level 3" in str(c) else "#2A7A6D" if "Level 2" in str(c) else "#5A7696" if "Level 1" in str(c) else "#14233A" for c in main["count"]]
+            ax.barh(range(len(main))[::-1], main["n"], color=cols)
+            ax.set_yticks(range(len(main))[::-1], [str(c).strip()[:60] for c in main["count"]], fontsize=8)
+            for i, v in zip(range(len(main))[::-1], main["n"]):
+                ax.text(v, i, f" {v}", va="center", fontsize=8)
+            ax.spines[["top", "right"]].set_visible(False)
+            ax.set_xlabel("n")
+            fig.tight_layout()
+        except Exception:
+            fig = None
+        from ..pdfreport import add_pdf
+        lv = eps["level"].value_counts().rename_axis("level").reset_index(name="episodes") if "level" in eps.columns else None
+        add_pdf(run, "screening_report.pdf", "Screening result", [
+            ("kv", [("Status", "CITABLE" if citable else "NOT CITABLE (draft gates and/or errors)"),
+                    ("Protocol", f"{g['protocol_version']} · sha256 {h[:16]}"), ("Data sha256", sha256_file(a.data)[:16]),
+                    ("Errors / warnings", f"{n_err} / {int((probs['level'] == 'WARN').sum())}")]),
+            ("h", "Screening flow"), *([("image", fig)] if fig is not None else []), ("table", fun[["stage", "count", "n"]]),
+            ("h", "Episodes by level"), ("table", lv),
+            ("h", "Checks"), ("table", probs if len(probs) else None)], subtitle=Path(a.data).name)
+        if fig is not None:
+            plt.close(fig)
         append_ledger(a.out, {"time": _dt.datetime.now().isoformat(timespec="seconds"), "run_folder": str(run.dir), "data": str(Path(a.data).resolve()),
                               "data_sha256": sha256_file(a.data), "gates_version": g["protocol_version"], "gates_sha256": h, "citable": citable,
                               "counts": {r["count"].strip(): r["n"] for _, r in fun.iterrows() if r["kind"] in ("main", "level")}})

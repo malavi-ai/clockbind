@@ -13,6 +13,7 @@ BUNDLED = {  # name -> original location in the repository
     "validation_data.csv": "validation/validation_data.csv",
     "conjoint_synthetic.csv": "examples/conjoint_synthetic.csv",
     "gates_v3_DRAFT.json": "examples/screening/gates_v3_DRAFT.json",
+    "gates_v3.3_DRAFT.json": "examples/screening/gates_v3.3_DRAFT.json",
     "VALIDATION.md": "VALIDATION.md",
     "AI_ASSISTANCE.md": "AI_ASSISTANCE.md",
     "PRIVACY.md": "PRIVACY.md",

@@ -9,19 +9,23 @@ from ..core.plugin import Plugin
 from ..privacy import ADVICE, scan_dataframe
 
 
-def _read(path: str) -> pd.DataFrame:
+def _read(path: str) -> dict:
+    """All sheets of a workbook (every sheet is scanned), or the single table of a CSV/SPSS file."""
     p = Path(path)
     if p.suffix.lower() in (".xlsx", ".xlsm", ".xls"):
-        return pd.read_excel(p, dtype=str)
+        return pd.read_excel(p, dtype=str, sheet_name=None)
     if p.suffix.lower() == ".sav":
         import pyreadstat
         df, _ = pyreadstat.read_sav(str(p))
-        return df
-    return pd.read_csv(p, dtype=str, keep_default_na=False)
+        return {p.name: df}
+    return {p.name: pd.read_csv(p, dtype=str, keep_default_na=False)}
 
 
 def cmd_scan(a):
-    f = scan_dataframe(_read(a.data))
+    f = []
+    for sheet, df in _read(a.data).items():
+        for x in scan_dataframe(df):
+            f.append({**x, "column": f"{sheet} › {x['column']}" if len(sheet) else x["column"]})
     if not f:
         print("No personal-data patterns found. (This does not prove the file is anonymous.)")
         return 0

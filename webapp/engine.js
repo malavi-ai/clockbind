@@ -194,8 +194,9 @@
       if (g.round_column && columns.includes(g.round_column)) r.rounds = sortedSet(grp.map((x) => x[g.round_column])).join(';');
       for (const c of epCols) {
         const v = sortedSet(usable.map((x) => x[c] || ''));
-        const dropped = sortedSet(excl.map((x) => x[c] || ''));
-        if (dropped.length && !v.length) problems.push({ level: 'ERROR', where: eid, problem: `'${c}' is coded only on entries excluded at Stage 0 (${r.entries_excluded_S0}); move it to a retained entry` });
+        const ph = new Set(((g.values || {}).unknown || []).map(String));
+        const dropped = sortedSet(excl.map((x) => x[c] || '')).filter((x) => !ph.has(x));
+        if (dropped.length && !v.length && usable.length) problems.push({ level: 'ERROR', where: eid, problem: `'${c}' is coded only on entries excluded at Stage 0 (${r.entries_excluded_S0}); move it to a retained entry` });
         if (v.length > 1) problems.push({ level: 'ERROR', where: eid, problem: `Conflicting values for '${c}' across entries: ${pyList(v)} (episode held on this criterion)` });
         r[c] = v.length === 1 ? v[0] : (!v.length ? '' : CONFLICT);
       }

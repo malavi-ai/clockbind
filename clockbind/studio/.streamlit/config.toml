@@ -12,3 +12,6 @@ address = "localhost"
 
 [browser]
 gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"
