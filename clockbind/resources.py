@@ -14,6 +14,8 @@ BUNDLED = {  # name -> original location in the repository
     "conjoint_synthetic.csv": "examples/conjoint_synthetic.csv",
     "gates_v3_DRAFT.json": "examples/screening/gates_v3_DRAFT.json",
     "gates_v3.3_DRAFT.json": "examples/screening/gates_v3.3_DRAFT.json",
+    "gates_v3.4_DRAFT.json": "examples/screening/gates_v3.4_DRAFT.json",
+    "bridge_terms_2026-09-28.json": "examples/screening/bridge_terms_2026-09-28.json",
     "VALIDATION.md": "VALIDATION.md",
     "AI_ASSISTANCE.md": "AI_ASSISTANCE.md",
     "PRIVACY.md": "PRIVACY.md",

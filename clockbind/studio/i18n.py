@@ -7,11 +7,17 @@ RTL = {"fa"}
 T = {
     # navigation
     "nav_home": {"en": "Home", "hu": "Kezdőlap", "fa": "خانه"},
+    "nav_doctoral": {"en": "Doctoral Programme", "hu": "Doktori program", "fa": "برنامه دکتری"},
     "nav_bridge": {"en": "Bridge", "hu": "Bridge", "fa": "Bridge"},
     "nav_reports": {"en": "Reports", "hu": "Jelentések", "fa": "گزارش‌ها"},
     "nav_stats": {"en": "Statistics", "hu": "Statisztika", "fa": "آمار"},
     "nav_settings": {"en": "Settings", "hu": "Beállítások", "fa": "تنظیمات"},
-    "brand_sub": {"en": "Research assistant · Bridge study", "hu": "Kutatási asszisztens · Bridge-vizsgálat", "fa": "دستیار پژوهش · مطالعه‌ی Bridge"},
+    "nav_document_audit": {"en": "Document Audit", "hu": "Dokumentum-audit", "fa": "ممیزی اسناد"},
+    "nav_privacy": {"en": "Privacy", "hu": "Adatvédelem", "fa": "حریم خصوصی"},
+    "nav_reproducibility": {"en": "Reproducibility", "hu": "Reprodukálhatóság", "fa": "بازتولیدپذیری"},
+    "nav_publication": {"en": "Publication", "hu": "Publikáció", "fa": "انتشار و پیش‌ثبت"},
+    "workspace": {"en": "Research workspace", "hu": "Kutatási munkatér", "fa": "محیط پژوهش"},
+    "brand_sub": {"en": "Doctoral research operating system", "hu": "Doktori kutatási rendszer", "fa": "سیستم پژوهشی دوره دکتری"},
     # profiles
     "who": {"en": "Who is using ClockBind?", "hu": "Ki használja a ClockBindot?", "fa": "چه کسی از ClockBind استفاده می‌کند؟"},
     "who_sub": {"en": "Profiles stay on this computer. No password, no online account.",
@@ -54,9 +60,9 @@ T = {
             "hu": "Adja meg egy epizód idővonalát, és megkapja a regisztrált szabály szerinti ítéletet.",
             "fa": "خط زمانی یک رویداد را وارد کنید و حکم را طبق قانون ثبت‌شده بگیرید."},
     "k3": {"en": "Any personal data?", "hu": "Van személyes adat?", "fa": "داده‌ی شخصی دارد؟"},
-    "k3d": {"en": "Finds names, e-mails, phones, IBANs and ID numbers. Values are never shown.",
-            "hu": "Neveket, e-maileket, telefonszámokat, IBAN-okat és azonosítókat keres. Az értékeket soha nem mutatja.",
-            "fa": "نام، ایمیل، تلفن، IBAN و کد ملی را پیدا می‌کند. خود داده‌ها هرگز نمایش داده نمی‌شوند."},
+    "k3d": {"en": "Checks workbooks and documents for names, e-mails, phones, IBANs, ID numbers, amounts and outdated wording. All on this computer; values are never shown.",
+            "hu": "Munkafüzetekben és dokumentumokban keres neveket, e-maileket, telefonszámokat, IBAN-okat, azonosítókat, összegeket és elavult megfogalmazást. Minden ezen a gépen történik; az értékeket soha nem mutatja.",
+            "fa": "ورک‌بوک‌ها و سندها را برای نام، ایمیل، تلفن، IBAN، کد ملی، مبلغ و عبارت‌های قدیمی بررسی می‌کند. همه‌چیز روی همین کامپیوتر؛ خود داده‌ها هرگز نمایش داده نمی‌شوند."},
     "k4": {"en": "Make a report", "hu": "Jelentés készítése", "fa": "گزارش بساز"},
     "k4d": {"en": "A ready PDF for your supervisor or the file: status, levels, checks and date.",
             "hu": "Kész PDF a témavezetőnek vagy az aktába: állapot, szintek, ellenőrzések és dátum.",
@@ -103,14 +109,20 @@ T = {
     "clock_rule": {"en": "Counterfactual critical path with ex-ante durations; verdicts at the earliest and latest date bounds. If they differ, the verdict is Indeterminate.",
                    "hu": "Kontrafaktuális kritikus út előre várt időtartamokkal; ítélet a legkorábbi és a legkésőbbi dátumhatáron. Ha eltérnek, az ítélet: Indeterminate.",
                    "fa": "مسیر بحرانی خلاف واقع با مدت‌های ex-ante؛ حکم در زودترین و دیرترین تاریخ. اگر فرق کنند، حکم Indeterminate است."},
-    "pii_file": {"en": "Data file (.xlsx or .csv)", "hu": "Adatfájl (.xlsx vagy .csv)", "fa": "فایل داده (‎.xlsx یا ‎.csv)"},
-    "scan": {"en": "Scan for personal data", "hu": "Személyes adatok keresése", "fa": "جست‌وجوی داده‌ی شخصی"},
+    "pii_file": {"en": "Files: Excel, CSV, Word, PDF, text or a .zip (e.g. a Google Drive download)", "hu": "Fájlok: Excel, CSV, Word, PDF, szöveg vagy .zip (pl. Google Drive-letöltés)", "fa": "فایل‌ها: Excel، CSV، Word، PDF، متن یا ‎.zip (مثلاً دانلود از Google Drive)"},
+    "aud_terms": {"en": "Also check wording against the current Bridge rules (28 Sep 2026)", "hu": "A megfogalmazás ellenőrzése a jelenlegi Bridge-szabályok szerint is (2026. szept. 28.)", "fa": "عبارت‌ها را هم با قواعد فعلی Bridge (۲۸ سپتامبر ۲۰۲۶) بررسی کن"},
+    "aud_names": {"en": "Optional: list of names to look for (.txt, one per line; stays on this computer)", "hu": "Nem kötelező: keresendő nevek listája (.txt, soronként egy; ezen a gépen marad)", "fa": "اختیاری: فهرست نام‌ها برای جست‌وجو (‎.txt، هر خط یک نام؛ روی همین کامپیوتر می‌ماند)"},
+    "aud_files": {"en": "Files", "hu": "Fájlok", "fa": "فایل‌ها"},
+    "aud_find": {"en": "What to fix (locations only; values are never shown)", "hu": "Javítandó (csak helyek; értékek soha nem jelennek meg)", "fa": "چه چیزی باید درست شود (فقط محل؛ مقدارها هرگز نشان داده نمی‌شوند)"},
+    "aud_skip": {"en": "Not read", "hu": "Nem olvasott", "fa": "خوانده نشد"},
+    "scan": {"en": "Check the files", "hu": "Fájlok ellenőrzése", "fa": "بررسی فایل‌ها"},
     "pii_none": {"en": "No personal-data patterns found. This does not prove the file is anonymous.",
                  "hu": "Nem található személyes adatra utaló minta. Ez nem bizonyítja, hogy a fájl anonim.",
                  "fa": "الگویی از داده‌ی شخصی پیدا نشد. این ثابت نمی‌کند فایل ناشناس است."},
-    "pii_found": {"en": "Replace these columns with pseudonymised codes before analysis or sharing.",
-                  "hu": "Elemzés vagy megosztás előtt cserélje ezeket az oszlopokat álnevesített kódokra.",
-                  "fa": "قبل از تحلیل یا اشتراک‌گذاری، این ستون‌ها را با کد مستعار جایگزین کنید."},
+    "pii_found": {"en": "Personal or confidential data found. Remove it or replace it with pseudonymised codes before analysis or sharing.",
+                  "hu": "Személyes vagy bizalmas adat található. Elemzés vagy megosztás előtt távolítsa el, vagy cserélje álnevesített kódra.",
+                  "fa": "داده‌ی شخصی یا محرمانه پیدا شد. قبل از تحلیل یا اشتراک‌گذاری، آن را حذف یا با کد مستعار جایگزین کنید."},
+    "aud_dl": {"en": "Download the findings (Excel)", "hu": "Eredmények letöltése (Excel)", "fa": "دانلود نتایج (Excel)"},
     "rep_t": {"en": "Bridge status report", "hu": "Bridge-állapotjelentés", "fa": "گزارش وضعیت Bridge"},
     "rep_make": {"en": "Make the report", "hu": "Jelentés elkészítése", "fa": "ساختن گزارش"},
     "rep_desc": {"en": "One PDF with the study status, the screening flow, episode levels and every check. Suitable for your supervisor.",
@@ -232,3 +244,253 @@ def fix_text(check: str, lang: str):
 def digits(s, lang: str) -> str:
     s = str(s)
     return s.translate(str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")) if lang == "fa" else s
+
+
+# Research Studio page texts (English source -> Hungarian, Persian)
+TX = {
+ "LOCAL-FIRST": {
+  "hu": "HELYBEN",
+  "fa": "محلی"
+ },
+ "WORKSPACE": {
+  "hu": "MUNKATÉR",
+  "fa": "محیط کار"
+ },
+ "Files stay on this computer": {
+  "hu": "A fájlok ezen a gépen maradnak",
+  "fa": "فایل‌ها روی همین کامپیوتر می‌مانند"
+ },
+ "Upload": {
+  "hu": "Feltöltés",
+  "fa": "بارگذاری"
+ },
+ "Configure": {
+  "hu": "Beállítás",
+  "fa": "تنظیم"
+ },
+ "Run": {
+  "hu": "Futtatás",
+  "fa": "اجرا"
+ },
+ "Review": {
+  "hu": "Áttekintés",
+  "fa": "بازبینی"
+ },
+ "Export": {
+  "hu": "Exportálás",
+  "fa": "خروجی"
+ },
+ "Bridge": {
+  "hu": "Bridge",
+  "fa": "Bridge"
+ },
+ "Evidence → rule engine → defensible claim language.": {
+  "hu": "Bizonyíték → szabálymotor → védhető állításszint.",
+  "fa": "شواهد ← موتور قاعده ← زبان ادعای قابل‌دفاع."
+ },
+ "Workbook integrity": {
+  "hu": "Munkafüzet-integritás",
+  "fa": "سلامت ورک‌بوک"
+ },
+ "Check formulas, dropdowns, source/episode links, overrides, verdict consistency and privacy flags.": {
+  "hu": "Képletek, legördülő listák, forrás–epizód kapcsolatok, felülírások, ítélet-konzisztencia és adatvédelmi jelzések ellenőrzése.",
+  "fa": "بررسی فرمول‌ها، فهرست‌های کشویی، پیوند منبع و رویداد، override‌ها، سازگاری حکم و هشدارهای حریم خصوصی."
+ },
+ "Which clock binds?": {
+  "hu": "Melyik óra köt?",
+  "fa": "کدام ساعت تعیین‌کننده بود؟"
+ },
+ "Apply the counterfactual rule, sign-stability test and finance-only temporal actionability.": {
+  "hu": "A kontrafaktuális szabály, az előjel-stabilitási teszt és a csak finanszírozásra vonatkozó időbeli cselekvőképesség alkalmazása.",
+  "fa": "اجرای قاعدهٔ خلاف واقع، آزمون پایداری علامت و actionability زمانی فقط برای تأمین مالی."
+ },
+ "Supervisor status": {
+  "hu": "Témavezetői állapot",
+  "fa": "وضعیت برای استاد راهنما"
+ },
+ "Generate a bounded report from the current workbook state; no target episode count is imposed.": {
+  "hu": "Korlátozott jelentés a munkafüzet jelenlegi állapotából; nincs előírt epizódszám.",
+  "fa": "گزارشی محدود از وضعیت فعلی ورک‌بوک؛ هیچ تعداد هدفی برای رویدادها تعیین نمی‌شود."
+ },
+ "Binding analysis": {
+  "hu": "Kötési elemzés",
+  "fa": "تحلیل ساعت تعیین‌کننده"
+ },
+ "Status report": {
+  "hu": "Állapotjelentés",
+  "fa": "گزارش وضعیت"
+ },
+ "Supervisor status report": {
+  "hu": "Témavezetői állapotjelentés",
+  "fa": "گزارش وضعیت برای استاد راهنما"
+ },
+ "Document Audit": {
+  "hu": "Dokumentum-audit",
+  "fa": "ممیزی اسناد"
+ },
+ "Check documents against the current Bridge language and sharing rules.": {
+  "hu": "Dokumentumok ellenőrzése a jelenlegi Bridge-megfogalmazás és megosztási szabályok szerint.",
+  "fa": "بررسی اسناد با زبان فعلی Bridge و قواعد اشتراک‌گذاری."
+ },
+ "Drop Word, PDF, Excel, CSV, text or ZIP files": {
+  "hu": "Húzzon ide Word-, PDF-, Excel-, CSV-, szöveg- vagy ZIP-fájlokat",
+  "fa": "فایل Word، PDF، Excel، CSV، متن یا ZIP را اینجا رها کنید"
+ },
+ "Current wording rules: Bridge decisions through 28 September 2026.": {
+  "hu": "Jelenlegi megfogalmazási szabályok: Bridge-döntések 2026. szeptember 28-ig.",
+  "fa": "قواعد فعلی عبارت‌ها: تصمیم‌های Bridge تا ۲۸ سپتامبر ۲۰۲۶."
+ },
+ "Optional local customer-name list (.txt, one per line)": {
+  "hu": "Nem kötelező helyi ügyfélnév-lista (.txt, soronként egy)",
+  "fa": "فهرست اختیاری نام مشتری‌ها (‎.txt، هر خط یک نام)"
+ },
+ "The name list is used locally and is not copied into the findings.": {
+  "hu": "A névlista csak helyben használatos, és nem kerül az eredményekbe.",
+  "fa": "فهرست نام‌ها فقط روی همین کامپیوتر استفاده می‌شود و در نتایج نمی‌آید."
+ },
+ "Run document audit": {
+  "hu": "Dokumentum-audit futtatása",
+  "fa": "اجرای ممیزی اسناد"
+ },
+ "Reading documents locally…": {
+  "hu": "Dokumentumok olvasása helyben…",
+  "fa": "خواندن اسناد روی همین کامپیوتر…"
+ },
+ "Upload one or more files. The audit reports types and locations; detected personal values are never shown.": {
+  "hu": "Töltsön fel egy vagy több fájlt. Az audit típusokat és helyeket jelez; a talált személyes értékeket soha nem mutatja.",
+  "fa": "یک یا چند فایل بارگذاری کنید. ممیزی نوع و محل را گزارش می‌کند؛ مقدار داده‌های شخصی هرگز نمایش داده نمی‌شود."
+ },
+ "Files read": {
+  "hu": "Beolvasott fájlok",
+  "fa": "فایل‌های خوانده‌شده"
+ },
+ "Outdated wording": {
+  "hu": "Elavult megfogalmazás",
+  "fa": "عبارت قدیمی"
+ },
+ "Privacy findings": {
+  "hu": "Adatvédelmi találatok",
+  "fa": "یافته‌های حریم خصوصی"
+ },
+ "Not read": {
+  "hu": "Nem olvasott",
+  "fa": "خوانده نشد"
+ },
+ "No findings in readable text. This does not prove that a scanned/image-only document is safe.": {
+  "hu": "Nincs találat az olvasható szövegben. Ez nem bizonyítja, hogy egy szkennelt/képalapú dokumentum biztonságos.",
+  "fa": "در متن قابل‌خواندن یافته‌ای نبود. این ثابت نمی‌کند سند اسکن‌شده یا تصویری امن است."
+ },
+ "Files not read": {
+  "hu": "Nem olvasott fájlok",
+  "fa": "فایل‌هایی که خوانده نشدند"
+ },
+ "Export Excel": {
+  "hu": "Excel exportálása",
+  "fa": "خروجی Excel"
+ },
+ "Export PDF": {
+  "hu": "PDF exportálása",
+  "fa": "خروجی PDF"
+ },
+ "Privacy": {
+  "hu": "Adatvédelem",
+  "fa": "حریم خصوصی"
+ },
+ "Identify personal or confidential data before analysis, coding or sharing.": {
+  "hu": "Személyes vagy bizalmas adatok azonosítása elemzés, kódolás vagy megosztás előtt.",
+  "fa": "شناسایی داده‌های شخصی یا محرمانه پیش از تحلیل، کدگذاری یا اشتراک‌گذاری."
+ },
+ "Files to scan": {
+  "hu": "Ellenőrizendő fájlok",
+  "fa": "فایل‌های مورد بررسی"
+ },
+ "Optional local name dictionary (.txt)": {
+  "hu": "Nem kötelező helyi névszótár (.txt)",
+  "fa": "فهرست اختیاری نام‌ها (‎.txt)"
+ },
+ "Run privacy scan": {
+  "hu": "Adatvédelmi ellenőrzés futtatása",
+  "fa": "اجرای بررسی حریم خصوصی"
+ },
+ "Scanning locally…": {
+  "hu": "Ellenőrzés helyben…",
+  "fa": "بررسی روی همین کامپیوتر…"
+ },
+ "ClockBind reports the category and location only. It never puts the detected value into the findings table.": {
+  "hu": "A ClockBind csak a kategóriát és a helyet jelzi; a talált értéket soha nem teszi az eredménytáblába.",
+  "fa": "ClockBind فقط نوع و محل را گزارش می‌کند و مقدار پیدا‌شده را هرگز در جدول نتایج نمی‌گذارد."
+ },
+ "Findings": {
+  "hu": "Találatok",
+  "fa": "یافته‌ها"
+ },
+ "Review these locations before sharing the files.": {
+  "hu": "Megosztás előtt nézze át ezeket a helyeket.",
+  "fa": "پیش از اشتراک‌گذاری فایل‌ها، این محل‌ها را بررسی کنید."
+ },
+ "No configured personal-data patterns were found in readable text. This is a screening aid, not proof of anonymity.": {
+  "hu": "Az olvasható szövegben nem található beállított személyesadat-minta. Ez szűrési segédlet, nem az anonimitás bizonyítéka.",
+  "fa": "در متن قابل‌خواندن الگوی داده‌ی شخصی پیدا نشد. این یک ابزار غربالگری است، نه اثبات ناشناس بودن."
+ },
+ "Export privacy findings": {
+  "hu": "Adatvédelmi találatok exportálása",
+  "fa": "خروجی یافته‌های حریم خصوصی"
+ },
+ "Reproducibility": {
+  "hu": "Reprodukálhatóság",
+  "fa": "بازتولیدپذیری"
+ },
+ "Tie every result to the exact data, protocol, software and code used.": {
+  "hu": "Minden eredmény a pontosan használt adathoz, protokollhoz, szoftverhez és kódhoz kötve.",
+  "fa": "هر نتیجه به دادهٔ دقیق، پروتکل، نرم‌افزار و کد استفاده‌شده گره می‌خورد."
+ },
+ "Project manifest": {
+  "hu": "Projektjegyzék",
+  "fa": "شناسنامهٔ پروژه"
+ },
+ "AI-safe export": {
+  "hu": "MI-biztos export",
+  "fa": "خروجی امن برای هوش مصنوعی"
+ },
+ "Run history": {
+  "hu": "Futtatási előzmények",
+  "fa": "تاریخچهٔ اجراها"
+ },
+ "Citation": {
+  "hu": "Hivatkozás",
+  "fa": "استناد"
+ },
+ "Code hash": {
+  "hu": "Kód-hash",
+  "fa": "هش کد"
+ },
+ "Choose the Bridge workbook in Settings to build a project manifest.": {
+  "hu": "A projektjegyzékhez válassza ki a Bridge-munkafüzetet a Beállításokban.",
+  "fa": "برای ساختن شناسنامهٔ پروژه، ورک‌بوک Bridge را در تنظیمات انتخاب کنید."
+ },
+ "The export contains aggregate project state and hashes only—no workbook cell values, raw document text, personal-data values or local input paths.": {
+  "hu": "Az export csak összesített projektállapotot és hash-eket tartalmaz – cellaértékeket, dokumentumszöveget, személyes adatokat vagy helyi elérési utakat nem.",
+  "fa": "این خروجی فقط وضعیت تجمیعی پروژه و هش‌ها را دارد؛ نه مقدار سلول، نه متن سند، نه دادهٔ شخصی و نه مسیر فایل."
+ },
+ "Create AI-safe research export": {
+  "hu": "MI-biztos kutatási export készítése",
+  "fa": "ساختن خروجی پژوهشی امن برای هوش مصنوعی"
+ },
+ "Set a Bridge workbook first.": {
+  "hu": "Először állítson be egy Bridge-munkafüzetet.",
+  "fa": "اول ورک‌بوک Bridge را تنظیم کنید."
+ },
+ "No local run manifests were found yet.": {
+  "hu": "Még nincs helyi futtatási jegyzék.",
+  "fa": "هنوز شناسنامهٔ اجرایی روی این کامپیوتر پیدا نشد."
+ },
+ "Use the release/version DOI actually assigned to the version used in the study; do not cite a draft DOI as if released.": {
+  "hu": "A tanulmányban használt verzióhoz ténylegesen kiadott DOI-t használja; tervezet-DOI-t ne idézzen kiadottként.",
+  "fa": "به DOI نسخه‌ای استناد کنید که واقعاً در مطالعه استفاده شده؛ DOI پیش‌نویس را منتشرشده جا نزنید."
+ }
+}
+
+
+def tx(text: str, lang: str) -> str:
+    """Translate a Research Studio page text; English (or unknown) falls back to the source."""
+    return TX.get(text, {}).get(lang, text) if lang != "en" else text

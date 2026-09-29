@@ -10,7 +10,7 @@ from clockbind.binding import evaluate_all
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "validation" / "binding"))
 import reference as ref  # noqa: E402
 
-CLOCKS = ["finance", "supplier", "logistics", "installation", "other"]
+CLOCKS = ["finance", "payment", "fulfilment", "logistics", "operational-readiness"]
 T0 = pd.Timestamp("2026-01-01")
 
 

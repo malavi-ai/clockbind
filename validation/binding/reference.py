@@ -66,8 +66,8 @@ def verdict(steps, finish, anchor, tw, r):
     return ("Window infeasible at ex-ante durations", ())
 
 
-LABEL = {"finance": "Finance-binding", "supplier": "Non-finance: supplier", "logistics": "Non-finance: logistics",
-         "installation": "Non-finance: installation/set-up", "other": "Non-finance: other"}
+LABEL = {"finance": "Finance-binding", "payment": "Payment-binding", "fulfilment": "Fulfilment-binding",
+         "logistics": "Logistics-binding", "operational-readiness": "Operational-readiness-binding"}
 
 
 def final(steps, bounds, anchor, tw, r):

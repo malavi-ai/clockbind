@@ -14,7 +14,7 @@ Registered rule (Bridge protocol, decisions of 27 September 2026):
   separately from binding.
 
 Model. Each episode is a dependency network of steps. Each step belongs to a
-clock (finance, supplier, logistics, installation/set-up, other), has zero or
+clock (finance, payment, fulfilment, logistics, operational-readiness), has zero or
 more predecessor steps, a documented finish time given as an interval
 [earliest, latest], and optionally an ex-ante expected duration. A step becomes
 ready when all its predecessors have finished (or at the episode anchor if it
@@ -31,14 +31,19 @@ from itertools import combinations, product
 import pandas as pd
 
 EPS = 1e-9
-CLOCK_LABELS = {
+CLOCK_LABELS = {  # USER DECISION 28 Sep 2026: eight verdict categories
     "finance": "Finance-binding",
-    "supplier": "Non-finance: supplier",
-    "logistics": "Non-finance: logistics",
-    "installation": "Non-finance: installation/set-up",
-    "installation/set-up": "Non-finance: installation/set-up",
-    "set-up": "Non-finance: installation/set-up",
-    "other": "Non-finance: other",
+    "payment": "Payment-binding",
+    "fulfilment": "Fulfilment-binding",
+    "logistics": "Logistics-binding",
+    "operational-readiness": "Operational-readiness-binding",
+}
+CLOCK_ALIASES = {
+    "financing": "finance", "funding": "finance", "fulfillment": "fulfilment", "supplier": "fulfilment", "production": "fulfilment",
+    "dispatch": "logistics", "transport": "logistics", "delivery": "logistics", "customs": "logistics",
+    "operational readiness": "operational-readiness", "readiness": "operational-readiness", "installation": "operational-readiness",
+    "installation/set-up": "operational-readiness", "set-up": "operational-readiness", "setup": "operational-readiness",
+    "commissioning": "operational-readiness", "training": "operational-readiness",
 }
 STEP_COLUMNS = ["episode", "step", "clock", "predecessors", "finish_earliest", "finish_latest", "expected_days", "source", "note"]
 EPISODE_COLUMNS = ["episode", "anchor_earliest", "anchor_latest", "tw_earliest", "tw_latest", "r_step", "note"]
@@ -177,7 +182,10 @@ def build_episodes(episodes: pd.DataFrame, steps: pd.DataFrame) -> list[Episode]
                 ep.problems.append(f"step {name}: latest finish is before earliest finish")
             if exp is not None and exp < 0:
                 ep.problems.append(f"step {name}: negative expected duration")
-            clock = str(s.get("clock", "other") or "other").strip().lower()
+            raw = "" if s.get("clock") is None or pd.isna(s.get("clock")) else str(s.get("clock")).strip().lower()
+            clock = CLOCK_ALIASES.get(raw, raw)
+            if clock not in CLOCK_LABELS:
+                ep.problems.append(f"step {name}: clock '{raw or '(blank)'}' is not one of finance, payment, fulfilment, logistics, operational-readiness")
             if name in ep.steps:
                 ep.problems.append(f"duplicate step name {name}")
             ep.steps[name] = Step(name, clock, preds, lo, hi, exp)
@@ -290,7 +298,7 @@ def _verdict(sc: _Scenario, clocks: list, reactive=False) -> dict:
     if singles:
         slack = max(sc.slack({c}, reactive) for c in singles)
         if len(singles) == 1:
-            label = CLOCK_LABELS.get(singles[0], "Non-finance: other")
+            label = CLOCK_LABELS[singles[0]]
         else:
             label = "Multiple sufficient corrections"
         return {"verdict": label, "clocks": singles, "decisive_slack": slack, "untestable": untestable}
@@ -310,8 +318,7 @@ def _key(v):
     return (v["verdict"], tuple(sorted(v["clocks"])))
 
 
-WORKBOOK_VERDICTS = {"Finance-binding", "Non-finance: supplier", "Non-finance: logistics", "Non-finance: installation/set-up",
-                     "Non-finance: other", "Jointly binding", "Non-binding", "Indeterminate"}
+WORKBOOK_VERDICTS = set(CLOCK_LABELS.values()) | {"Jointly binding", "Non-binding", "Indeterminate"}
 
 
 def evaluate(ep: Episode, corner_limit: int = 10) -> dict:

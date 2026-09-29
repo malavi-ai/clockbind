@@ -46,7 +46,7 @@ def test_mcp_server_tools_return_summaries(tmp_path):
                 out = (await s.call_tool("binding_template", {"output_path": str(tpl)})).content[0].text
                 assert "Template written" in out
                 out = (await s.call_tool("binding_verdicts", {"path": str(tpl)})).content[0].text
-                assert "EX-01" in out and "Non-finance: logistics" in out
+                assert "EX-01" in out and "Logistics-binding" in out
                 out = (await s.call_tool("freeze_gates", {"gates": str(tpl), "frozen_by": "x"})).content[0].text
                 assert out.startswith("Not frozen")
                 out = (await s.call_tool("privacy_scan", {"path": str(tmp_path / "missing.xlsx")})).content[0].text

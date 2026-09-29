@@ -1,0 +1,22 @@
+{
+  "LiquidityRunway": [
+    "run1_t1",
+    "run2_t1",
+    "run3_t1"
+  ],
+  "FinancingOptionality": [
+    "opt1_t1",
+    "opt2_t1",
+    "opt3_t1"
+  ],
+  "CostAdaptability": [
+    "ada1_t1",
+    "ada2_t1",
+    "ada3_t1"
+  ],
+  "UpgradeCapacity": [
+    "upg1_t1",
+    "upg2_t1",
+    "upg3_t1"
+  ]
+}

@@ -1,0 +1,13 @@
+case_id,proposition_id,test_type,result,source_id,rival_id
+CASE-01,P-control,hoop,pass,CASE-01-PT1,R-market
+CASE-01,P-control,smoking-gun,pass,CASE-01-PT2,R-market
+CASE-02,P-control,hoop,pass,CASE-02-PT1,R-market
+CASE-02,P-control,smoking-gun,fail,CASE-02-PT2,R-market
+CASE-03,P-control,hoop,pass,CASE-03-PT1,R-market
+CASE-03,P-control,smoking-gun,pass,CASE-03-PT2,R-market
+CASE-04,P-control,hoop,pass,CASE-04-PT1,R-market
+CASE-04,P-control,smoking-gun,fail,CASE-04-PT2,R-market
+CASE-05,P-control,hoop,pass,CASE-05-PT1,R-market
+CASE-05,P-control,smoking-gun,pass,CASE-05-PT2,R-market
+CASE-06,P-control,hoop,unknown,CASE-06-PT1,R-market
+CASE-06,P-control,smoking-gun,fail,CASE-06-PT2,R-market

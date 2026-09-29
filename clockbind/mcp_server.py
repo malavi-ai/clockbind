@@ -79,8 +79,97 @@ def build_server():
     @mcp.tool()
     def clockbind_about() -> str:
         """Version, available tools and the privacy model of this ClockBind server."""
-        return (f"ClockBind {__version__}. Tools: validate_workbook, privacy_scan, screen_workbook, binding_verdicts, "
-                f"binding_template, coder_agreement, freeze_gates, verify_references. Output folder: {_out_dir()}. {PRIVACY_NOTE}")
+        return (f"ClockBind {__version__}. Tools: bridge_validate, audit_documents, privacy_scan, statistics_run, "
+                f"binding_verdicts, export_ai_safe, doctoral_capabilities, preregistration_snapshot, publication_consistency_audit, verify_package, coder_agreement, freeze_gates, verify_references. "
+                f"Output folder: {_out_dir()}. {PRIVACY_NOTE}")
+
+    @mcp.tool()
+    def bridge_validate(path: str, gates: str = "") -> str:
+        """Validate a Bridge workbook locally. Checks workbook integrity; when a gates/protocol JSON is supplied,
+        also applies the current evidence-level rules. Returns only safe summaries/locations, never cell values."""
+        data = _path(path)
+        first = _cli(["workbook", "check", "--data", data, "--out", _out_dir()])
+        if not gates:
+            return first
+        g = _path(gates)
+        found = _find_sheet(data, g)
+        if found is None:
+            return first + "\n\nCould not auto-detect the assessment sheet for gate application."
+        second = _cli(["screen", "run", "--data", data, "--gates", g, "--sheet", found[0], "--header-row", str(found[1]), "--out", _out_dir()])
+        return first + "\n\n" + second
+
+    @mcp.tool()
+    def audit_documents(path: str, names_file: str = "", check_bridge_wording: bool = True) -> str:
+        """Audit Word/PDF/Excel/CSV/text/zip/folders locally for personal/confidential data and, optionally,
+        outdated Bridge wording. Console response is aggregate-only by default; full local reports stay on the computer."""
+        argv = ["audit", "docs", "--data", _path(path), "--out", _out_dir()]
+        if names_file:
+            argv += ["--names", _path(names_file)]
+        if not check_bridge_wording:
+            argv += ["--no-terms"]
+        return _cli(argv)
+
+    @mcp.tool()
+    def statistics_run(path: str, analysis: str, params_json: str = "{}") -> str:
+        """Run one ClockBind statistical analysis locally. `params_json` is a JSON object string.
+        Returns the run summary; detailed Word/Excel/figure outputs and the manifest remain in the local run folder."""
+        import json as _json
+        obj = _json.loads(params_json or "{}")
+        if not isinstance(obj, dict):
+            raise ValueError("params_json must be a JSON object")
+        return _cli(["stats", "run", "--data", _path(path), "--analysis", analysis, "--params", _json.dumps(obj), "--out", _out_dir()])
+
+    @mcp.tool()
+    def doctoral_capabilities() -> str:
+        """List the installed Paper 1--4 and Bridge analysis engines. This exposes capability metadata only; no research data are read."""
+        from .analysis import REGISTRY
+        groups = {}
+        for name, spec in REGISTRY.items():
+            if spec.get("group", "").startswith("Paper ") or spec.get("group") == "Doctoral modules":
+                groups.setdefault(spec["group"], []).append(name)
+        lines = [f"{g}: " + ", ".join(sorted(v)) for g, v in sorted(groups.items())]
+        return "ClockBind doctoral engines\n" + "\n".join(lines) + f"\n\n{PRIVACY_NOTE}"
+
+    @mcp.tool()
+    def preregistration_snapshot(files_json: str, output_path: str, status: str = "DRAFT", frozen_by: str = "", confirm: bool = False) -> str:
+        """Create a local hash-locked preregistration snapshot from protocol/plan files. It never registers externally.
+        `files_json` is a JSON list of local paths. FROZEN requires explicit confirm=true and frozen_by."""
+        import json as _json
+        from .publication import build_prereg_bundle
+        files = _json.loads(files_json)
+        if not isinstance(files, list) or not files:
+            raise ValueError("files_json must be a non-empty JSON list of local protocol/plan paths")
+        if status.upper() == "FROZEN" and (not confirm or not frozen_by.strip()):
+            return "Not frozen. FROZEN requires explicit confirm=true and frozen_by. No external registration occurred."
+        local = [_path(x) for x in files]
+        out = Path(output_path).expanduser(); out.parent.mkdir(parents=True, exist_ok=True)
+        build_prereg_bundle(None, local, out, status.upper(), frozen_by.strip(), "Created through ClockBind MCP")
+        return f"Snapshot created: {out}\nExternal registry status: NOT REGISTERED BY CLOCKBIND\n{PRIVACY_NOTE}"
+
+    @mcp.tool()
+    def publication_consistency_audit(manuscript: str, registry: str) -> str:
+        """Check a local manuscript against an explicit result/claim registry. Returns pass/fail counts only; detailed local report remains on the computer."""
+        import json as _json
+        from .publication import consistency_audit
+        rows, summ = consistency_audit(_path(manuscript), _path(registry))
+        out = Path(_out_dir()) / "manuscript_consistency_audit.json"
+        out.write_text(_json.dumps({"summary": summ, "checks": rows}, indent=2), encoding="utf-8")
+        return f"Checks: {summ['checks']} · PASS {summ['pass']} · FAIL {summ['fail']}\nLocal report: {out}\n{PRIVACY_NOTE}"
+
+    @mcp.tool()
+    def export_ai_safe(workbook: str, gates: str, output_path: str = "") -> str:
+        """Create a local AI-safe Bridge export containing aggregate counts, hashes and protocol state only.
+        No workbook cell values, raw text, personal-data values or local input paths are included in the package."""
+        out = Path(output_path).expanduser() if output_path else Path(_out_dir()) / "Bridge_AI_Safe_Export.zip"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        return _cli(["export", "ai-safe", "--workbook", _path(workbook), "--gates", _path(gates), "--output", str(out)])
+
+    @mcp.tool()
+    def verify_package() -> str:
+        """Return ClockBind version and exact local code hash for reproducibility verification."""
+        from .core.provenance import code_sha256, package_versions
+        v = package_versions()
+        return f"ClockBind {__version__} · code sha256 {code_sha256()} · Python {v.get('python')} · {PRIVACY_NOTE}"
 
     @mcp.tool()
     def validate_workbook(path: str) -> str:

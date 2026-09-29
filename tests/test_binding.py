@@ -27,7 +27,7 @@ def test_design_note_illustration_transit_binds():
     e, s = chain("T1", ["2026-01-02", "2026-01-04", "2026-01-10", "2026-01-11"], [2, 2, 3, 1], "2026-01-11")
     e[3] = "2026-01-10"
     r = run([e], s).loc["T1"]
-    assert r["verdict"] == "Non-finance: logistics"
+    assert r["verdict"] == "Logistics-binding"
     assert r["sign_stable"] == "Yes"
     assert r["finance_actionable"] == "Yes"
     assert r["decisive_slack_earliest_days"] == pytest.approx(2.0)  # corrected: delivered Jan 7, R Jan 8; tW Jan 10
@@ -92,7 +92,7 @@ def test_parallel_network_only_critical_branch_binds():
              ["P1", "delivered", "logistics", "funds;made", "2026-01-10", None, 2],
              ["P1", "operational", "installation", "delivered", "2026-01-11", None, 1]]
     r = run([["P1", "2026-01-01", None, "2026-01-08", None, "operational"]], steps).loc["P1"]
-    assert r["verdict"] == "Non-finance: supplier"
+    assert r["verdict"] == "Fulfilment-binding"
     assert r["finance_actionable"] == "Yes"
 
 
@@ -123,3 +123,15 @@ def test_input_safeguards_dates_duplicates_orphans_timezones():
     assert r.loc["C", "reason"] == "listed in Steps but has no row in Episodes"
     with _pt.raises(ValueError, match="missing column"):
         evaluate_all(ep.drop(columns=["tw_earliest"]), st)
+
+
+def test_clock_names_and_aliases():
+    # aliases map to the eight registered categories; unknown clocks are refused, not silently labelled
+    ep = pd.DataFrame([{"episode": "K1", "anchor_earliest": "2026-01-01", "tw_earliest": "2026-01-05", "r_step": "b"},
+                       {"episode": "K2", "anchor_earliest": "2026-01-01", "tw_earliest": "2026-01-10", "r_step": "b"}])
+    st = pd.DataFrame([["K1", "a", "Payment", "", "2026-01-09", None, 1], ["K1", "b", "installation", "a", "2026-01-10", None, 1],
+                       ["K2", "a", "other", "", "2026-01-03", None, 1], ["K2", "b", "finance", "a", "2026-01-04", None, 1]],
+                      columns=["episode", "step", "clock", "predecessors", "finish_earliest", "finish_latest", "expected_days"])
+    res = evaluate_all(ep, st).set_index("episode")
+    assert res.loc["K1", "verdict"] == "Payment-binding"
+    assert res.loc["K2", "verdict"] == "Indeterminate" and "not one of" in res.loc["K2", "flags"]

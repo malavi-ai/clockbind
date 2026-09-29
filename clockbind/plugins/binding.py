@@ -15,7 +15,7 @@ GUIDE = [
     ("Episodes: anchor", "Time the process starts for steps without predecessors (usually the route decision tD). Earliest/latest bounds; latest may be blank if exact."),
     ("Episodes: tW", "End of the action window. Earliest/latest bounds."),
     ("Episodes: r_step", "Name of the step whose finish is the required event R (e.g. 'operational')."),
-    ("Steps: clock", "finance, supplier, logistics, installation, or other."),
+    ("Steps: clock", "finance, payment, fulfilment, logistics or operational-readiness (supplier, delivery, installation etc. are accepted as synonyms)."),
     ("Steps: predecessors", "Step names separated by ';'. Parallel steps are allowed (dependency network, not a chain)."),
     ("Steps: finish", "Documented finish time as an interval. Dates or date-times (YYYY-MM-DD or YYYY-MM-DD HH:MM). Blank = not documented."),
     ("Steps: expected_days", "Ex-ante expected duration in days (decimals allowed: 0.5 = 12 hours), from a document dated before the outcome. Blank = not documented."),
@@ -74,9 +74,9 @@ def cmd_template(a):
                         "r_step": "operational", "note": "Synthetic example: delete before use"}], columns=EPISODE_COLUMNS)
     st = pd.DataFrame([
         {"episode": "EX-01", "step": "funds_usable", "clock": "finance", "predecessors": "", "finish_earliest": "2026-01-06", "finish_latest": "", "expected_days": 2, "source": "DOC-000"},
-        {"episode": "EX-01", "step": "dispatch", "clock": "supplier", "predecessors": "funds_usable", "finish_earliest": "2026-01-08", "finish_latest": "", "expected_days": 2, "source": "DOC-000"},
+        {"episode": "EX-01", "step": "dispatch", "clock": "fulfilment", "predecessors": "funds_usable", "finish_earliest": "2026-01-08", "finish_latest": "", "expected_days": 2, "source": "DOC-000"},
         {"episode": "EX-01", "step": "delivered", "clock": "logistics", "predecessors": "dispatch", "finish_earliest": "2026-01-14", "finish_latest": "", "expected_days": 3, "source": "DOC-000"},
-        {"episode": "EX-01", "step": "operational", "clock": "installation", "predecessors": "delivered", "finish_earliest": "2026-01-15", "finish_latest": "", "expected_days": 1, "source": "DOC-000"},
+        {"episode": "EX-01", "step": "operational", "clock": "operational-readiness", "predecessors": "delivered", "finish_earliest": "2026-01-15", "finish_latest": "", "expected_days": 1, "source": "DOC-000"},
     ], columns=STEP_COLUMNS)
     with pd.ExcelWriter(a.output, engine="openpyxl") as xw:
         ep.to_excel(xw, sheet_name="Episodes", index=False)

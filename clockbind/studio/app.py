@@ -68,8 +68,16 @@ if _profile is None:
     st.stop()
 st.markdown(_shell.css(_shell.lang()), unsafe_allow_html=True)  # language may have changed with the profile
 _pg = _shell.topbar(_profile)
-_PAGES = {"home": _shell.page_home, "check": _shell.page_check, "clock": _shell.page_clock, "privacy": _shell.page_privacy,
-          "reports": _shell.page_reports, "settings": _shell.page_settings}
+_PAGES = {
+    "home": _shell.page_home,
+    "doctoral": _shell.page_doctoral,
+    "bridge": _shell.page_bridge,
+    "document_audit": _shell.page_document_audit,
+    "privacy": _shell.page_privacy,
+    "reproducibility": _shell.page_reproducibility,
+    "publication": _shell.page_publication,
+    "settings": _shell.page_settings,
+}
 if _pg in _PAGES:
     _PAGES[_pg](_profile)
     st.stop()
@@ -99,37 +107,21 @@ def load_file(up) -> tuple[pd.DataFrame, dict]:
 
 
 with st.sidebar:
-    icon = ASSETS / "clockbind-icon.svg"
-    c1, c2 = st.columns([1, 3])
-    if icon.exists():
-        c1.image(str(icon), width=52)
-    c2.markdown(f"<div style='font:600 27px/1.1 Newsreader,Georgia,serif;letter-spacing:-.02em;padding-top:6px'>ClockBind</div><div style='font-size:12px;opacity:.75'>Studio {__version__}</div>", unsafe_allow_html=True)
     st.markdown("---")
-    up = st.file_uploader("Open data (.xlsx, .csv, .sav)", type=["xlsx", "xls", "csv", "sav"])
-    if up is not None and up.name != ss.data_name:
-        try:
-            ss.df, meta = load_file(up); ss.data_name = up.name; ss.labels = meta
-            from clockbind.privacy import scan_dataframe
-            ss.pii = scan_dataframe(ss.df)
-        except Exception as e:
-            st.error(f"Could not read the file: {e}")
-    if st.button("Load example data (synthetic)"):
-        ss.df = pd.read_csv(resource("validation_data.csv"))
-        ss.data_name = "validation_data.csv (synthetic example)"; ss.labels = {}; ss.pii = []
-    if st.button("Run demo analyses"):
-        ss.df = pd.read_csv(resource("validation_data.csv")); ss.data_name = "validation_data.csv (synthetic example)"; ss.labels = {}; ss.pii = []
-        for n_, p_ in [("descriptives", {"variables": "y,x1", "by": "g2"}), ("t_independent", {"variables": "y", "group": "g2"}),
-                       ("regression_linear", {"y": "y", "x": "x1,x2,x3", "categorical": "g2", "se": "CR2", "cluster": "firm"}), ("reliability", {"items": "q1,q2,q3"})]:
-            ss.outputs.append(run(n_, ss.df, p_))
-        ss.nav = "Output"
-    page = st.radio("Go to", ["Data", "Analyze", "Output", "Cite & validation"], label_visibility="collapsed", key="nav")
+    st.markdown("<div class='cb-sidecap'>STATISTICS WORKFLOW</div>", unsafe_allow_html=True)
+    ss.setdefault("stat_step", "Upload")
+    _stat_steps = ["Upload", "Configure", "Run", "Review", "Export"]
+    for _i, _step in enumerate(_stat_steps, 1):
+        if st.button(f"{_i}. {_step}", key=f"stat_nav_{_step.lower()}", type="primary" if ss.stat_step == _step else "secondary", use_container_width=True):
+            ss.stat_step = _step
+            st.rerun()
     st.markdown("---")
     if ss.df is not None:
         st.caption(f"**{ss.data_name}**  \n{len(ss.df):,} rows · {ss.df.shape[1]} variables  \nsha256 {data_hash(ss.df)[:12]}")
+    else:
+        st.caption("No statistics dataset loaded.")
     st.caption(f"Results in this session: {len(ss.outputs)}")
     st.caption("Data stay on this computer. Use pseudonymised codes.")
-    if ss.df is not None and ss.get("pii"):
-        st.warning("Possible personal data in: " + ", ".join(sorted({x["column"] for x in ss.pii})) + ". See the Data page.")
 
 
 # ----------------------------------------------------------------- rendering
@@ -173,255 +165,184 @@ def is_numeric(s: pd.Series) -> bool:
     return pd.to_numeric(s, errors="coerce").notna().mean() > 0.9 if len(s.dropna()) else False
 
 
-# ----------------------------------------------------------------- pages
-if page == "Data":
-    st.markdown("<span class='cb-eyebrow'>Data</span>", unsafe_allow_html=True)
-    st.title("Data view")
-    if ss.df is None:
-        st.markdown("<div class='cb-card'>Open a data file from the sidebar, or load the synthetic example. Excel, CSV and SPSS (.sav) files are supported. Nothing leaves this computer.</div>", unsafe_allow_html=True)
-    else:
+# ----------------------------------------------------------------- Statistics: five-stage workflow
+_shell._section_header("Statistics", "Point-and-click analysis with an explicit plan → run → review → export separation.")
+_stat_steps = ["Upload", "Configure", "Run", "Review", "Export"]
+try:
+    _current = _stat_steps.index(ss.stat_step)
+except ValueError:
+    ss.stat_step, _current = "Upload", 0
+_shell.workflow(_current)
+
+
+def _goto(step: str):
+    ss.stat_step = step
+    st.rerun()
+
+
+if ss.stat_step == "Upload":
+    st.markdown("### Upload data")
+    st.caption("Excel, CSV and SPSS (.sav) are supported. The file is read locally in this Studio session.")
+    up = st.file_uploader("Research dataset", type=["xlsx", "xls", "csv", "sav"], key="stats_upload_main")
+    c1, c2 = st.columns([1, 1])
+    if up is not None and up.name != ss.data_name:
+        try:
+            ss.df, meta = load_file(up)
+            ss.data_name, ss.labels = up.name, meta
+            from clockbind.privacy import scan_dataframe
+            ss.pii = scan_dataframe(ss.df)
+        except Exception as e:
+            st.error(f"Could not read the file: {e}")
+    if c1.button("Load synthetic example", key="stats_example", use_container_width=True):
+        ss.df = pd.read_csv(resource("validation_data.csv"))
+        ss.data_name = "validation_data.csv (synthetic example)"
+        ss.labels, ss.pii = {}, []
+        st.rerun()
+    if c2.button("Continue to Configure →", key="stats_upload_next", type="primary", use_container_width=True, disabled=ss.df is None):
+        _goto("Configure")
+    if ss.df is not None:
         df = ss.df
         if ss.get("pii"):
-            from clockbind.privacy import ADVICE
-            st.warning(ADVICE)
+            st.warning("Possible personal-data patterns were found. Review them in Privacy before sharing this dataset.")
             st.dataframe(pd.DataFrame(ss.pii).rename(columns={"column": "Column", "kind": "Looks like", "count": "Cells"}), hide_index=True, width="stretch")
-            st.caption("Only column names and counts are shown. Replace these columns with codes (or drop them) before analysis; keep the code key in a separate, protected file.")
         m = st.columns(4)
-        m[0].metric("Rows", f"{len(df):,}"); m[1].metric("Variables", df.shape[1]); m[2].metric("Missing cells", f"{int(df.isna().sum().sum()):,}"); m[3].metric("Complete rows", f"{int(df.dropna().shape[0]):,}")
-        t1, t2 = st.tabs(["Data", "Variables"])
-        with t1:
-            st.dataframe(df, width="stretch", height=460)
-        with t2:
-            vl = ss.labels.get("variable_labels", {})
-            info = pd.DataFrame({"Variable": df.columns, "Label": [vl.get(c, "") or "" for c in df.columns],
-                                 "Type": ["numeric" if is_numeric(df[c]) else "categorical" for c in df.columns],
-                                 "Valid": [int(df[c].notna().sum()) for c in df.columns], "Missing": [int(df[c].isna().sum()) for c in df.columns],
-                                 "Distinct": [int(df[c].nunique()) for c in df.columns], "Example": [str(df[c].dropna().iloc[0]) if df[c].notna().any() else "" for c in df.columns]})
-            st.dataframe(info, width="stretch", hide_index=True, height=460)
+        m[0].metric("Rows", f"{len(df):,}")
+        m[1].metric("Variables", df.shape[1])
+        m[2].metric("Missing cells", f"{int(df.isna().sum().sum()):,}")
+        m[3].metric("Complete rows", f"{int(df.dropna().shape[0]):,}")
+        with st.expander("Preview and variable structure", expanded=False):
+            t1, t2 = st.tabs(["Data preview", "Variables"])
+            with t1:
+                st.dataframe(df.head(200), width="stretch", height=390)
+            with t2:
+                vl = ss.labels.get("variable_labels", {})
+                info = pd.DataFrame({
+                    "Variable": df.columns,
+                    "Label": [vl.get(c, "") or "" for c in df.columns],
+                    "Type": ["numeric" if is_numeric(df[c]) else "categorical" for c in df.columns],
+                    "Valid": [int(df[c].notna().sum()) for c in df.columns],
+                    "Missing": [int(df[c].isna().sum()) for c in df.columns],
+                    "Distinct": [int(df[c].nunique()) for c in df.columns],
+                })
+                st.dataframe(info, width="stretch", hide_index=True, height=390)
 
-elif page == "Analyze":
-    st.markdown("<span class='cb-eyebrow'>Analyze</span>", unsafe_allow_html=True)
-    st.title("Run an analysis")
-    groups = {}
-    for k, v in REGISTRY.items():
-        groups.setdefault(v["group"], []).append(k)
-    order = ["Data", "Descriptive statistics", "Compare means", "Non-parametric tests", "Correlate", "Regression", "Scale", "Dimension reduction", "Planning", "Doctoral modules"]
-    gnames = [g for g in order if g in groups] + [g for g in groups if g not in order]
-    c = st.columns([1, 1.4])
-    grp = c[0].selectbox("Menu", gnames)
-    name = c[1].selectbox("Analysis", groups[grp], format_func=lambda k: REGISTRY[k]["title"])
-    spec = REGISTRY[name]
-    needs_data = name != "power"
-    if needs_data and ss.df is None:
-        st.warning("Open a data file first (sidebar).")
+elif ss.stat_step == "Configure":
+    st.markdown("### Configure analysis")
+    if ss.df is None:
+        st.warning("Upload a dataset first.")
+        if st.button("← Go to Upload", key="cfg_back"):
+            _goto("Upload")
     else:
-        df = ss.df if ss.df is not None else pd.DataFrame()
+        groups = {}
+        for k, v in REGISTRY.items():
+            groups.setdefault(v["group"], []).append(k)
+        order = ["Data", "Descriptive statistics", "Compare means", "Non-parametric tests", "Correlate", "Regression", "Scale", "Dimension reduction", "Planning", "Paper 1 · DCE", "Paper 2 · Measurement", "Paper 3 · QCA & Panel", "Paper 4 · Qualitative", "Doctoral modules"]
+        gnames = [g for g in order if g in groups] + [g for g in groups if g not in order]
+        c = st.columns([1, 1.4])
+        grp = c[0].selectbox("Analysis family", gnames, key="stats_group")
+        name = c[1].selectbox("Analysis", groups[grp], format_func=lambda k: REGISTRY[k]["title"], key="stats_analysis")
+        spec = REGISTRY[name]
+        df = ss.df
         cols = list(df.columns)
         numcols = [x for x in cols if is_numeric(df[x])]
-        with st.form(f"form_{name}"):
+        with st.form(f"configure_{name}"):
             params = {}
             for p in spec["params"]:
-                t, lab, key = p["type"], p["label"], f"{name}_{p['name']}"
+                typ, lab, key = p["type"], p["label"], f"cfg_{name}_{p['name']}"
                 pool = numcols if p.get("numeric") else cols
-                if t == "columns":
+                if typ == "columns":
                     v = st.multiselect(lab, pool, key=key)
                     params[p["name"]] = ",".join(v) if v else None
-                elif t == "column":
+                elif typ == "column":
                     opts = ([""] if p.get("optional") else []) + pool
                     v = st.selectbox(lab, opts, key=key)
                     params[p["name"]] = v or None
-                elif t == "bool":
+                elif typ == "bool":
                     params[p["name"]] = st.checkbox(lab, value=p.get("default", False), key=key)
-                elif t == "choice":
-                    params[p["name"]] = st.selectbox(lab, p["choices"], index=p["choices"].index(p.get("default", p["choices"][0])), key=key)
-                elif t == "int":
+                elif typ == "choice":
+                    choices = p["choices"]
+                    params[p["name"]] = st.selectbox(lab, choices, index=choices.index(p.get("default", choices[0])), key=key)
+                elif typ == "int":
                     params[p["name"]] = int(st.number_input(lab, value=int(p.get("default", 0)), step=1, key=key))
-                elif t == "number":
+                elif typ == "number":
                     params[p["name"]] = float(st.number_input(lab, value=float(p.get("default", 0.0)), key=key, format="%.4f"))
-                elif t == "textarea":
+                elif typ == "textarea":
                     params[p["name"]] = st.text_area(lab, key=key) or None
                 else:
                     params[p["name"]] = st.text_input(lab, key=key) or None
-            go = st.form_submit_button("Run", type="primary")
-        with st.expander("About this analysis"):
+            save_plan = st.form_submit_button("Save analysis plan →", type="primary")
+        with st.expander("Method note"):
             st.write(spec["doc"] or spec["title"])
-        if go:
-            params = {k: v for k, v in params.items() if v is not None}
+        if save_plan:
+            ss.stat_plan = {"analysis": name, "title": spec["title"], "params": {k: v for k, v in params.items() if v is not None}}
+            _goto("Run")
+
+elif ss.stat_step == "Run":
+    st.markdown("### Run")
+    plan = ss.get("stat_plan")
+    if ss.df is None or not plan:
+        st.warning("A dataset and saved analysis plan are required.")
+        if st.button("← Configure analysis", key="run_back"):
+            _goto("Configure")
+    else:
+        st.markdown("<div class='cb-card'><span class='cb-eyebrow'>Frozen for this run</span>", unsafe_allow_html=True)
+        st.markdown(f"**{plan['title']}**")
+        st.code(json.dumps(plan["params"], indent=2, ensure_ascii=False), language="json")
+        st.caption(f"Dataset sha256: {data_hash(ss.df)}")
+        st.markdown("</div>", unsafe_allow_html=True)
+        c1, c2 = st.columns([1, 1])
+        if c1.button("← Change configuration", key="run_change", use_container_width=True):
+            _goto("Configure")
+        if c2.button("Run analysis", type="primary", key="run_now", use_container_width=True):
             try:
-                with st.spinner("Running…"):
-                    o = run(name, df, params)
+                with st.spinner("Running analysis…"):
+                    o = run(plan["analysis"], ss.df, plan["params"])
                 ss.outputs.append(o)
-                st.success("Done. The result is also saved in Output.")
-                show_output(o)
+                ss.stat_last_idx = len(ss.outputs) - 1
+                _goto("Review")
             except Exception as e:
                 st.error(f"{type(e).__name__}: {e}")
 
-elif page == "Output":
-    st.markdown("<span class='cb-eyebrow'>Output</span>", unsafe_allow_html=True)
-    st.title("Output viewer")
+elif ss.stat_step == "Review":
+    st.markdown("### Review")
     if not ss.outputs:
-        st.markdown("<div class='cb-card'>Results appear here as you run analyses. Export them as a Word document, or save the syntax file to re-run everything later with <code>clockbind syntax run</code>.</div>", unsafe_allow_html=True)
+        st.info("No statistical results yet.")
+        if st.button("← Configure an analysis", key="review_back"):
+            _goto("Configure")
     else:
-        b = st.columns([1, 1, 1, 1, 2])
-        buf = io.BytesIO()
+        idx = min(int(ss.get("stat_last_idx", len(ss.outputs) - 1)), len(ss.outputs) - 1)
+        st.caption("Scientific review comes before export. Inspect diagnostics, warnings, assumptions and syntax here.")
+        show_output(ss.outputs[idx])
+        with st.expander("Other results in this session"):
+            for i, o in enumerate(ss.outputs):
+                st.write(f"{i + 1}. {o.title} · {o.created}")
+        c1, c2 = st.columns(2)
+        if c1.button("Configure another analysis", key="review_more", use_container_width=True):
+            _goto("Configure")
+        if c2.button("Continue to Export →", key="review_export", type="primary", use_container_width=True):
+            _goto("Export")
+
+elif ss.stat_step == "Export":
+    st.markdown("### Export")
+    if not ss.outputs:
+        st.info("No results to export.")
+    else:
         tmp = Path("/tmp") / "clockbind_output.docx"
         outputs_to_docx(ss.outputs, tmp, title=f"ClockBind output — {ss.data_name or ''}")
-        b[0].download_button("Word (.docx)", tmp.read_bytes(), file_name=f"ClockBind_output_{_dt.date.today()}.docx")
         from clockbind.pdfreport import outputs_to_pdf
         pdf = io.BytesIO()
         outputs_to_pdf(ss.outputs, pdf, title=f"ClockBind output: {ss.data_name or ''}")
-        b[1].download_button("PDF report", pdf.getvalue(), file_name=f"ClockBind_output_{_dt.date.today()}.pdf", mime="application/pdf")
-        b[2].download_button("Syntax (.json)", syntax_file(ss.outputs), file_name=f"ClockBind_syntax_{_dt.date.today()}.json")
-        if b[3].button("Clear all"):
-            ss.outputs = []; st.rerun()
-        for i, o in list(enumerate(ss.outputs))[::-1]:
-            show_output(o, i)
+        c1, c2, c3 = st.columns(3)
+        c1.download_button("Word report", tmp.read_bytes(), file_name=f"ClockBind_output_{_dt.date.today()}.docx", use_container_width=True)
+        c2.download_button("PDF report", pdf.getvalue(), file_name=f"ClockBind_output_{_dt.date.today()}.pdf", mime="application/pdf", use_container_width=True)
+        c3.download_button("Analysis syntax", syntax_file(ss.outputs), file_name=f"ClockBind_syntax_{_dt.date.today()}.json", use_container_width=True)
+        st.markdown("<div class='cb-card'><b>Reproducibility note</b><p class='cb-sub'>Each result carries the dataset hash and exact syntax. Use the Reproducibility module for project hashes, run manifests and the AI-safe Bridge export.</p></div>", unsafe_allow_html=True)
+        a, b = st.columns(2)
+        if a.button("Run another analysis", key="export_more", use_container_width=True):
+            _goto("Configure")
+        if b.button("Clear session results", key="export_clear", use_container_width=True):
+            ss.outputs = []
+            ss.stat_plan = None
+            ss.stat_last_idx = None
+            _goto("Upload")
 
-elif page == "Research checks":
-    import tempfile
-    from clockbind.workbook_check import check_workbook
-    from clockbind.binding import evaluate_all
-
-    st.markdown("<div class='cb-hero'><div><span class='cb-eyebrow'>Bridge study · integrity before analysis</span><h1>Research checks</h1></div>"
-                "<span class='cb-pill ok'>Files stay on this computer</span></div>", unsafe_allow_html=True)
-
-    def _stats(cards):
-        st.markdown("<div class='cb-stats'>" + "".join(f"<div class='cb-stat {c}'><div class='k'>{k}</div><div class='v'>{v}</div></div>" for c, k, v in cards) + "</div>", unsafe_allow_html=True)
-
-    def _xlsx(df):
-        b = io.BytesIO()
-        df.to_excel(b, index=False)
-        return b.getvalue()
-
-    def _tmp(up):
-        f = tempfile.NamedTemporaryFile(delete=False, suffix=Path(up.name).suffix)
-        f.write(up.getvalue()); f.close()
-        return f.name
-
-    t1, t2, t3 = st.tabs(["Validate workbook", "Which clock binds?", "Personal-data scan"])
-    # results are kept in the session, so a download click (which reruns the page) does not clear them
-    with t1:
-        with st.container(border=True):
-            st.markdown("Checks formulas, uncalculated cells, entries outside dropdown lists, links between sheets, override logs, "
-                        "verdict consistency and personal data. It reports locations only.")
-            wb = st.file_uploader("Screening workbook (.xlsx)", type=["xlsx"], key="wb_check")
-            if wb is not None and st.button("Validate workbook", type="primary", key="btn_wb"):
-                with st.spinner("Checking every sheet…"):
-                    try:
-                        rep = check_workbook(_tmp(wb))
-                        df = rep.frame()
-                        from clockbind.pdfreport import build_pdf
-                        nf, nw, npass = rep.count("FAIL"), rep.count("WARN"), rep.count("PASS")
-                        show = df[df["level"].isin(["FAIL", "WARN"])]
-                        pdf = io.BytesIO()
-                        build_pdf(pdf, "Workbook integrity check", [("kv", [("FAIL", nf), ("WARN", nw), ("PASS", npass)]),
-                                  ("h", "Problems to fix"), ("table", show if len(show) else None, "Locations only; cell contents are never shown."),
-                                  ("h", "All checks"), ("table", df)], subtitle=wb.name)
-                        ss.rc_wb = {"name": wb.name, "df": df, "counts": (nf, nw, npass), "pdf": pdf.getvalue()}
-                    except Exception as e:
-                        ss.rc_wb = {"error": f"The file could not be checked ({type(e).__name__}: {e}). Open it in Excel, save it as .xlsx and retry."}
-            r = ss.get("rc_wb")
-            if r and "error" in r:
-                st.error(r["error"])
-            elif r:
-                nf, nw, npass = r["counts"]
-                _stats([("bad" if nf else "ok", "Fail", nf), ("warn" if nw else "ok", "Warn", nw), ("ok", "Pass", npass), ("gold", "Workbook", r["name"][:18] + ("…" if len(r["name"]) > 18 else ""))])
-                show = r["df"][r["df"]["level"].isin(["FAIL", "WARN"])]
-                if len(show):
-                    st.dataframe(show, width="stretch", hide_index=True)
-                else:
-                    st.success("Nothing to fix: every check passed.")
-                with st.expander("All checks, including notes on archived sheets"):
-                    st.dataframe(r["df"], width="stretch", hide_index=True)
-                d1, d2, _ = st.columns([1, 1, 3])
-                d1.download_button("PDF report", r["pdf"], file_name="workbook_check.pdf", mime="application/pdf", key="dl_wb_pdf")
-                d2.download_button("CSV", r["df"].to_csv(index=False).encode("utf-8"), file_name="workbook_check.csv", key="dl_wb_csv")
-    with t2:
-        with st.container(border=True):
-            st.markdown("Counterfactual critical path with ex-ante durations. Verdicts are computed at the earliest and latest date bounds; "
-                        "if they differ, the episode is **Indeterminate** (sign-stability rule).")
-            tl = st.file_uploader("Timeline workbook (sheets Episodes and Steps)", type=["xlsx"], key="tl")
-            c1, c2, _ = st.columns([1, 1, 2])
-            run_tl = c1.button("Compute verdicts", type="primary", key="btn_tl", disabled=tl is None)
-            import contextlib as _cl
-            from clockbind.plugins.binding import cmd_template
-            buf = io.BytesIO()
-            class _A: pass
-            _a = _A(); _a.output = buf
-            with _cl.redirect_stdout(io.StringIO()):
-                cmd_template(_a)
-            c2.download_button("Blank timeline template", buf.getvalue(), file_name="timeline_template.xlsx", key="dl_tpl")
-            if tl is not None and run_tl:
-                try:
-                    x = pd.read_excel(tl, sheet_name=None, dtype=object)
-                    low = {k.strip().lower(): v for k, v in x.items()}
-                    if "episodes" not in low or "steps" not in low:
-                        raise ValueError("the workbook needs two sheets named Episodes and Steps; download the template to see the layout")
-                    res = evaluate_all(low["episodes"], low["steps"])
-                    vc = res["verdict"].value_counts() if len(res) else pd.Series(dtype=int)
-                    from clockbind.pdfreport import build_pdf
-                    pdf = io.BytesIO()
-                    cols = [c for c in ["episode", "verdict", "binding_clocks", "sign_stable", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
-                    build_pdf(pdf, "Which clock binds?", [("h", "Verdicts"), ("table", vc.rename_axis("verdict").reset_index(name="episodes")),
-                              ("h", "Per episode"), ("table", res[cols])], subtitle=tl.name, landscape_pages=True)
-                    ss.rc_tl = {"name": tl.name, "res": res, "pdf": pdf.getvalue()}
-                except Exception as e:
-                    ss.rc_tl = {"error": f"Verdicts could not be computed: {e}"}
-            r = ss.get("rc_tl")
-            if r and "error" in r:
-                st.error(r["error"])
-            elif r:
-                res = r["res"]
-                vc = res["verdict"].value_counts() if len(res) else pd.Series(dtype=int)
-                fin = int(vc.get("Finance-binding", 0)); ind = int(vc.get("Indeterminate", 0)); nb = int(vc.get("Non-binding", 0))
-                _stats([("gold", "Episodes", len(res)), ("warn" if fin else "ok", "Finance-binding", fin),
-                        ("ok", "Other verdicts", int(len(res) - fin - ind - nb)), ("warn" if ind else "ok", "Indeterminate", ind)])
-                st.dataframe(res, width="stretch", hide_index=True)
-                d1, d2, _ = st.columns([1, 1, 3])
-                d1.download_button("PDF report", r["pdf"], file_name="binding_verdicts.pdf", mime="application/pdf", key="dl_tl_pdf")
-                d2.download_button("Excel", _xlsx(res), file_name="binding_verdicts.xlsx", key="dl_tl_xlsx")
-                st.caption("Verdicts apply the registered rule. The researcher records them in the assessment sheet; any override needs a reason and date.")
-    with t3:
-        with st.container(border=True):
-            st.markdown("GDPR / KVKK aid. Looks for e-mails, phone numbers, IBANs, card numbers, Turkish ID numbers, Hungarian tax IDs and "
-                        "name-like columns in every sheet. Values are never shown.")
-            pf = st.file_uploader("Data file (.xlsx, .csv)", type=["xlsx", "csv"], key="pii_file")
-            if pf is not None and st.button("Scan for personal data", type="primary", key="btn_pii"):
-                try:
-                    from clockbind.privacy import scan_dataframe
-                    from clockbind.plugins.privacy import _read as _read_all
-                    sheets = _read_all(_tmp(pf))
-                    found = [{"sheet": name, **f} for name, d in sheets.items() for f in scan_dataframe(d)]
-                    ss.rc_pii = {"name": pf.name, "found": found, "n": len(sheets)}
-                except Exception as e:
-                    ss.rc_pii = {"error": f"The file could not be read ({type(e).__name__}: {e})."}
-            r = ss.get("rc_pii")
-            if r and "error" in r:
-                st.error(r["error"])
-            elif r:
-                _stats([("bad" if r["found"] else "ok", "Findings", len(r["found"])), ("ok", "Sheets scanned", r["n"]), ("gold", "File", r["name"][:22]), ("ok", "Values shown", "None")])
-                if r["found"]:
-                    st.dataframe(pd.DataFrame(r["found"]), width="stretch", hide_index=True)
-                    st.warning("Replace these columns with pseudonymised codes before analysis or sharing.")
-                else:
-                    st.success("No personal-data patterns found. This does not prove the file is anonymous.")
-
-else:
-    st.markdown("<span class='cb-eyebrow'>Cite &amp; validation</span>", unsafe_allow_html=True)
-    st.title("How to cite ClockBind")
-    st.markdown(f"<div class='cb-card'>Alavi, S. M. (2026). <i>ClockBind: a reproducible statistics studio for doctoral research</i> (Version {__version__}) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22989932<br><span class='cb-eyebrow'>Concept DOI (all versions). For a paper, cite the version DOI of the release you used, listed on Zenodo; 1.0.1 is https://doi.org/10.5281/zenodo.22992952. Also cite the libraries listed under each result.</span></div>", unsafe_allow_html=True)
-    try:
-        v = resource("VALIDATION.md")
-    except FileNotFoundError:
-        v = None
-    if v:
-        txt = v.read_text(encoding="utf-8")
-        ok = "pass" in txt
-        st.markdown(txt)
-    try:
-        a = resource("AI_ASSISTANCE.md")
-    except FileNotFoundError:
-        a = None
-    if a:
-        with st.expander("Disclosure of AI assistance"):
-            st.markdown(a.read_text(encoding="utf-8"))

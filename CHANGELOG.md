@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.3.0 — 2026-09-28 (Research Studio)
+- 1.2.1 was not published separately; its changes are part of this release.
+- The new Studio pages are available in English, Magyar and فارسی (Doctoral Programme, Publication and Statistics pages in English).
+- **Doctoral Programme and Publication pages** in the Studio, spanning the Bridge study and Papers 1–4.
+- **Paper 1 (DCE):** outside-option MNL, Swait–Louviere diagnostic, simulated-ML mixed logit and hierarchical-Bayes MNL, in addition to AMCE. MNL standard errors come from the observed information matrix (matches statsmodels ConditionalLogit).
+- **Paper 2 (measurement):** HTMT, CR/AVE, incremental validity (ΔR²), group and longitudinal invariance via lavaan, follow-up attrition.
+- **Paper 3:** T1/T2 first-difference models and dyadic discrepancy diagnostics; fsQCA (calibration, necessity, truth table, conservative solution) and Cox survival as exploratory tools. PRI follows Ragin's formula.
+- **Paper 4 (qualitative):** case-code evidence matrices, provenance and chronology checks, conflicting evidence, process-tracing test register, governance-form comparison.
+- **Publication:** local DRAFT/FROZEN preregistration snapshots with SHA-256, manuscript–result consistency audit, hashed submission bundles; no external registration is claimed.
+- New Paper 1 mixed logit and HB, Paper 2 invariance and other new engines are marked **validation-required** until benchmarked against external reference implementations.
+- **Research Studio Beta 2:** optional project manifests can preload governance, registered research assets, and privacy-minimised per-source/per-episode status registries on the Home dashboard. `CLOCKBIND_AUTO_PROFILE` supports a deliberate local project launcher without embedding private paths in the public package.
+- **Audit false-positive controls:** current-wording checks can exempt archived/history sheet locations while privacy checks still run there; labelled-name detection requires an explicit field separator; the approved HUF 200,000 / HUF 200k materiality threshold is masked before generic amount detection.
+- **Public package contains code, documentation, tests and synthetic examples only;** no study data.
+- **Research Studio information architecture refresh:** persistent left navigation is now Home / Bridge / Statistics / Document Audit / Privacy / Reproducibility / Settings. Analysis work uses one five-stage interaction model: Upload → Configure → Run → Review → Export.
+- **Bridge workspace:** workbook integrity, binding analysis and supervisor status are grouped under one Bridge module rather than mixed with statistics.
+- **Document Audit and Privacy are separated:** methodological wording/version checks live in Document Audit; personal/confidential-data screening lives in Privacy. Both remain local and values are never displayed.
+- **AI-safe research handoff:** `clockbind export ai-safe --workbook ... --gates ... --output ...` creates a zip containing aggregate Bridge status, protocol/code/input hashes and reproducibility metadata only—no cell values, raw document text, detected personal values or local input paths.
+- **Chat/MCP surface expanded:** safe tools now include `bridge_validate`, `audit_documents`, `statistics_run`, `export_ai_safe` and `verify_package`, in addition to the existing binding, privacy, agreement and freeze tools.
+- Fix: documents with no extractable text (empty or scanned) are listed as not read, never as clean.
+- **Document audit, on this computer:** `clockbind audit docs --data <file | folder | zip>` and, in the Studio, the *Any personal data?* task now read Word, PDF, Excel, CSV, text and zip files (for example a Google Drive download). They report personal or confidential data (e-mails, phones, IBANs, ID numbers, card numbers, exact amounts, invoice or order numbers, and names from an optional local list) by kind and location only, never the value, and outdated wording against the Bridge rules of 28 September 2026 (`bridge_terms_2026-09-28.json`, editable). Results as Excel and PDF. The CLI now prints only aggregate counts by default, can write a safe `--summary-json`, exposes per-file names only with `--list-files`, recognises explicitly labelled person-name fields, and audits nested zip downloads with conservative archive limits.
+- **Binding verdicts (Bridge protocol v3.4-DRAFT):** eight categories — Finance-, Payment-, Fulfilment-, Logistics-, Operational-readiness-binding, Jointly binding, Non-binding, Indeterminate. Step clocks must be finance, payment, fulfilment, logistics or operational-readiness (common synonyms such as supplier, delivery or installation are accepted); any other clock is reported as an input problem instead of being labelled "other".
+- Protocol file `gates_v3.4_DRAFT.json`: finance-only actionability and the five-tier claim-language scale.
+
 ## 1.2.0 — 2026-09-28
 - **New Studio, built around tasks.** A home screen shows where the Bridge study stands (sources reviewed, evidence levels, episodes held, workbook errors, roadmap A–E) and four large task cards: *Check my Bridge workbook*, *Which clock binds?*, *Any personal data?*, *Make a report*. Each task is a short step-by-step flow with plain-language fixes instead of technical check names. Statistics (Data, Analyze, Output, Cite) stay one click away.
 - **Personal profiles on this computer.** Whoever uses the app picks their name; the greeting, language, workbook and protocol are remembered per person in `~/.clockbind/profiles.json`. No passwords and no online accounts.
@@ -54,3 +77,9 @@
 
 ## 0.3.x — 2026-09-26
 - Screening integrity fixes after independent audit (freeze register, strict validation, levels, run ledger, code hash).
+
+### 1.2.1 local statistics CLI addition
+- Added auto-discovered `clockbind stats` plugin over the same analysis registry as ClockBind Studio.
+- Added `list`, `show`, `columns`, `run`, and `batch` commands.
+- Statistical runs remain local and write provenance manifests, frozen syntax, Word reports, Excel tables, and figure files where applicable.
+- Added CLI regression tests, including a no-row-values metadata inspection test.

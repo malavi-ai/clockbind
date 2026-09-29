@@ -1,0 +1,20 @@
+{
+  "checks": [
+    {
+      "id": "sample_size",
+      "expected": "N = 150",
+      "required": true,
+      "forbidden": [
+        "N = 90"
+      ]
+    },
+    {
+      "id": "claim_ceiling",
+      "expected": "suggests",
+      "required": false,
+      "forbidden": [
+        "proves causally"
+      ]
+    }
+  ]
+}

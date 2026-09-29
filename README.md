@@ -3,17 +3,19 @@
 # ClockBind
 [![DOI](https://zenodo.org/badge/1390144757.svg)](https://doi.org/10.5281/zenodo.22989932)
 
-**A reproducible statistics studio for doctoral research.** Point-and-click app, command line and syntax files; every procedure validated against R.
+**A local-first doctoral research operating system.** ClockBind combines evidence governance, Bridge classification, statistics, discrete-choice modelling, longitudinal measurement, configurational/panel analysis, qualitative case/process-tracing support, reproducibility and publication control.
+
+**Beta 3 scientific-status note.** The previously released/core statistical procedures retain their existing validation record. The new Paper 1--4 engines added in Research Studio Beta 3 are functional but **validation-required** unless explicitly marked otherwise; convergence alone is never treated as validation.
 
 
 | | |
 |---|---|
-| **Studio** | Local app in your browser in English, Magyar or فارسی: a home screen with the Bridge status and four tasks (check the workbook, which clock binds, personal data, report), plus statistics like SPSS: open Excel/CSV/SPSS files, choose an analysis from the menu, get tables, charts and a *methods text*, export everything to Word. Data never leave your computer. |
+| **Studio** | Local research workstation in English, Magyar or فارسی with persistent left navigation: **Home / Doctoral Programme / Bridge / Statistics / Document Audit / Privacy / Reproducibility / Publication**. Analysis modules follow **Upload → Configure → Run → Review → Export**. Data never leave your computer. |
 | **Reproducible** | Every result carries its *syntax* (JSON). `clockbind syntax run` re-creates the whole output from the data file, with a manifest (data hash, software versions, code hash). |
-| **Validated** | `clockbind validate all` compares 50 statistics with established R functions (stats, psych, lavaan, irr, irrCAC, nnet, MASS, sandwich, clubSandwich, pwr) and writes [VALIDATION.md](VALIDATION.md). Current result: **50 of 50 pass**. |
+| **Validation-aware** | `clockbind validate all` compares 50 core statistics with established R functions (50 of 50 pass; [VALIDATION.md](VALIDATION.md)). New Beta 3 DCE/HB/invariance/fsQCA/panel/survival/qualitative-support procedures carry explicit validation-required or methodological-support labels until frozen reference-case comparisons are completed. |
 | **Private** | Everything runs on your device; no telemetry; bundled fonts; a personal-data scan warns before analysis (GDPR / KVKK). See [PRIVACY.md](PRIVACY.md). |
 | **In your chat** | Connect ClockBind to Claude Desktop, Claude Code or any MCP chat app with one command. Your assistant runs the checks on files you name; only results come back (counts, levels, verdicts, cells to fix), never cell values. |
-| **Tested** | See [TESTING.md](TESTING.md): statistics against R, the binding rule against an independent implementation, browser and chat tools end to end, clean installs on Python 3.9–3.13. |
+| **Tested** | See [TESTING.md](TESTING.md). The released/core procedures retain their prior validation record; Beta 3 adds focused engineering tests and explicitly identifies procedures still requiring external reference validation. |
 | **Citable** | MIT licence, `CITATION.cff`, Zenodo DOI per release (see [RELEASE_GUIDE.md](RELEASE_GUIDE.md)). |
 
 ## Analyses
@@ -35,6 +37,11 @@
   - screening-workbook validation: formula errors, uncalculated cells, dropdown compliance, links between sheets, override logs, verdict consistency;
   - P3 multi-arm overlap weights (diagnostics, estimability gates, CR2 contrasts, cluster bootstrap);
   - P1 conjoint AMCEs with CR2 by respondent.
+- **Paper 1 · DCE:** choice/design diagnostics; explicit outside-option MNL; Swait--Louviere relative-scale/preference-equality diagnostics; simulated-ML mixed logit; hierarchical-Bayes multinomial logit with respondent part-worths.
+- **Paper 2 · Measurement:** construct reliability; HTMT; CR/AVE from supplied CFA loadings; incremental validity (ΔR²); configural/metric/scalar/partial-scalar invariance via lavaan; longitudinal T1/T2 invariance with correlated uniquenesses; 12-month attrition diagnostics.
+- **Paper 3 · QCA & Panel:** fsQCA direct calibration; necessity analysis; truth tables; conservative minimisation without logical remainders; T1/T2 first-difference models; dyad discrepancy diagnostics; fsQCA and Cox survival are exploratory tools.
+- **Paper 4 · Qualitative:** researcher-coded case × code evidence matrices; provenance and chronology coverage; conflicting/negative-evidence retention; process-tracing test register (straw-in-the-wind, hoop, smoking-gun, doubly decisive); governance-form cross-case matrices.
+- **Publication & preregistration:** local hash-locked DRAFT/FROZEN snapshots, explicit manuscript-result consistency registries and hashed submission bundles. ClockBind never claims external OSF/registry submission.
 
 ## Screening app (any device, offline)
 Open https://malavi-ai.github.io/clockbind/ once, then *Add to Home Screen* (iPhone) or *Install* (Chrome/Edge). After the first visit it works without internet. Files are read inside the browser and never uploaded. It covers case screening only; the statistics Studio runs on the Mac (below).
@@ -53,7 +60,9 @@ ClockBind includes a local tool server (Model Context Protocol). It runs on your
 
 Needs Python 3.10 or later (the Mac installer uses the newest Python it finds; Apple's built-in 3.9 runs everything except the chat tools).
 
-Tools: `validate_workbook`, `privacy_scan`, `screen_workbook`, `binding_verdicts`, `binding_template`, `coder_agreement`, `freeze_gates` (asks for explicit confirmation), `verify_references`. Full results and manifests are saved in `~/ClockBind_runs`.
+Tools include `bridge_validate`, `audit_documents`, `statistics_run`, `binding_verdicts`, `privacy_scan`, `export_ai_safe`, `doctoral_capabilities`, `preregistration_snapshot`, `publication_consistency_audit`, `verify_package`, `coder_agreement`, `freeze_gates` (asks for explicit confirmation), and `verify_references`. Full detailed results and manifests stay in `~/ClockBind_runs`; chat-facing responses are intentionally bounded.
+
+If your study rules say that no case data may reach an AI tool (not even pseudonymised), use only `export_ai_safe`, `audit_documents` (aggregate counts) and `verify_package` with study files, and run everything else in the Studio or on the command line.
 
 ## Install (Mac)
 1. Download the latest release from https://github.com/malavi-ai/clockbind/releases/latest (**Source code (zip)**) and unzip it.
@@ -61,7 +70,7 @@ Tools: `validate_workbook`, `privacy_scan`, `screen_workbook`, `binding_verdicts
    right-click → **Open** → **Open**. On macOS 15 or later, if there is no Open button: **System Settings → Privacy & Security → Open Anyway**.
 3. When the Terminal says *Done*, **ClockBind** is in your Applications folder (Home → Applications). Drag it to the Dock: one click opens the Studio.
 
-The Studio runs on your Mac and opens in your browser at `localhost:8501`; it works offline. R is optional (CFA and re-running the validation).
+The Studio runs on your Mac and opens in your browser at `localhost:8501`; it works offline. R is optional for most of ClockBind, but required for CFA and the Paper 2 lavaan measurement-invariance workflows, and for re-running R-based validation.
 
 ## Command line
 ```
@@ -73,10 +82,25 @@ clockbind screen run --data screening.xlsx --gates gates.json
 clockbind workbook check --data screening.xlsx          # integrity before analysis or freeze
 clockbind binding template --output timeline.xlsx      # timeline input with an example
 clockbind binding run --data timeline.xlsx              # which clock binds? verdicts
+clockbind export ai-safe --workbook Bridge.xlsx --gates gates.json --output Bridge_AI_Safe_Export.zip
 clockbind connect claude-desktop                        # use ClockBind from your chat
-clockbind validate all                                  # regenerate VALIDATION.md
+clockbind validate all                                  # regenerate legacy/core VALIDATION.md
+clockbind stats list                                    # Paper 1--4 + general statistics engines
+clockbind publication prereg --file plan.json --output prereg.zip --status DRAFT
+clockbind publication audit --manuscript paper.docx --registry result_registry.json
 ```
 `phdstat` remains as an alias of `clockbind`.
+
+## Checking documents before sharing
+Everything runs on your computer; nothing is uploaded and values are never shown.
+
+```
+clockbind audit docs --data "Bridge download.zip"            # safe aggregate summary in the terminal
+clockbind audit docs --data folder --names my_names.txt       # also look for names from your own local list
+clockbind audit docs --data folder --summary-json summary.json # safe counts only; suitable to paste into a chat
+clockbind audit docs --data folder --list-files               # opt in to local per-file names/statuses
+```
+In the Studio: **Bridge → Any personal data?** Drop Word, PDF, Excel, CSV, text or zip files. Google Docs must be downloaded first (select the files in Drive → Download gives a zip with Word/Excel copies). The CLI is safe-by-default: it prints aggregate counts only; file names are shown in the local Excel/PDF report, or in the terminal only with `--list-files`. Nested zip files are read locally with archive-size limits.
 
 ## Citing
 > Alavi, S. M. (2026). *ClockBind: a reproducible statistics studio for doctoral research* (Version 1.0.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22992952
@@ -92,6 +116,22 @@ Please also cite the underlying libraries named in each result (statsmodels, Sci
 - Missing data: listwise deletion by default. Pre-specify your rule (e.g. multiple imputation) before analysing outcomes; multiple imputation is planned.
 - Cluster-robust tests use G − 1 degrees of freedom. clubSandwich uses Satterthwaite df, so p-values can differ slightly with few clusters even when SEs agree.
 - The P3 simulation assumptions (`clockbind/dgp`) are placeholders, not findings.
-- Qualitative coding belongs in dedicated software (MAXQDA, NVivo). ClockBind computes the agreement statistics.
+- ClockBind now supports structured qualitative evidence matrices and process-tracing registers, but it is not a replacement for full CAQDAS functions such as transcript annotation, multimedia coding or team codebook management in MAXQDA/NVivo/ATLAS.ti.
+- New Beta 3 confirmatory engines must be externally benchmarked on frozen validation cases before they are used as sole support for manuscript claims.
 
 Developed with the assistance of Claude (Anthropic); see [AI_ASSISTANCE.md](AI_ASSISTANCE.md). MIT licence.
+
+## Local statistics CLI
+
+ClockBind 1.2.1 exposes the same registered analyses used by Studio through an auto-discovered `stats` plugin. Data stay on the local computer.
+
+```bash
+clockbind stats list
+clockbind stats show t_independent
+clockbind stats columns --data study.xlsx
+clockbind stats run --data study.xlsx --analysis descriptives --param variables=age,bp
+clockbind stats run --data study.xlsx --analysis t_independent --param variables=outcome --param group=arm
+clockbind stats batch --data study.xlsx --syntax analysis_plan.json
+```
+
+Each statistical run writes a provenance manifest and frozen syntax. Table-producing analyses also write `tables.xlsx`; figures are exported as PNG; all analyses are assembled into `output.docx`. `stats columns` prints only metadata (column names, dtypes, non-missing counts and unique counts), not row values.

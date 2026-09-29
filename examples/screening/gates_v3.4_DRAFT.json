@@ -1,0 +1,332 @@
+{
+  "protocol_version": "v3.4-DRAFT",
+  "frozen": false,
+  "design": "Tiered full-population multiple-case design (USER DECISION D1, 26 Sept 2026)",
+  "note": "Matches the column names of Bridge_Evidence_Review v3.9, sheet 05_Level_Assessment (header row 3). Levels are calculated from the criteria (USER DECISION 27 Sept 2026); manual overrides only with a logged reason. Verdict categories, finance-only actionability and the five-tier claim language: USER DECISION 28 Sept 2026. Rename protocol_version to 'v3.4' (no DRAFT) only when the author freezes. No target counts exist anywhere in this file.",
+  "id_column": "Episode ID",
+  "episode_column": "Episode ID",
+  "reason_column": null,
+  "claimed_status_column": null,
+  "carry_columns": [
+    "Source code"
+  ],
+  "values": {
+    "pass": [
+      "Yes"
+    ],
+    "fail": [
+      "No"
+    ],
+    "unknown": [
+      "PENDING",
+      "Unknown",
+      "Held"
+    ]
+  },
+  "levels": {
+    "S0": "Below Level 1",
+    "L1": "Level 1",
+    "L2": "Level 2",
+    "L3": "Level 3"
+  },
+  "stages": [
+    {
+      "id": "S0",
+      "name": "Episode analysis-readiness after source screening",
+      "unit": "entry",
+      "criteria": [
+        {
+          "id": "S0p1",
+          "type": "in",
+          "column": "Episode extraction complete?",
+          "allowed": [
+            "COMPLETE"
+          ],
+          "scale": [
+            "COMPLETE"
+          ],
+          "label": "Source→episode extraction complete (prerequisite)",
+          "definition": "COMPLETE when the one-pass source→episode extraction in 03A is finished for this episode; otherwise PENDING (held, never excluded)."
+        },
+        {
+          "id": "S0p2",
+          "type": "in",
+          "column": "Original docs checked?",
+          "allowed": [
+            "Yes"
+          ],
+          "scale": [
+            "Yes"
+          ],
+          "label": "Original documents checked (prerequisite)",
+          "definition": "Yes when the authorised primary screener (the author) has checked the original documents; otherwise PENDING (held, never excluded). 'No' is not a valid entry. The later blind independent-coder check is recorded separately."
+        },
+        {
+          "id": "S0d",
+          "type": "yn",
+          "column": "Access cleared?",
+          "label": "Lawful research access",
+          "definition": "Source's controller assessment signed and no cross-border restriction pending. Pending (e.g. KVKK) = Unknown: held, not excluded, not read for research."
+        },
+        {
+          "id": "S0b",
+          "type": "yn",
+          "column": "Organisational episode?",
+          "label": "Organisational episode",
+          "definition": "Concerns an organisation of any size, not private/personal use (D2: no size restriction; size recorded in org_size)."
+        },
+        {
+          "id": "S0c",
+          "type": "yn",
+          "column": "Archive-window eligible?",
+          "label": "Inside archive window",
+          "definition": "Dated within the frozen archive window 2024-01-01 to 2026-08-24."
+        }
+      ],
+      "note": "Evaluated row by row. In sheet 05A each row is one episode, so this row-level stage is episode-level in practice; source-entry screening itself is recorded in 02A (Stage-0 audit) and 03A (source→episode extraction). ClockBind's 'entry' unit is kept so that failures read 'Outside analytic archive' and holds read 'Held at S0'."
+    },
+    {
+      "id": "L1",
+      "name": "Level 1 – archive typology",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "L1a",
+          "type": "yn",
+          "column": "L1 functional necessity contemporaneously documented?",
+          "label": "Functional necessity (D14)",
+          "definition": "The equipment, system or component was required for the buyer to deliver its service, shown by a contemporaneous document."
+        },
+        {
+          "id": "L1b",
+          "type": "yn",
+          "column": "L1 commitment ≥ HUF 200,000 equivalent?",
+          "label": "Commitment at or above the study's operational floor (HUF 200,000 equivalent)",
+          "definition": "Materiality floor. An episode satisfies the monetary component of materiality when the contemporaneously documented total commitment is at least HUF 200,000, or its foreign-currency equivalent. HUF 200,000 is a study-specific ex-ante operational materiality floor, not a statutory, accounting, or universal definition of materiality. Functional necessity is assessed separately, and both conditions must be satisfied."
+        },
+        {
+          "id": "L1c",
+          "type": "in",
+          "column": "L1 ECB conversion (commitment-document date) verified or N/A?",
+          "allowed": [
+            "Yes",
+            "N/A"
+          ],
+          "scale": [
+            "Yes",
+            "N/A",
+            "No"
+          ],
+          "label": "Currency conversion verified (D14)",
+          "definition": "For non-HUF transactions, conversion uses the ECB reference rate for the date of the contemporaneous transaction document used to establish the commitment amount; if no rate is published that day, the most recent preceding published working-day rate is used. N/A if the commitment is in HUF."
+        },
+        {
+          "id": "L1d",
+          "type": "yn",
+          "column": "L1 ≥2 dated-source chronology?",
+          "label": "Reconstructable chronology",
+          "definition": "At least two dated contemporaneous sources allow the sequence of events to be ordered."
+        },
+        {
+          "id": "L1e",
+          "type": "yn",
+          "column": "L1 finance/payment arrangement OR pre-outcome comparator?",
+          "label": "Financing/payment architecture OR dated comparator role",
+          "definition": "A financing or payment arrangement is documented, or a comparator role is recorded in a dated document that predates the outcome review."
+        },
+        {
+          "id": "L1f",
+          "type": "in",
+          "column": "Organisation size (EU 2003/361)",
+          "allowed": [
+            "Micro",
+            "Small",
+            "Medium",
+            "Large",
+            "Unknown size"
+          ],
+          "scale": [
+            "Micro",
+            "Small",
+            "Medium",
+            "Large",
+            "Unknown size"
+          ],
+          "gate": false,
+          "label": "Organisation size (reporting flag, D2)",
+          "definition": "EU Recommendation 2003/361 category; record how it was verified. Never a gate."
+        },
+        {
+          "id": "L1g",
+          "type": "in",
+          "column": "Equipment type",
+          "allowed": [
+            "Device/system",
+            "Replacement part/consumable",
+            "Other"
+          ],
+          "scale": [
+            "Device/system",
+            "Replacement part/consumable",
+            "Other"
+          ],
+          "gate": false,
+          "label": "Equipment type (flag, D15)",
+          "definition": "Replacement parts and consumables qualify when both D14 conditions hold."
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "name": "Level 2 – mechanism",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "L2a",
+          "type": "yn",
+          "column": "L2 ≥2 linked evidenced process steps?",
+          "label": "≥2 linked process steps evidenced",
+          "definition": "At least two dependency-linked process steps in the episode-specific process network are each supported by a dated source; steps may be sequential, parallel or overlapping."
+        },
+        {
+          "id": "L2b",
+          "type": "yn",
+          "column": "L2 documented decision/outcome state?",
+          "label": "Decision/outcome state documented",
+          "definition": "The state needed for the mechanism claim (e.g. route chosen, route stalled, payment executed) is documented, not inferred."
+        },
+        {
+          "id": "L2c",
+          "type": "yn",
+          "column": "L2 transactional/external or non-researcher-firm corroboration?",
+          "label": "Corroboration appropriate to the claim",
+          "definition": "The central mechanism step is supported by a transactional/external record or by a source not authored by the researcher's firm."
+        },
+        {
+          "id": "L2d",
+          "type": "yn",
+          "column": "L2 rival mechanisms listed?",
+          "label": "Rival mechanisms listed (analysis step)",
+          "definition": "Rival explanations listed for the mechanism (analysis step, D5).",
+          "gate": false
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "name": "Level 3 – binding clock",
+      "unit": "episode",
+      "criteria": [
+        {
+          "id": "L3a",
+          "type": "yn",
+          "column": "L3 evaluated financing route?",
+          "label": "Financing route evaluated",
+          "definition": "Episode-level evidence that at least one financing route was evaluated."
+        },
+        {
+          "id": "L3b",
+          "type": "yn",
+          "column": "L3 ex-ante/structurally fixed downstream durations?",
+          "label": "Ex-ante expected durations documented",
+          "definition": "Expected durations of the downstream stages are contemporaneous or structurally fixed; realised durations are descriptive only (D12)."
+        },
+        {
+          "id": "L3c",
+          "type": "yn",
+          "column": "L3 Tier A/B window independent of outcome?",
+          "label": "Tier A/B window set independently of the outcome",
+          "definition": "Tier A (contractual/external) or B (documented operational) window, documented in a source dated before the outcome or set by a third party. Tier C windows are Level 2 only."
+        },
+        {
+          "id": "L3d",
+          "type": "yn",
+          "column": "L3 required event explicit?",
+          "label": "Required event R explicit",
+          "definition": "The event that had to occur by tW is stated in the source."
+        },
+        {
+          "id": "L3e",
+          "type": "yn",
+          "column": "L3 customer-side date has outside source?",
+          "label": "Customer-side clocks independently sourced",
+          "definition": "No customer-side clock (financing usability, payment) is dated solely by a source authored by the researcher's firm (D6)."
+        },
+        {
+          "id": "L3f",
+          "type": "yn",
+          "column": "L3 supplier-delay rival tested?",
+          "label": "Supplier-delay rival tested (analysis step, D6)",
+          "definition": "Required analysis step for every Level 3 episode; not an admission gate.",
+          "gate": false
+        },
+        {
+          "id": "L3g",
+          "type": "yn",
+          "column": "L3 window setter recorded?",
+          "label": "Window setter recorded (flag)",
+          "definition": "Buyer, seller or third party; seller-set windows form a sensitivity group.",
+          "gate": false
+        },
+        {
+          "id": "L3h",
+          "type": "yn",
+          "column": "L3 dependency network reconstructed?",
+          "label": "Dependency network reconstructed (analysis step)",
+          "definition": "The order of clocks is taken from contract and payment terms; parallel steps allowed.",
+          "gate": false
+        },
+        {
+          "id": "L3i",
+          "type": "yn",
+          "column": "L3 finance actionability assessed separately from binding?",
+          "label": "Actionability reported separately from binding (analysis step)",
+          "definition": "Finance only (USER DECISION 28 Sept 2026): did financing become usable by the latest feasible start of the downstream path? Assessed and reported separately from the binding verdict.",
+          "gate": false
+        },
+        {
+          "id": "L3j",
+          "type": "yn",
+          "column": "L3 reactive-downstream sensitivity completed?",
+          "label": "Reactive-downstream sensitivity (analysis step)",
+          "definition": "Sensitivity check that relaxes the 'other clocks unchanged' assumption.",
+          "gate": false
+        }
+      ]
+    }
+  ],
+  "binding_rule": {
+    "status": "Rule: USER DECISION 27 Sept 2026; verdict categories and claim language: USER DECISION 28 Sept 2026. Applied after the protocol freeze to Level 3 episodes only.",
+    "definition": "A clock binds if the required event R would have occurred by tW had that clock met its ex-ante expected duration, other clocks as documented. Only ex-ante expected durations are used. Temporal actionability is defined for finance only and reported separately from binding.",
+    "verdicts": [
+      "Finance-binding",
+      "Payment-binding",
+      "Fulfilment-binding",
+      "Logistics-binding",
+      "Operational-readiness-binding",
+      "Jointly binding",
+      "Non-binding",
+      "Indeterminate"
+    ],
+    "jointly_binding": "No single correction is sufficient; the specified combined correction is sufficient for R to occur by tW.",
+    "sign_stability": "Slack is computed at the earliest and at the latest admissible date bounds; if the sign of the decisive slack differs, the verdict is Indeterminate.",
+    "claim_ceiling": {
+      "A": "Level 3; Tier A window; window not seller-set (Buyer or Third party); customer-side date independently sourced; supplier-delay rival rejected; sign-stable → 'was binding under the specified decision rule'",
+      "B": "As A, but Tier B window or seller-set window → 'appears to have been binding'",
+      "C": "Level 3; supplier-delay rival not rejected → 'is consistent with a binding constraint'",
+      "D": "Level 2 → 'suggests' (mechanism only; no binding claim)",
+      "E": "Level 1 → 'a delay was observed' (description only)",
+      "X": "Indeterminate verdict or sign-unstable → 'binding status cannot be determined'",
+      "non_binding": "Non-binding verdicts use the negated form at the same tier ('was not binding under the specified decision rule', 'appears not to have been binding', 'is consistent with a non-binding clock')",
+      "pending": "Level 3 with no verdict or no sign-stability record → PENDING",
+      "overrides": "Only with reason and date; counted and reported"
+    },
+    "clocks": {
+      "finance": "financing becomes usable",
+      "payment": "payment execution",
+      "fulfilment": "supplier production, preparation or fulfilment",
+      "logistics": "dispatch, transport, customs or delivery",
+      "operational-readiness": "installation, commissioning, training or other documented readiness requirement"
+    }
+  }
+}

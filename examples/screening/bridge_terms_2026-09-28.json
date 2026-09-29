@@ -1,0 +1,150 @@
+{
+  "name": "Bridge current position, 28 Sep 2026",
+  "source": "Bridge_Evidence_Review v3.9, 00_Control and 09_Change_Log",
+  "rules": [
+    {
+      "id": "T01",
+      "severity": "HIGH",
+      "pattern": "frozen (?:focal|core) (?:architecture|eligibility|sample)|four satisfy the frozen core",
+      "issue": "Four-case design stated as current",
+      "current": "Tiered full-population design (26 Sep 2026): all 45 sources reviewed; former 4 cases only in Table S2"
+    },
+    {
+      "id": "T02",
+      "severity": "HIGH",
+      "pattern": "\\bfour (?:core |focal )?episodes\\b|four-case process sample|\\bbenchmark episode\\b",
+      "issue": "Four-case design stated as current",
+      "current": "Tiered full-population design; E02/E03/E05/E17 are audit history only"
+    },
+    {
+      "id": "T03",
+      "severity": "HIGH",
+      "pattern": "\\b(?:45\\s*(?:→|->)\\s*)?19\\s*(?:→|->)\\s*4\\b|\\bnineteen candidate|\\b19 candidate episodes screened",
+      "issue": "19 → 4 selection stated as current",
+      "current": "50 → 46 → 45 sources; every episode placed by formula; no selection"
+    },
+    {
+      "id": "T04",
+      "severity": "MEDIUM",
+      "pattern": "\\bcore (?:count|eligible)\\b|\\bNOT CORE\\b|\\bB\\+ ?reserve\\b|\\bS2\\s*[–-]\\s*core\\b",
+      "issue": "Core-sample logic",
+      "current": "Levels 1–3 by formula; no core sample"
+    },
+    {
+      "id": "T05",
+      "severity": "MEDIUM",
+      "pattern": "\\bmixed/joint\\b|\\bmixed\\s+(?:binding|category|verdict)\\b|(?:→|->|=)\\s*mixed\\b|\\(\\d\\)\\s*Mixed\\b",
+      "issue": "Outdated verdict 'mixed'",
+      "current": "Jointly binding (no single correction sufficient; the combined correction sufficient)"
+    },
+    {
+      "id": "T06",
+      "severity": "MEDIUM",
+      "pattern": "Non-finance:\\s*\\w+|\\boperational-binding\\b|\\bwindow met\\b",
+      "issue": "Outdated verdict label",
+      "current": "Finance-, Payment-, Fulfilment-, Logistics-, Operational-readiness-binding; Jointly binding; Non-binding; Indeterminate"
+    },
+    {
+      "id": "T07",
+      "severity": "HIGH",
+      "pattern": "permits\\s+[“\\\"]shows[”\\\"]|\\bshows\\s*/\\s*was binding|\\bA\\s*=\\s*shows",
+      "issue": "Old claim ladder (allows 'shows')",
+      "current": "A was binding under the specified decision rule; B appears to have been binding; C is consistent with a binding constraint; D suggests; E a delay was observed; X cannot be determined"
+    },
+    {
+      "id": "T08",
+      "severity": "MEDIUM",
+      "pattern": "appears to be binding",
+      "issue": "Old tier-B wording",
+      "current": "'appears to have been binding'"
+    },
+    {
+      "id": "T09",
+      "severity": "HIGH",
+      "pattern": "€\\s?1,000|1,000\\s*(?:EUR|€)?\\s*net of VAT",
+      "issue": "Old materiality threshold",
+      "current": "Functional necessity + commitment ≥ HUF 200,000 (study-specific floor)"
+    },
+    {
+      "id": "T10",
+      "severity": "HIGH",
+      "pattern": "statutory reference amount|external statutory reference",
+      "issue": "Materiality framed as statutory",
+      "current": "'a study-specific ex-ante operational floor, not a statutory, accounting or universal threshold'"
+    },
+    {
+      "id": "T11",
+      "severity": "MEDIUM",
+      "pattern": "invoice/proforma date",
+      "issue": "Old conversion date",
+      "current": "ECB reference rate on the commitment-document date"
+    },
+    {
+      "id": "T12",
+      "severity": "HIGH",
+      "pattern": "was registered on OSF|\\b(?:were|was) re-coded\\b|independent coder (?:re-coded|coded)\\b|(?<!after the )(?<!once the )(?<!until the )(?<!before the )(?<!when the )\\bprotocol (?:was|is|has been) frozen",
+      "issue": "Status stated as done (freeze / OSF / coder)",
+      "current": "Protocol not yet frozen; not registered on OSF; independent coding after the freeze"
+    },
+    {
+      "id": "T13",
+      "severity": "MEDIUM",
+      "pattern": "\\buses independent coding\\b",
+      "issue": "Independent coding described as ongoing",
+      "current": "'will use blind independent coding … after the protocol is frozen'"
+    },
+    {
+      "id": "T14",
+      "severity": "MEDIUM",
+      "pattern": "final (?:8|eight)\\s*[–-]\\s*10 episodes|\\b6\\s*[–-]\\s*8 Level 3|≥\\s*4\\s*[–-]\\s*5 Level 3",
+      "issue": "Target episode count",
+      "current": "No target counts; N follows from the workbook"
+    },
+    {
+      "id": "T15",
+      "severity": "LOW",
+      "pattern": "\\bphdstat\\b",
+      "issue": "Old software name",
+      "current": "ClockBind (cite the version DOI used)"
+    },
+    {
+      "id": "T16",
+      "severity": "MEDIUM",
+      "pattern": "AI-assisted coding",
+      "issue": "AI described as coding cases",
+      "current": "AI never codes cases (USER DECISION 28 Sep 2026: no case data to AI)"
+    },
+    {
+      "id": "T17",
+      "severity": "LOW",
+      "pattern": "Dr\\.? Andrea|110-member committee|simulated committee",
+      "issue": "Internal review label",
+      "current": "Keep out of academic and supervisor documents"
+    },
+    {
+      "id": "T18",
+      "severity": "LOW",
+      "pattern": "When Available Finance Arrives Too Late",
+      "issue": "Old study title",
+      "current": "Which Clock Binds?"
+    },
+    {
+      "id": "T19",
+      "severity": "MEDIUM",
+      "pattern": "Current analysis-rule freeze",
+      "issue": "Heading implies a freeze",
+      "current": "'Analysis rules adopted before protocol freeze'"
+    }
+  ],
+  "allow_amounts": [
+    "HUF\\s?200[ ,.]?000",
+    "200[ ,.]?000\\s?(?:HUF|Ft)",
+    "HUF\\s?200k(?:-equivalent)?",
+    "200k(?:-equivalent)?\\s?(?:HUF|Ft)"
+  ],
+  "wording_exempt_locations": [
+    "^Archive_[^!]+!",
+    "^09_Change_Log!",
+    "^08_PL_M01_Ledger!"
+  ]
+}

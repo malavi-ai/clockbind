@@ -1,0 +1,50 @@
+{
+  "LiquidityRunway": {
+    "t1": [
+      "run1_t1",
+      "run2_t1",
+      "run3_t1"
+    ],
+    "t2": [
+      "run1_t2",
+      "run2_t2",
+      "run3_t2"
+    ]
+  },
+  "FinancingOptionality": {
+    "t1": [
+      "opt1_t1",
+      "opt2_t1",
+      "opt3_t1"
+    ],
+    "t2": [
+      "opt1_t2",
+      "opt2_t2",
+      "opt3_t2"
+    ]
+  },
+  "CostAdaptability": {
+    "t1": [
+      "ada1_t1",
+      "ada2_t1",
+      "ada3_t1"
+    ],
+    "t2": [
+      "ada1_t2",
+      "ada2_t2",
+      "ada3_t2"
+    ]
+  },
+  "UpgradeCapacity": {
+    "t1": [
+      "upg1_t1",
+      "upg2_t1",
+      "upg3_t1"
+    ],
+    "t2": [
+      "upg1_t2",
+      "upg2_t2",
+      "upg3_t2"
+    ]
+  }
+}

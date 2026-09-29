@@ -1,0 +1,73 @@
+case_id,governance_form,code,source_id,event_date,direction,coded_value
+CASE-01,know-how licence,capital-risk,CASE-01-S1,2026-01-02,support,medium
+CASE-01,know-how licence,operational-control,CASE-01-S2,2026-02-02,support,high
+CASE-01,know-how licence,technology-exposure,CASE-01-S3,2026-03-02,support,low
+CASE-01,know-how licence,contractual-rigidity,CASE-01-S4,2026-04-02,oppose,medium
+CASE-01,know-how licence,support-depth,CASE-01-S5,2026-05-02,support,high
+CASE-01,know-how licence,exit-protection,CASE-01-S6,2026-06-02,support,low
+CASE-02,franchise,capital-risk,CASE-02-S1,2026-01-03,support,high
+CASE-02,franchise,operational-control,CASE-02-S2,2026-02-03,support,low
+CASE-02,franchise,technology-exposure,CASE-02-S3,2026-03-03,oppose,medium
+CASE-02,franchise,contractual-rigidity,CASE-02-S4,2026-04-03,support,high
+CASE-02,franchise,support-depth,CASE-02-S5,2026-05-03,support,low
+CASE-02,franchise,exit-protection,CASE-02-S6,2026-06-03,support,medium
+CASE-03,know-how licence,capital-risk,CASE-03-S1,2026-01-04,support,low
+CASE-03,know-how licence,operational-control,CASE-03-S2,2026-02-04,oppose,medium
+CASE-03,know-how licence,technology-exposure,CASE-03-S3,2026-03-04,support,high
+CASE-03,know-how licence,contractual-rigidity,CASE-03-S4,2026-04-04,support,low
+CASE-03,know-how licence,support-depth,CASE-03-S5,2026-05-04,support,medium
+CASE-03,know-how licence,exit-protection,CASE-03-S6,2026-06-04,oppose,high
+CASE-04,franchise,capital-risk,CASE-04-S1,2026-01-05,oppose,medium
+CASE-04,franchise,operational-control,CASE-04-S2,2026-02-05,support,high
+CASE-04,franchise,technology-exposure,CASE-04-S3,2026-03-05,support,low
+CASE-04,franchise,contractual-rigidity,CASE-04-S4,2026-04-05,support,medium
+CASE-04,franchise,support-depth,CASE-04-S5,2026-05-05,oppose,high
+CASE-04,franchise,exit-protection,CASE-04-S6,2026-06-05,support,low
+CASE-05,know-how licence,capital-risk,CASE-05-S1,2026-01-06,support,high
+CASE-05,know-how licence,operational-control,CASE-05-S2,2026-02-06,support,low
+CASE-05,know-how licence,technology-exposure,CASE-05-S3,2026-03-06,support,medium
+CASE-05,know-how licence,contractual-rigidity,CASE-05-S4,2026-04-06,oppose,high
+CASE-05,know-how licence,support-depth,CASE-05-S5,2026-05-06,support,low
+CASE-05,know-how licence,exit-protection,CASE-05-S6,2026-06-06,support,medium
+CASE-06,franchise,capital-risk,CASE-06-S1,2026-01-07,support,low
+CASE-06,franchise,operational-control,CASE-06-S2,2026-02-07,support,medium
+CASE-06,franchise,technology-exposure,CASE-06-S3,2026-03-07,oppose,high
+CASE-06,franchise,contractual-rigidity,CASE-06-S4,2026-04-07,support,low
+CASE-06,franchise,support-depth,CASE-06-S5,2026-05-07,support,medium
+CASE-06,franchise,exit-protection,CASE-06-S6,2026-06-07,support,high
+CASE-07,know-how licence,capital-risk,CASE-07-S1,2026-01-08,support,medium
+CASE-07,know-how licence,operational-control,CASE-07-S2,2026-02-08,oppose,high
+CASE-07,know-how licence,technology-exposure,CASE-07-S3,2026-03-08,support,low
+CASE-07,know-how licence,contractual-rigidity,CASE-07-S4,2026-04-08,support,medium
+CASE-07,know-how licence,support-depth,CASE-07-S5,2026-05-08,support,high
+CASE-07,know-how licence,exit-protection,CASE-07-S6,2026-06-08,oppose,low
+CASE-08,franchise,capital-risk,CASE-08-S1,2026-01-09,oppose,high
+CASE-08,franchise,operational-control,CASE-08-S2,2026-02-09,support,low
+CASE-08,franchise,technology-exposure,CASE-08-S3,2026-03-09,support,medium
+CASE-08,franchise,contractual-rigidity,CASE-08-S4,2026-04-09,support,high
+CASE-08,franchise,support-depth,CASE-08-S5,2026-05-09,oppose,low
+CASE-08,franchise,exit-protection,CASE-08-S6,2026-06-09,support,medium
+CASE-09,know-how licence,capital-risk,CASE-09-S1,2026-01-10,support,low
+CASE-09,know-how licence,operational-control,CASE-09-S2,2026-02-10,support,medium
+CASE-09,know-how licence,technology-exposure,CASE-09-S3,2026-03-10,support,high
+CASE-09,know-how licence,contractual-rigidity,CASE-09-S4,2026-04-10,oppose,low
+CASE-09,know-how licence,support-depth,CASE-09-S5,2026-05-10,support,medium
+CASE-09,know-how licence,exit-protection,CASE-09-S6,2026-06-10,support,high
+CASE-10,franchise,capital-risk,CASE-10-S1,2026-01-11,support,medium
+CASE-10,franchise,operational-control,CASE-10-S2,2026-02-11,support,high
+CASE-10,franchise,technology-exposure,CASE-10-S3,2026-03-11,oppose,low
+CASE-10,franchise,contractual-rigidity,CASE-10-S4,2026-04-11,support,medium
+CASE-10,franchise,support-depth,CASE-10-S5,2026-05-11,support,high
+CASE-10,franchise,exit-protection,CASE-10-S6,2026-06-11,support,low
+CASE-11,know-how licence,capital-risk,CASE-11-S1,2026-01-12,support,high
+CASE-11,know-how licence,operational-control,CASE-11-S2,2026-02-12,oppose,low
+CASE-11,know-how licence,technology-exposure,CASE-11-S3,2026-03-12,support,medium
+CASE-11,know-how licence,contractual-rigidity,CASE-11-S4,2026-04-12,support,high
+CASE-11,know-how licence,support-depth,CASE-11-S5,2026-05-12,support,low
+CASE-11,know-how licence,exit-protection,CASE-11-S6,2026-06-12,oppose,medium
+CASE-12,franchise,capital-risk,CASE-12-S1,2026-01-13,oppose,low
+CASE-12,franchise,operational-control,CASE-12-S2,2026-02-13,support,medium
+CASE-12,franchise,technology-exposure,CASE-12-S3,2026-03-13,support,high
+CASE-12,franchise,contractual-rigidity,CASE-12-S4,2026-04-13,support,low
+CASE-12,franchise,support-depth,CASE-12-S5,2026-05-13,oppose,medium
+CASE-12,franchise,exit-protection,CASE-12-S6,2026-06-13,support,high
