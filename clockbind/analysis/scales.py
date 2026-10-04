@@ -15,20 +15,9 @@ from .core import Output, analysis, as_list, numeric
 from .style import BRASS, INK, REF, SLATE, TEAL, fig
 
 
-def _fa_module():
-    """factor_analyzer with a shim for scikit-learn >= 1.6 (force_all_finite was renamed ensure_all_finite)."""
-    import factor_analyzer.factor_analyzer as fam
-    import sklearn.utils.validation as skv
-    if not getattr(fam, "_cb_patched", False):
-        orig = skv.check_array
-
-        def check_array(*a, force_all_finite=None, **k):
-            if force_all_finite is not None:
-                k.setdefault("ensure_all_finite", force_all_finite)
-            return orig(*a, **k)
-        fam.check_array = check_array
-        fam._cb_patched = True
-    return fam
+# EFA, KMO, Bartlett and the omega loadings use ClockBind's own implementation (analysis/factor.py,
+# numpy/scipy only); factor_analyzer is no longer required. Agreement with it is checked in the tests.
+from .factor import EFA, bartlett as _bartlett, kmo as _kmo
 
 
 # ----------------------------------------------------------------- reliability
@@ -38,9 +27,7 @@ def cronbach_alpha(X: pd.DataFrame) -> float:
 
 
 def one_factor_omega(X: pd.DataFrame):
-    FactorAnalyzer = _fa_module().FactorAnalyzer
-    fa = FactorAnalyzer(n_factors=1, rotation=None, method="ml")
-    fa.fit(X)
+    fa = EFA(n_factors=1, method="ml").fit(X)
     lam = fa.loadings_[:, 0]
     lam = lam * np.sign(lam.sum()) if lam.sum() != 0 else lam
     uniq = 1 - lam ** 2
@@ -149,11 +136,9 @@ def icc(df, raters):
            {"name": "method", "label": "Extraction", "type": "choice", "choices": ["ml", "minres", "principal"], "default": "ml"},
            {"name": "rotation", "label": "Rotation", "type": "choice", "choices": ["varimax", "oblimin", "promax", "none"], "default": "oblimin"}])
 def efa(df, items, n_factors=2, method="ml", rotation="oblimin"):
-    fam = _fa_module()
-    FactorAnalyzer, calculate_bartlett_sphericity, calculate_kmo = fam.FactorAnalyzer, fam.calculate_bartlett_sphericity, fam.calculate_kmo
     its = as_list(items); X = numeric(df, its).dropna()
     out = Output("efa", "Exploratory factor analysis", {}); out.n_used = len(X)
-    chi, p = calculate_bartlett_sphericity(X); kmo_i, kmo = calculate_kmo(X)
+    chi, p = _bartlett(X); kmo_i, kmo = _kmo(X)
     out.table(pd.DataFrame([{"N": len(X), "KMO": kmo, "Bartlett χ²": chi, "df": len(its) * (len(its) - 1) / 2, "p": p}]), "Sampling adequacy")
     ev = np.sort(np.linalg.eigvalsh(X.corr().values))[::-1]
     out.table(pd.DataFrame({"Eigenvalue": ev, "% variance": 100 * ev / len(its), "Cumulative %": 100 * np.cumsum(ev) / len(its)}, index=[f"Component {i + 1}" for i in range(len(ev))]), "Eigenvalues of the correlation matrix")
@@ -161,15 +146,16 @@ def efa(df, items, n_factors=2, method="ml", rotation="oblimin"):
     ax.plot(range(1, len(ev) + 1), ev, "o-", color=INK); ax.axhline(1, color=BRASS, ls="--", lw=1.2); ax.set_title("Scree plot"); ax.set_xlabel("Component"); ax.set_ylabel("Eigenvalue")
     out.figure(f)
     rot = None if rotation == "none" else rotation
-    fa = FactorAnalyzer(n_factors=int(n_factors), rotation=rot, method=method)
-    fa.fit(X)
+    fa = EFA(n_factors=int(n_factors), method=method, rotation=rot).fit(X)
     L = pd.DataFrame(fa.loadings_, index=its, columns=[f"F{i + 1}" for i in range(int(n_factors))])
-    L["Communality"] = fa.get_communalities()
+    L["Communality"] = fa.communalities_
     out.table(L, f"Loadings ({method}, {rotation})", "Loadings above |.40| are usually interpreted.")
     if rot in ("oblimin", "promax") and getattr(fa, "phi_", None) is not None:
         out.table(pd.DataFrame(fa.phi_, index=L.columns[:-1], columns=L.columns[:-1]), "Factor correlations")
-    var = fa.get_factor_variance()
+    var = fa.factor_variance()
     out.table(pd.DataFrame(np.vstack(var), index=["SS loadings", "Proportion", "Cumulative"], columns=L.columns[:-1]), "Variance explained")
+    if not fa.converged_:
+        out.note("The extraction optimiser did not report convergence; check the number of factors and the items.")
     out.ref(REF["kmo"], REF["bartlett"])
     return out
 

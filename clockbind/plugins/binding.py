@@ -19,6 +19,7 @@ GUIDE = [
     ("Steps: predecessors", "Step names separated by ';'. Parallel steps are allowed (dependency network, not a chain)."),
     ("Steps: finish", "Documented finish time as an interval. Dates or date-times (YYYY-MM-DD or YYYY-MM-DD HH:MM). Blank = not documented."),
     ("Steps: expected_days", "Ex-ante expected duration in days (decimals allowed: 0.5 = 12 hours), from a document dated before the outcome. Blank = not documented."),
+    ("Steps: zero_documented", "Yes only if expected_days = 0 AND a pre-outcome document states immediate/same-day execution; otherwise a 0 is treated as missing (rule of 4 Oct 2026)."),
     ("Steps: source", "Document code (DOC-nnn). No names, amounts or file links."),
     ("Rule", "A clock binds if R would have occurred by tW had that clock met its ex-ante duration, other clocks as documented. "
              "Verdicts are computed at the earliest and at the latest bounds; if they differ the episode is Indeterminate."),
@@ -55,7 +56,7 @@ def cmd_run(a):
         md.write_text(summary.to_markdown(index=False) + "\n", encoding="utf-8")
         run.add_output(md)
         from ..pdfreport import add_pdf
-        cols = [c for c in ["episode", "verdict", "binding_clocks", "sign_stable", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
+        cols = [c for c in ["episode", "verdict", "indeterminate_reason", "binding_clocks", "sign_stable", "fragile", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
         add_pdf(run, "binding_report.pdf", "Which clock binds?", [
             ("h", "Verdicts"), ("table", summary),
             ("h", "Per episode"), ("table", res[cols] if len(res) else None),

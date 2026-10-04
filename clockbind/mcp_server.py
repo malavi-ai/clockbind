@@ -79,7 +79,7 @@ def build_server():
     @mcp.tool()
     def clockbind_about() -> str:
         """Version, available tools and the privacy model of this ClockBind server."""
-        return (f"ClockBind {__version__}. Tools: bridge_validate, audit_documents, privacy_scan, statistics_run, "
+        return (f"ClockBind {__version__}. Tools: bridge_full_report, lock_readiness, bridge_validate, audit_documents, privacy_scan, statistics_run, "
                 f"binding_verdicts, export_ai_safe, doctoral_capabilities, preregistration_snapshot, publication_consistency_audit, verify_package, coder_agreement, freeze_gates, verify_references. "
                 f"Output folder: {_out_dir()}. {PRIVACY_NOTE}")
 
@@ -201,6 +201,34 @@ def build_server():
         if sheet:
             argv += ["--sheet", sheet]
         return _cli(argv)
+
+    @mcp.tool()
+    def bridge_full_report(path: str, gates: str = "", chat_safe: bool = True) -> str:
+        """Full Bridge report in one call: workbook integrity, pipeline, screening funnel, levels, where attribution
+        breaks down (per-gate answers, first failed gate), claim ladder, binding verdicts with sign stability and
+        finance actionability, coder agreement (kappa, AC1) and change-log counts. Writes PDF, Excel, Word, CSV, PNG/SVG
+        charts and a zip bundle on this computer and returns the aggregate summary plus file locations.
+        chat_safe=True (default) keeps everything aggregate: no episode codes, no per-episode rows."""
+        argv = ["report", "full", "--data", _path(path), "--out", _out_dir()]
+        if gates:
+            argv += ["--gates", _path(gates)]
+        if chat_safe:
+            argv.append("--chat-safe")
+        return _cli(argv)
+
+    @mcp.tool()
+    def lock_readiness(path: str, gates: str, warnings_note: str = "") -> str:
+        """Data-lock readiness of a Bridge workbook: counts of blockers and warnings by category (no episode codes are
+        returned). Nothing is locked; run `clockbind lock run` locally to lock."""
+        from .lock import readiness, _read_notes
+        import tempfile
+        b, w, _, _ = readiness(_path(path), _path(gates), tempfile.mkdtemp(prefix="cb_lock_"), notes=_read_notes(warnings_note) if warnings_note else {})
+        from collections import Counter
+        cb, cw = Counter(x[0] for x in b), Counter(x[0] for x in w)
+        lines = [f"Blockers: {len(b)}" + "".join(f"\n  - {k}: {v}" for k, v in cb.items()),
+                 f"Warnings: {len(w)}" + "".join(f"\n  - {k}: {v}" for k, v in cw.items()),
+                 "READY TO LOCK" if not b else "NOT READY — see the local readiness report for details."]
+        return "\n".join(lines) + "\n" + PRIVACY_NOTE
 
     @mcp.tool()
     def binding_verdicts(path: str) -> str:

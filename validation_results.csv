@@ -35,13 +35,13 @@ Ordinal logistic,thresholds,MASS::polr,2.9077497985363632e-05,0.0001,PASS
 Ordinal logistic,SE,MASS::polr (Hessian),3.015612210222063e-07,0.001,PASS
 Reliability,"Cronbach's α, standardised α",psych::alpha,3.3306690738754696e-16,1e-10,PASS
 Reliability,"corrected item–total r, α if deleted",psych::alpha,6.661338147750939e-16,1e-10,PASS
-Reliability,McDonald's ω (1 factor),"lavaan one-factor CFA, ω from standardised loadings",3.00533951058668e-08,0.001,PASS
+Reliability,McDonald's ω (1 factor),"lavaan one-factor CFA, ω from standardised loadings",3.266263759460486e-08,0.001,PASS
 Agreement,"Cohen's κ, weighted κ (linear, quadratic)",irr::kappa2,3.3306690738754696e-16,1e-10,PASS
 Agreement,Gwet's AC1,irrCAC::gwet.ac1.raw (reports 5 decimals),1.1610185594035372e-06,5e-06,PASS
 ICC,"ICC1, ICC2, ICC3, ICC1k, ICC2k, ICC3k",psych::ICC(lmer = FALSE),1.2212453270876722e-15,1e-10,PASS
-Exploratory FA,"ML varimax loadings (|λ|, factor order aligned)","psych::fa(fm = 'ml', rotate = 'varimax')",4.005972326193152e-06,0.002,PASS
-Exploratory FA,communalities,psych::fa,5.909645887203219e-06,0.002,PASS
-Exploratory FA,"KMO, Bartlett χ²","psych::KMO, psych::cortest.bartlett",2.2737367544323206e-13,1e-06,PASS
+Exploratory FA,"ML varimax loadings (|λ|, factor order aligned)","psych::fa(fm = 'ml', rotate = 'varimax')",3.9669056263180735e-06,0.002,PASS
+Exploratory FA,communalities,psych::fa,5.8531862922039934e-06,0.002,PASS
+Exploratory FA,"KMO, Bartlett χ²","psych::KMO, psych::cortest.bartlett",1.0231815394945443e-12,1e-06,PASS
 Confirmatory FA,"χ², df, CFI, TLI, RMSEA, SRMR",lavaan::cfa (same engine),0.0,1e-08,PASS
 Power,required n (t_independent),pwr::pwr.t.test,1.4476989207423685e-07,0.001,PASS
 Power,required n (anova),pwr::pwr.anova.test,1.2395461681080633e-05,0.001,PASS

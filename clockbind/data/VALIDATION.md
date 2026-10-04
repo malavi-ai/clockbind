@@ -1,6 +1,6 @@
-# ClockBind 1.0.0 — validation against R
+# ClockBind 1.4.0 — validation against R
 
-Generated 2026-09-26 22:26 by `clockbind validate all`. Each row compares a statistic computed by ClockBind with the same statistic from an established R function on the same data (`validation/validation_data.csv`, synthetic, n = 300; `examples/conjoint_synthetic.csv`).
+Generated 2026-10-04 08:11 by `clockbind validate all`. Each row compares a statistic computed by ClockBind with the same statistic from an established R function on the same data (`validation/validation_data.csv`, synthetic, n = 300; `examples/conjoint_synthetic.csv`).
 
 **Result: 50 of 50 checks pass.**
 
@@ -44,13 +44,13 @@ Python engines: SciPy 1.17.1, statsmodels 0.15.0. R 4.3.3: psych 2.6.5, lavaan 0
 | Ordinal logistic | SE | `MASS::polr (Hessian)` | 3.02e-07 | 1e-03 | PASS |
 | Reliability | Cronbach's α, standardised α | `psych::alpha` | 3.33e-16 | 1e-10 | PASS |
 | Reliability | corrected item–total r, α if deleted | `psych::alpha` | 6.66e-16 | 1e-10 | PASS |
-| Reliability | McDonald's ω (1 factor) | `lavaan one-factor CFA, ω from standardised loadings` | 3.01e-08 | 1e-03 | PASS |
+| Reliability | McDonald's ω (1 factor) | `lavaan one-factor CFA, ω from standardised loadings` | 3.27e-08 | 1e-03 | PASS |
 | Agreement | Cohen's κ, weighted κ (linear, quadratic) | `irr::kappa2` | 3.33e-16 | 1e-10 | PASS |
 | Agreement | Gwet's AC1 | `irrCAC::gwet.ac1.raw (reports 5 decimals)` | 1.16e-06 | 5e-06 | PASS |
 | ICC | ICC1, ICC2, ICC3, ICC1k, ICC2k, ICC3k | `psych::ICC(lmer = FALSE)` | 1.22e-15 | 1e-10 | PASS |
-| Exploratory FA | ML varimax loadings (|λ|, factor order aligned) | `psych::fa(fm = 'ml', rotate = 'varimax')` | 4.01e-06 | 2e-03 | PASS |
-| Exploratory FA | communalities | `psych::fa` | 5.91e-06 | 2e-03 | PASS |
-| Exploratory FA | KMO, Bartlett χ² | `psych::KMO, psych::cortest.bartlett` | 2.27e-13 | 1e-06 | PASS |
+| Exploratory FA | ML varimax loadings (|λ|, factor order aligned) | `psych::fa(fm = 'ml', rotate = 'varimax')` | 3.97e-06 | 2e-03 | PASS |
+| Exploratory FA | communalities | `psych::fa` | 5.85e-06 | 2e-03 | PASS |
+| Exploratory FA | KMO, Bartlett χ² | `psych::KMO, psych::cortest.bartlett` | 1.02e-12 | 1e-06 | PASS |
 | Confirmatory FA | χ², df, CFI, TLI, RMSEA, SRMR | `lavaan::cfa (same engine)` | 0.00e+00 | 1e-08 | PASS |
 | Power | required n (t_independent) | `pwr::pwr.t.test` | 1.45e-07 | 1e-03 | PASS |
 | Power | required n (anova) | `pwr::pwr.anova.test` | 1.24e-05 | 1e-03 | PASS |

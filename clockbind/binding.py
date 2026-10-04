@@ -13,6 +13,20 @@ Registered rule (Bridge protocol, decisions of 27 September 2026):
 * Finance actionability (finance usable in time, slack >= 0) is reported
   separately from binding.
 
+Clarifications (USER DECISION 4 Oct 2026, before the freeze):
+* Jointly binding keeps its registered meaning only: no single-clock correction
+  is sufficient, the specified combination is.
+* If two or more single-clock corrections are each sufficient, attribution is
+  non-unique: Indeterminate, reason "multiple-sufficient" (the sufficient clocks
+  are still listed in binding_clocks).
+* Every Indeterminate verdict carries one primary reason: window-infeasible |
+  multiple-sufficient | sign-unstable | missing-inputs.
+* Slack = 0 counts as on time; |decisive slack| <= 1 day at either bound gets a
+  pre-specified "fragile" robustness flag. The flag never changes the verdict.
+* An ex-ante duration of 0 is valid only if Steps.zero_documented = Yes
+  (a pre-outcome document states immediate/same-day execution); otherwise the
+  duration is treated as missing.
+
 Model. Each episode is a dependency network of steps. Each step belongs to a
 clock (finance, payment, fulfilment, logistics, operational-readiness), has zero or
 more predecessor steps, a documented finish time given as an interval
@@ -45,7 +59,9 @@ CLOCK_ALIASES = {
     "installation/set-up": "operational-readiness", "set-up": "operational-readiness", "setup": "operational-readiness",
     "commissioning": "operational-readiness", "training": "operational-readiness",
 }
-STEP_COLUMNS = ["episode", "step", "clock", "predecessors", "finish_earliest", "finish_latest", "expected_days", "source", "note"]
+STEP_COLUMNS = ["episode", "step", "clock", "predecessors", "finish_earliest", "finish_latest", "expected_days", "zero_documented", "source", "note"]
+FRAGILE_DAYS = 1.0
+YES = {"yes", "y", "true", "1", "igen", "evet", "بله"}
 EPISODE_COLUMNS = ["episode", "anchor_earliest", "anchor_latest", "tw_earliest", "tw_latest", "r_step", "note"]
 
 
@@ -118,6 +134,7 @@ class Episode:
     r_step: str
     steps: dict = field(default_factory=dict)
     problems: list = field(default_factory=list)
+    notes: list = field(default_factory=list)
 
 
 _TZ = re.compile(r"(Z|[+-]\d{2}:?\d{2})\s*$")
@@ -182,6 +199,11 @@ def build_episodes(episodes: pd.DataFrame, steps: pd.DataFrame) -> list[Episode]
                 ep.problems.append(f"step {name}: latest finish is before earliest finish")
             if exp is not None and exp < 0:
                 ep.problems.append(f"step {name}: negative expected duration")
+            if exp is not None and abs(exp) < EPS:
+                zd = s.get("zero_documented")
+                if _blank(zd) or str(zd).strip().lower() not in YES:
+                    ep.notes.append(f"step {name}: ex-ante duration 0 without zero_documented = Yes, treated as missing")
+                    exp = None
             raw = "" if s.get("clock") is None or pd.isna(s.get("clock")) else str(s.get("clock")).strip().lower()
             clock = CLOCK_ALIASES.get(raw, raw)
             if clock not in CLOCK_LABELS:
@@ -326,8 +348,9 @@ def evaluate(ep: Episode, corner_limit: int = 10) -> dict:
            "sign_stable": "", "decisive_slack_earliest_days": None, "decisive_slack_latest_days": None,
            "baseline_slack_earliest_days": None, "baseline_slack_latest_days": None,
            "finance_slack_earliest_days": None, "finance_slack_latest_days": None, "finance_actionable": "",
-           "reactive_sensitivity": "", "corner_check": "", "flags": "", "reason": ""}
-    flags = list(ep.problems)
+           "reactive_sensitivity": "", "corner_check": "", "flags": "", "reason": "",
+           "engine_outcome": "", "indeterminate_reason": "missing-inputs", "fragile": ""}
+    flags = list(ep.problems) + list(ep.notes)
     try:
         if not ep.steps:
             raise ValueError("no steps recorded")
@@ -381,6 +404,25 @@ def evaluate(ep: Episode, corner_limit: int = 10) -> dict:
         row["verdict"] = "Indeterminate"
         row["reason"] = (f"sign-stability rule: verdict at earliest bounds = {v['earliest']['verdict']} "
                          f"{v['earliest']['clocks'] or ''}; at latest bounds = {v['latest']['verdict']} {v['latest']['clocks'] or ''}")
+    # USER DECISION 4 Oct 2026: map engine outcomes to the eight registered categories
+    row["engine_outcome"] = row["verdict"]
+    if row["verdict"] == "Multiple sufficient corrections":
+        row["verdict"] = "Indeterminate"
+        row["reason"] = "multiple-sufficient: each of these single-clock corrections is sufficient (non-unique attribution): " + row["binding_clocks"]
+    elif row["verdict"] == "Window infeasible at ex-ante durations":
+        row["verdict"] = "Indeterminate"
+        row["reason"] = row["reason"] or "window-infeasible: no admissible correction reaches tW at ex-ante durations"
+    if row["verdict"] == "Indeterminate":
+        o = row["engine_outcome"]
+        row["indeterminate_reason"] = ("sign-unstable" if not stable else "window-infeasible" if o.startswith("Window infeasible")
+                                       else "multiple-sufficient" if o == "Multiple sufficient corrections" else "missing-inputs")
+    else:
+        row["indeterminate_reason"] = ""
+    ds = [row["decisive_slack_earliest_days"], row["decisive_slack_latest_days"]]
+    if any(d is not None for d in ds):
+        row["fragile"] = "Yes" if any(d is not None and abs(d) <= FRAGILE_DAYS + EPS for d in ds) else "No"
+        if row["fragile"] == "Yes":
+            flags.append(f"fragile: decisive slack within ±{FRAGILE_DAYS:g} day of zero; report both bounds")
     if row["verdict"] in WORKBOOK_VERDICTS:
         row["workbook_verdict"] = row["verdict"]
     else:

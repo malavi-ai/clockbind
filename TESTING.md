@@ -1,4 +1,15 @@
-# Testing record: ClockBind 1.3.0
+# Testing record: ClockBind 1.4.0
+
+## 1.4.0 — 4 October 2026
+- Clean environment (Python 3.11, no factor_analyzer, no scikit-learn): `pip install ".[test]"`, `pytest tests` → 126 passed, 2 skipped (factor_analyzer comparison; optional component).
+- Full-report stress test: 30 randomised synthetic workbooks (6–30 episodes, 23 with Level-3 timelines), each built three ways (FULL, chat-safe, relative time): all outputs written; levels add up; temporal ladder equals hand counts; finance ladder equals engine verdicts; claim tiers follow the frozen engine (Indeterminate → X, Non-binding never a positive tier); no episode code in any chat-safe table, Markdown or PDF text. 30 of 30 pass.
+- `clockbind validate all` → 50 of 50 checks pass against R (psych, lavaan, irr, irrCAC, …), including the native EFA: ML varimax loadings vs `psych::fa` 4e-06, ω vs lavaan 3e-08, KMO/Bartlett 1e-12.
+- Native EFA vs factor_analyzer 0.5.1 (where installed): minres ≤ 1e-7, principal ≤ 1e-13, ML ≤ 2e-4 across 3 extraction × 4 rotation settings and 1–3 factors.
+- Binding engine vs the independent reference implementation: 2,000 random networks, all verdicts and clocks agree (with the 4 Oct 2026 category mapping).
+- Weighted kappa vs scikit-learn `cohen_kappa_score(weights="linear")`: identical to 1e-6.
+- `python -m build` and `twine check`: sdist and wheel PASSED; the wheel contains no bundled third-party packages.
+
+# Earlier record: ClockBind 1.3.0
 
 Tests run on 27–28 September 2026 before release. All tests were written by the developer; they show that ClockBind does what it was designed to do. They are not independent validation.
 

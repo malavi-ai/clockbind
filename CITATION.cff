@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use ClockBind, please cite it using the metadata below, together with the underlying libraries named in the methods text of each analysis."
 type: software
 title: "ClockBind: a reproducible statistics studio for doctoral research"
-version: 1.3.0
-date-released: 2026-09-28
+version: 1.4.0
+date-released: 2026-10-04
 license: MIT
 authors:
   - family-names: Alavi
@@ -22,6 +22,9 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.22992952
     description: "Version DOI: ClockBind 1.0.1"
+  - type: doi
+    value: 10.5281/zenodo.23019192
+    description: "Version DOI: ClockBind 1.2.0"
 keywords:
   - reproducible research
   - case screening
@@ -36,4 +39,4 @@ abstract: >-
   ClockBind is an open-source statistics studio with a command-line interface and a local point-and-click app.
   It records the exact analysis specification, input and output hashes, software versions and code hash for every run,
   and each statistical procedure is validated against established reference implementations in R.
-  Computations rely on established libraries (NumPy, SciPy, statsmodels, factor_analyzer; lavaan in R for confirmatory factor analysis).
+  Computations rely on established libraries (NumPy, SciPy, statsmodels; exploratory factor analysis is implemented in ClockBind on NumPy/SciPy; lavaan in R for confirmatory factor analysis).

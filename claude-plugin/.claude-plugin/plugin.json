@@ -1,6 +1,6 @@
 {
   "name": "clockbind",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "ClockBind research tools inside Claude: workbook validation, GDPR/KVKK personal-data scan, registered screening, 'which clock binds?' verdicts, coder agreement and reference checks. All processing is local; only summaries reach the chat.",
   "author": {"name": "Seyed Mehdi Alavi"},
   "homepage": "https://github.com/malavi-ai/clockbind",

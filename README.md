@@ -82,6 +82,13 @@ clockbind screen run --data screening.xlsx --gates gates.json
 clockbind workbook check --data screening.xlsx          # integrity before analysis or freeze
 clockbind binding template --output timeline.xlsx      # timeline input with an example
 clockbind binding run --data timeline.xlsx              # which clock binds? verdicts
+clockbind report full --data Bridge.xlsx --gates gates.json --chat-safe   # full report (aggregate, safe to share)
+clockbind report full --data Bridge.xlsx --gates gates.json --relative-time # timelines in days from day 0 (publication)
+clockbind lock check --data Bridge.xlsx --gates gates.json --by SMA        # lock readiness (nothing is locked)
+clockbind lock run   --data Bridge.xlsx --gates gates.json --by SMA        # gated data lock with SHA-256 manifest
+clockbind lock verify Bridge_Lock/LOCK_<timestamp>                        # re-hash a lock package
+clockbind screen coder-form --gates gates.json --episodes-from Bridge.xlsx --output Coder_Form.xlsx
+clockbind screen agreement --data author.xlsx --coder coder.xlsx --gates gates.json
 clockbind export ai-safe --workbook Bridge.xlsx --gates gates.json --output Bridge_AI_Safe_Export.zip
 clockbind connect claude-desktop                        # use ClockBind from your chat
 clockbind validate all                                  # regenerate legacy/core VALIDATION.md
@@ -103,7 +110,7 @@ clockbind audit docs --data folder --list-files               # opt in to local 
 In the Studio: **Bridge → Any personal data?** Drop Word, PDF, Excel, CSV, text or zip files. Google Docs must be downloaded first (select the files in Drive → Download gives a zip with Word/Excel copies). The CLI is safe-by-default: it prints aggregate counts only; file names are shown in the local Excel/PDF report, or in the terminal only with `--list-files`. Nested zip files are read locally with archive-size limits.
 
 ## Citing
-> Alavi, S. M. (2026). *ClockBind: a reproducible statistics studio for doctoral research* (Version 1.0.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22992952
+> Alavi, S. M. (2026). *ClockBind: a reproducible statistics studio for doctoral research* (Version 1.2.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23019192
 
 Cite the exact version you used. Each release has its own version DOI; the concept DOI https://doi.org/10.5281/zenodo.22989932 always points to the latest version.
 

@@ -596,6 +596,14 @@ def cmd_template(a):
     cols += criterion_columns(g)
     cols += [c for c in [g.get("reason_column"), g.get("claimed_status_column")] if c] + g.get("carry_columns", [])
     extras = {e["column"]: e for e in g.get("extra_columns", [])}
+    if getattr(a, "descriptive", True):
+        from ..descriptive import fields_for
+        from ..fullreport import SENS_COL, SENS_VALUES
+        extras.setdefault(SENS_COL, {"column": SENS_COL, "group": "Sensitivity S1/S2", "values": SENS_VALUES,
+                                     "hint": "type of record dating the customer-side event"})
+        for f in fields_for(g):
+            extras.setdefault(f["column"], {"column": f["column"], "group": "Descriptive (never changes a gate)",
+                                            "values": f["allowed"], "hint": f.get("label", "")})
     cols += list(extras)
     cols = list(dict.fromkeys(cols))
     spec = column_specs(g)
@@ -635,6 +643,23 @@ def cmd_template(a):
         for pname, crits in zip(_path_names(st), _paths(st)):
             for c in crits:
                 d.append([st["id"], st.get("unit", "episode"), pname, c["id"], "yes" if c.get("gate", True) else "flag", ", ".join(_cols(c)), c.get("label", ""), c.get("definition", "")])
+    src = getattr(a, "episodes_from", "")
+    if src:
+        A = load_data_sheet(src, getattr(a, "from_sheet", None), getattr(a, "from_header_row", 0))
+        idc = [c for c in dict.fromkeys([g["id_column"], g["episode_column"]]) if c in A.columns]
+        ids = A[idc].apply(lambda col: col.map(lambda v: "" if v is None or (isinstance(v, float) and v != v) else str(v).strip()))
+        ids = ids[ids.iloc[:, 0] != ""].drop_duplicates()
+        for i, (_, r) in enumerate(ids.iterrows()):
+            for c in idc:
+                ws.cell(3 + i, cols.index(c) + 1, r[c])
+        info = wb.create_sheet("Coder_Instructions", 0)
+        for line in ["Independent coding form (blind).",
+                     f"Prefilled: unit IDs only ({len(ids)} units). The author's codes, levels and verdicts are not included.",
+                     "Code every item from the evidence packet and the codebook only. Unsure → PENDING with a note. No AI tools.",
+                     "For every 'Yes', record the document code and page/line in the note column of the evidence packet.",
+                     "Return this file unchanged in structure; its SHA-256 is recorded on receipt."]:
+            info.append([line])
+        info.column_dimensions["A"].width = 120
     wb.save(a.output)
     print(f"Template written: {a.output}  (row 2 = criterion labels, ignored because it has no entry ID; enter data from row 3)")
 
@@ -678,6 +703,21 @@ def _agreement_stats(x, y, scale):
     return po, kappa, ac1
 
 
+def weighted_kappa(pairs, k):
+    """Linear-weighted Cohen's kappa for ordinal codes 0..k-1."""
+    o = np.zeros((k, k))
+    for i, j in pairs:
+        o[i, j] += 1
+    n = o.sum()
+    if n == 0:
+        return float("nan")
+    o /= n
+    e = np.outer(o.sum(1), o.sum(0))
+    w = 1 - np.abs(np.subtract.outer(np.arange(k), np.arange(k))) / (k - 1)
+    pe = (w * e).sum()
+    return float(((w * o).sum() - pe) / (1 - pe)) if pe < 1 else float("nan")
+
+
 def cmd_agreement(a):
     g = load_gates(a.gates)
     A = load_data_sheet(a.data, a.sheet, a.header_row)
@@ -704,22 +744,73 @@ def cmd_agreement(a):
         rows, dis = [], []
         cols = [c for c in criterion_columns(g, "episode") if c in ea.columns and c in eb.columns]
         extra = [c for c in ("level", "final_status") if c in ea.columns and c in eb.columns]
+        # descriptive fields and the L3e source type are compared at entry level (first row per unit)
+        from ..descriptive import fields_for, canonical, find_column
+        from ..fullreport import SENS_COL, SENS_VALUES
+        fa_ = A.groupby(key, sort=False).first() if key in A.columns else pd.DataFrame()
+        fb_ = B.groupby(key, sort=False).first() if key in B.columns else pd.DataFrame()
+        fa_.index, fb_.index = fa_.index.astype(str).str.casefold(), fb_.index.astype(str).str.casefold()
+        desc = []
+        for f in fields_for(g) + [{"column": SENS_COL, "allowed": SENS_VALUES}]:
+            ca, cb = find_column(fa_.columns, f["column"]), find_column(fb_.columns, f["column"])
+            if ca and cb:
+                ea[f["column"]] = [canonical(fa_.loc[i, ca], f["allowed"]) if i in fa_.index else "" for i in ea.index]
+                eb[f["column"]] = [canonical(fb_.loc[i, cb], f["allowed"]) if i in fb_.index else "" for i in eb.index]
+                ea[f["column"]] = ea[f["column"]].fillna("invalid")
+                eb[f["column"]] = eb[f["column"]].fillna("invalid")
+                spec[f["column"]] = (f["allowed"], {"id": f["column"]})
+                desc.append(f["column"])
+        extra += desc
+        rng = np.random.default_rng(getattr(a, "seed", 20261004))
+        B_ = int(getattr(a, "bootstrap", 2000) or 0)
         for c in cols + extra:
             x = [(v or "Unknown") for v in ea.loc[ids, c].fillna("")]
             y = [(v or "Unknown") for v in eb.loc[ids, c].fillna("")]
             scale = (spec.get(c, (None,))[0] or [])
             po, k, ac1 = _agreement_stats(x, y, scale)
+            ci = {}
+            if B_ and len(x) >= 5:
+                bs = []
+                for _ in range(B_):
+                    ix = rng.integers(0, len(x), len(x))
+                    bs.append(_agreement_stats([x[i] for i in ix], [y[i] for i in ix], scale)[1:])
+                bs = np.array(bs, dtype=float)
+                for j, nm in ((0, "kappa"), (1, "ac1")):
+                    v = bs[:, j][~np.isnan(bs[:, j])]
+                    ci[nm] = f"[{np.percentile(v, 2.5):.2f}, {np.percentile(v, 97.5):.2f}]" if len(v) > B_ * 0.5 else "n/a"
             rows.append({"column": c, "units": len(ids), "percent_agreement": round(100 * po, 1),
-                         "cohen_kappa": None if k != k else round(k, 3), "gwet_ac1": None if ac1 != ac1 else round(ac1, 3),
+                         "cohen_kappa": None if k != k else round(k, 3), "kappa_95ci": ci.get("kappa", ""),
+                         "gwet_ac1": None if ac1 != ac1 else round(ac1, 3), "ac1_95ci": ci.get("ac1", ""),
                          "scale": ", ".join(scale) if scale else "observed"})
             dis += [{"unit": i, "column": c, "author": xa, "coder": yb, "resolution_note": ""} for i, xa, yb in zip(ids, x, y) if xa != yb]
+        summary = []
+        if "level" in ea.columns and "level" in eb.columns:
+            la, lb = ea.loc[ids, "level"].fillna("").astype(str), eb.loc[ids, "level"].fillna("").astype(str)
+            order = ["Outside analytic archive", "Held at S0", "Below Level 1", "Level 1", "Level 2", "Level 3"]
+            rk = lambda v: next((i for i, o in enumerate(order) if v == o or v.startswith(o + " ")), None)
+            pr = [(rk(u), rk(v)) for u, v in zip(la, lb) if rk(u) is not None and rk(v) is not None]
+            summary.append(("Units compared", len(ids)))
+            summary.append(("Level: linear weighted kappa", None if not pr else round(weighted_kappa(pr, len(order)), 3)))
+            changed = [i for i, u, v in zip(ids, la, lb) if u != v]
+            summary.append(("Units whose computed level differs", len(changed)))
+            sa, sb = set(la.index[la == "Level 3"]), set(lb.index[lb == "Level 3"])
+            summary += [("Level 3 — author", len(sa)), ("Level 3 — coder", len(sb)), ("Level 3 — both", len(sa & sb)), ("Level 3 — either", len(sa | sb))]
+        summary += [("Author file SHA-256", sha256_file(a.data)), ("Coder file SHA-256", sha256_file(a.coder)),
+                    ("Bootstrap resamples (CI)", B_), ("PENDING / blank", "own category (never agreement on 'Yes')")]
         out = run.path("agreement.xlsx")
         with pd.ExcelWriter(out, engine="openpyxl") as xw:
+            pd.DataFrame(summary, columns=["measure", "value"]).to_excel(xw, sheet_name="Summary", index=False)
             pd.DataFrame(rows).to_excel(xw, sheet_name="Agreement", index=False)
             pd.DataFrame(dis, columns=["unit", "column", "author", "coder", "resolution_note"]).to_excel(xw, sheet_name="Disagreements", index=False)
             pd.DataFrame({"only_in_author": pd.Series(only_a, dtype=str), "only_in_coder": pd.Series(only_b, dtype=str)}).to_excel(xw, sheet_name="Unmatched", index=False)
         run.add_output(out)
         print(pd.DataFrame(rows).to_string(index=False))
+        if summary:
+            print(pd.DataFrame(summary, columns=["measure", "value"]).to_string(index=False))
+        md = run.path("agreement.md")
+        md.write_text("# Coder agreement\n\n" + pd.DataFrame(summary, columns=["measure", "value"]).to_markdown(index=False) + "\n\n"
+                      + pd.DataFrame(rows).to_markdown(index=False) + "\n", encoding="utf-8")
+        run.add_output(md)
         if len(ids) < 10:
             run.warn(f"Only {len(ids)} units: report percent agreement and the disagreement list; kappa is unstable at this size.")
 
@@ -745,9 +836,17 @@ class Screen(Plugin):
         p.set_defaults(func=cmd_compare)
         p = common(sub.add_parser("agreement", help="Author vs independent coder: % agreement, Cohen's kappa, Gwet's AC1 (full scale), disagreements"))
         p.add_argument("--coder", required=True)
+        p.add_argument("--bootstrap", type=int, default=2000, help="Bootstrap resamples for 95%% CIs (0 = off)")
+        p.add_argument("--seed", type=int, default=20261004)
         p.set_defaults(func=cmd_agreement)
         p = common(sub.add_parser("template", help="Blank screening workbook with dropdowns from the gates"), data=False)
         p.add_argument("--output", default="screening_template.xlsx")
+        p.set_defaults(func=cmd_template)
+        p = common(sub.add_parser("coder-form", help="Blind form for the independent coder: unit IDs only, all items with dropdowns"), data=False)
+        p.add_argument("--episodes-from", required=True, help="Author's (locked) workbook: only unit IDs are copied")
+        p.add_argument("--from-sheet", default=None)
+        p.add_argument("--from-header-row", type=int, default=0)
+        p.add_argument("--output", default="Coder_Form.xlsx")
         p.set_defaults(func=cmd_template)
         p = common(sub.add_parser("freeze", help="Lock the gates once per protocol_version (append-only register)"), data=False)
         p.add_argument("--by", required=True)

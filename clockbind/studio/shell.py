@@ -460,7 +460,7 @@ def page_clock(profile):
     st.dataframe(res, width="stretch", hide_index=True)
     from clockbind.pdfreport import build_pdf
     pdf = io.BytesIO()
-    cols = [c for c in ["episode", "verdict", "binding_clocks", "sign_stable", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
+    cols = [c for c in ["episode", "verdict", "indeterminate_reason", "binding_clocks", "sign_stable", "fragile", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
     build_pdf(pdf, "Which clock binds?", [("h", "Verdicts"), ("table", vc.rename_axis("verdict").reset_index(name="episodes")),
               ("h", "Per episode"), ("table", res[cols])], subtitle=r["name"], landscape_pages=True)
     x = io.BytesIO()
@@ -734,7 +734,9 @@ def page_bridge(profile):
              ("Supervisor status", "Generate a bounded report from the current workbook state; no target episode count is imposed.")]
     st.markdown("<div class='cb-module-grid'>" + "".join(
         f"<div class='cb-module'><b>{tx(h, L)}</b><p>{tx(d, L)}</p></div>" for h, d in _mods) + "</div>", unsafe_allow_html=True)
-    tab1, tab2, tab3 = st.tabs([tx("Workbook integrity", lang()), tx("Binding analysis", lang()), tx("Status report", lang())])
+    tab1, tab2, tab3, tab4 = st.tabs([tx("Workbook integrity", lang()), tx("Binding analysis", lang()), tx("Status report", lang()), tx("Full report", lang())])
+    with tab4:
+        page_full_report(profile)
     with tab1:
         page_check(profile, embedded=True)
     with tab2:
@@ -936,3 +938,35 @@ def page_clock(profile, embedded: bool = False):
 
 def page_reports(profile, embedded: bool = False):
     return _old_page_reports(profile)
+
+
+def page_full_report(profile):
+    """One button: PDF + Excel + Word + CSV + charts + zip bundle from the Bridge master workbook."""
+    import tempfile
+    from clockbind.fullreport import build
+    ss, L = st.session_state, lang()
+    st.markdown("<p class='cb-sub'>" + tx("Everything in one run: integrity, pipeline, gates, claim ladder, binding, agreement — as PDF, Excel, Word, CSV, charts and a zip bundle.", L) + "</p>", unsafe_allow_html=True)
+    wb = _workbook(profile)
+    up = st.file_uploader(tx("Bridge master workbook (.xlsx)", L), type=["xlsx"], key="full_rep_up") if not wb else None
+    if up is not None:
+        wb = _tmp(up)
+    if not wb:
+        st.info(tx("Choose the Bridge master workbook first.", L))
+        return
+    safe = st.toggle(tx("Chat-safe (aggregate only, no episode codes)", L), value=False, key="full_rep_safe")
+    if st.button(tx("Create full report", L), type="primary", key="full_rep_go"):
+        out = Path(tempfile.mkdtemp(prefix="clockbind_full_"))
+        with st.spinner(tx("Working locally…", L)):
+            ss.cb_full = build(wb, _gates(profile), str(out), chat_safe=safe)
+    r = ss.get("cb_full")
+    if not r:
+        return
+    st.markdown(r["summary"])
+    c = st.columns(5)
+    for i, (k, mime) in enumerate((("pdf", "application/pdf"), ("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+                                   ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"), ("md", "text/markdown"), ("bundle", "application/zip"))):
+        p = Path(r[k])
+        c[i].download_button(p.name, p.read_bytes(), file_name=p.name, mime=mime, key=f"full_dl_{k}")
+    figs = sorted((Path(r["pdf"]).parent / "figures").glob("*.png"))
+    for f in figs:
+        st.image(str(f), use_container_width=True)

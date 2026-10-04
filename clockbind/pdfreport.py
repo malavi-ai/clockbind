@@ -97,7 +97,7 @@ def _table(df: pd.DataFrame, width: float, st):
     return t
 
 
-def _image(obj, width: float):
+def _image(obj, width: float, max_height: float | None = None):
     from reportlab.platypus import Image
 
     if isinstance(obj, (bytes, bytearray)):
@@ -113,6 +113,9 @@ def _image(obj, width: float):
     ratio = img.imageHeight / img.imageWidth
     img.drawWidth = min(width, img.imageWidth)
     img.drawHeight = img.drawWidth * ratio
+    if max_height and img.drawHeight > max_height:          # tall figures (many episodes) are scaled to fit one page
+        img.drawHeight = max_height
+        img.drawWidth = max_height / ratio
     return img
 
 
@@ -177,7 +180,7 @@ def build_pdf(path, title: str, blocks: list, subtitle: str = "", meta: dict | N
                 story.append(Paragraph(_esc(b[2]), st["note"]))
             story.append(Spacer(1, 3 * mm))
         elif kind == "image":
-            story += [KeepTogether([_image(b[1], width)]), Spacer(1, 3 * mm)]
+            story += [KeepTogether([_image(b[1], width, max_height=size[1] - 2 * margin - 30 * mm)]), Spacer(1, 3 * mm)]
     target = path if hasattr(path, "write") else str(path)
     doc = SimpleDocTemplate(target, pagesize=size, leftMargin=margin, rightMargin=margin, topMargin=18 * mm, bottomMargin=16 * mm,
                             title=title, author="ClockBind", subject=subtitle or title, creator=f"ClockBind {__version__}")

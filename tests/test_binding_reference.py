@@ -53,6 +53,9 @@ def test_engine_matches_independent_reference_on_2000_random_networks():
     res = evaluate_all(pd.DataFrame(eps), pd.DataFrame(rows)).set_index("episode")
     bad = []
     for eid, (label, clocks) in exp.items():
+        # USER DECISION 4 Oct 2026 mapping to the eight registered categories
+        label = {"Multiple sufficient corrections": "Indeterminate",
+                 "Window infeasible at ex-ante durations": "Indeterminate"}.get(label, label)
         got = res.loc[eid]
         got_clocks = tuple(sorted(c for c in str(got["binding_clocks"]).split("; ") if c))
         if got["verdict"] != label or (label not in ("Indeterminate", "Non-binding") and got_clocks != tuple(sorted(clocks))):

@@ -77,12 +77,49 @@ def test_sign_stability_rule():
     assert "sign-stability" in r["reason"]
 
 
-def test_window_infeasible_is_flagged_for_author():
-    # even at expected durations (1+2+3+1 = 7 days) R cannot be met by day 5
+def test_window_infeasible_is_indeterminate_with_reason():
+    # even at expected durations (1+2+3+1 = 7 days) R cannot be met by day 5 (USER DECISION 4 Oct 2026)
     e, s = chain("T8", ["2026-01-02", "2026-01-04", "2026-01-07", "2026-01-08"], [1, 2, 3, 1], "2026-01-05")
     r = run([e], s).loc["T8"]
-    assert r["verdict"] == "Window infeasible at ex-ante durations"
-    assert r["workbook_verdict"] == "" and "AUTHOR DECISION" in r["flags"]
+    assert r["verdict"] == "Indeterminate" and r["indeterminate_reason"] == "window-infeasible"
+    assert r["engine_outcome"] == "Window infeasible at ex-ante durations" and r["workbook_verdict"] == "Indeterminate"
+
+
+def test_multiple_sufficient_is_indeterminate_with_reason():
+    # finance 3 days late and transit 3 days late; tW missed by 1: either correction alone suffices
+    e, s = chain("T9", ["2026-01-05", "2026-01-07", "2026-01-13", "2026-01-14"], [1, 2, 3, 1], "2026-01-13")
+    r = run([e], s).loc["T9"]
+    assert r["verdict"] == "Indeterminate" and r["indeterminate_reason"] == "multiple-sufficient"
+    assert set(r["binding_clocks"].split("; ")) == {"finance", "logistics"} and r["workbook_verdict"] == "Indeterminate"
+
+
+def test_jointly_binding_unchanged_and_reasons():
+    e, s = chain("T4b", ["2026-01-05", "2026-01-07", "2026-01-13", "2026-01-14"], [1, 2, 3, 1], "2026-01-09")
+    r = run([e], s).loc["T4b"]
+    assert r["verdict"] == "Jointly binding" and r["indeterminate_reason"] == ""
+    e, s = chain("T5b", ["2026-01-02", "2026-01-04", "2026-01-10", "2026-01-11"], [2, 2, None, 1], "2026-01-10")
+    assert run([e], s).loc["T5b", "indeterminate_reason"] == "missing-inputs"
+    e, s = chain("T7b", ["2026-01-02", "2026-01-04", "2026-01-09", ("2026-01-10", "2026-01-11")], [2, 2, 3, 1], "2026-01-10")
+    assert run([e], s).loc["T7b", "indeterminate_reason"] == "sign-unstable"
+
+
+def test_fragile_flag():
+    e, s = chain("F1", ["2026-01-07", "2026-01-09", "2026-01-12", "2026-01-13"], [1, 2, 3, 1], "2026-01-08")
+    r = run([e], s).loc["F1"]   # corrected R = Jan 8 = tW -> slack 0 -> binds, fragile
+    assert r["verdict"] == "Finance-binding" and r["fragile"] == "Yes" and "fragile" in r["flags"]   # flag never changes the verdict
+    e, s = chain("F2", ["2026-01-07", "2026-01-09", "2026-01-12", "2026-01-13"], [1, 2, 3, 1], "2026-01-10")
+    assert run([e], s).loc["F2", "fragile"] == "No"
+
+
+def test_zero_duration_needs_documentation():
+    e, s = chain("Z1", ["2026-01-07", "2026-01-09", "2026-01-12", "2026-01-13"], [0, 2, 3, 1], "2026-01-10")
+    r = run([e], s).loc["Z1"]
+    assert r["verdict"] == "Indeterminate" and r["indeterminate_reason"] == "missing-inputs"
+    assert "treated as missing" in r["flags"]
+    ep = pd.DataFrame([e], columns=EP_COLS)
+    st = pd.DataFrame(s, columns=["episode", "step", "clock", "predecessors", "finish_earliest", "finish_latest", "expected_days"])
+    st["zero_documented"] = ["Yes", "", "", ""]
+    assert evaluate_all(ep, st).iloc[0]["verdict"] == "Finance-binding"
 
 
 def test_parallel_network_only_critical_branch_binds():
