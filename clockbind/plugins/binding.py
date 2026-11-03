@@ -40,12 +40,15 @@ def _read(a):
 
 def cmd_run(a):
     ep, st = _read(a)
-    res = evaluate_all(ep, st)
+    zero = bool(getattr(a, "zero_as_documented", False))
+    res = evaluate_all(ep, st, zero_as_documented=zero)
     with RunLog(a.out, "binding", "run", vars(a), None) as run:
+        if zero:
+            run.warn("SENSITIVITY RUN (--zero-as-documented): every ex-ante 0 accepted. Not the registered rule; do not report as the primary verdicts.")
         for p, lab in ((a.data, "timeline"), (a.episodes, "episodes"), (a.steps, "steps")):
             if p:
                 run.add_input(p, lab)
-        out = run.path("binding_verdicts.xlsx")
+        out = run.path("binding_verdicts_SENSITIVITY_zero_accepted.xlsx" if zero else "binding_verdicts.xlsx")
         summary = res["verdict"].value_counts().rename_axis("verdict").reset_index(name="episodes") if len(res) else pd.DataFrame(columns=["verdict", "episodes"])
         with pd.ExcelWriter(out, engine="openpyxl") as xw:
             res.to_excel(xw, sheet_name="Verdicts", index=False)
@@ -57,7 +60,8 @@ def cmd_run(a):
         run.add_output(md)
         from ..pdfreport import add_pdf
         cols = [c for c in ["episode", "verdict", "indeterminate_reason", "binding_clocks", "sign_stable", "fragile", "finance_actionable", "reactive_sensitivity", "reason"] if c in res.columns]
-        add_pdf(run, "binding_report.pdf", "Which clock binds?", [
+        add_pdf(run, "binding_report_SENSITIVITY.pdf" if zero else "binding_report.pdf",
+                "Which clock binds? — SENSITIVITY (every ex-ante 0 accepted; not the registered rule)" if zero else "Which clock binds?", [
             ("h", "Verdicts"), ("table", summary),
             ("h", "Per episode"), ("table", res[cols] if len(res) else None),
             ("h", "Registered rule"), ("table", pd.DataFrame(GUIDE, columns=["item", "meaning"]).iloc[-1:]),
@@ -97,6 +101,8 @@ class Binding(Plugin):
         p.add_argument("--episodes", help="Episodes CSV (instead of --data)")
         p.add_argument("--steps", help="Steps CSV (instead of --data)")
         p.add_argument("--out", default="clockbind_runs")
+        p.add_argument("--zero-as-documented", action="store_true",
+                       help="SENSITIVITY only: accept every ex-ante duration of 0 (treatment before the 4 Oct 2026 clarification)")
         p.set_defaults(func=cmd_run)
         p = sub.add_parser("template", help="Write a timeline input template with a synthetic example")
         p.add_argument("--output", default="timeline_template.xlsx")

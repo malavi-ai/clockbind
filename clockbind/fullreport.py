@@ -657,6 +657,12 @@ def build(data: str, gates: str, out_root: str, sheet: str = "05_Level_Assessmen
             tables["07_Slack_descriptives"] = res[num].apply(pd.to_numeric, errors="coerce").describe().T[["count", "mean", "50%", "min", "max"]].round(2).rename(columns={"50%": "median"}).reset_index(names="measure")
         if not chat_safe:
             tables["07_Binding_per_episode"] = res
+        if res["flags"].fillna("").str.contains("treated as missing").any():
+            from .binding import zero_rule_sensitivity
+            zs, zp = zero_rule_sensitivity(E, S, res)
+            tables["07_Zero_rule_sensitivity"] = zs
+            if not chat_safe:
+                tables["07_Zero_rule_per_episode"] = zp
 
     # 6 claim ladder
     first_rows = entries.groupby(eid, sort=False).first() if eid in entries.columns else pd.DataFrame()
@@ -891,6 +897,12 @@ def build(data: str, gates: str, out_root: str, sheet: str = "05_Level_Assessmen
             blocks += fig(key)
     else:
         blocks += [("h", "8 · Which clock binds?"), ("p", "No Level-3 timelines in the Episodes/Steps sheets yet. Fill them after the freeze.")]
+    if "07_Zero_rule_sensitivity" in tables:
+        blocks += [("h", "8c · Sensitivity of the zero-duration rule (verdict level)"), ("table", tables["07_Zero_rule_sensitivity"]),
+                   ("note", "Registered rule (4 Oct 2026): an ex-ante 0 counts only with Steps.zero_documented = Yes. The sensitivity column accepts every 0 "
+                            "(earlier treatment). Reported for transparency; the registered verdicts are unchanged.")]
+        if "07_Zero_rule_per_episode" in tables:
+            blocks.append(("table", tables["07_Zero_rule_per_episode"]))
     if "12_Sensitivity_L3e" in tables:
         blocks += [("h", "8b · Sensitivity of the L3e independence requirement"), ("table", tables["12_Sensitivity_L3e"]),
                    ("note", "Primary = frozen gates. S1 also accepts contemporaneous routine transactional records of the firm; S2 only system-generated time-stamped records. Primary classifications are unchanged by these analyses.")]

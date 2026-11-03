@@ -150,7 +150,8 @@ def _blank(v):
     return v is None or (isinstance(v, float) and pd.isna(v)) or (isinstance(v, str) and not v.strip())
 
 
-def build_episodes(episodes: pd.DataFrame, steps: pd.DataFrame) -> list[Episode]:
+def build_episodes(episodes: pd.DataFrame, steps: pd.DataFrame, zero_as_documented: bool = False) -> list[Episode]:
+    """zero_as_documented=True is a SENSITIVITY setting only (pre-4-Oct-2026 treatment: every ex-ante 0 accepted)."""
     episodes = episodes.rename(columns=lambda c: str(c).strip().lower())
     steps = steps.rename(columns=lambda c: str(c).strip().lower())
     for need, frame, cols in (("Episodes", episodes, ["episode", "anchor_earliest", "tw_earliest", "r_step"]),
@@ -199,7 +200,7 @@ def build_episodes(episodes: pd.DataFrame, steps: pd.DataFrame) -> list[Episode]
                 ep.problems.append(f"step {name}: latest finish is before earliest finish")
             if exp is not None and exp < 0:
                 ep.problems.append(f"step {name}: negative expected duration")
-            if exp is not None and abs(exp) < EPS:
+            if exp is not None and abs(exp) < EPS and not zero_as_documented:
                 zd = s.get("zero_documented")
                 if _blank(zd) or str(zd).strip().lower() not in YES:
                     ep.notes.append(f"step {name}: ex-ante duration 0 without zero_documented = Yes, treated as missing")
@@ -460,8 +461,8 @@ def evaluate(ep: Episode, corner_limit: int = 10) -> dict:
     return row
 
 
-def evaluate_all(episodes: pd.DataFrame, steps: pd.DataFrame) -> pd.DataFrame:
-    eps = build_episodes(episodes, steps)
+def evaluate_all(episodes: pd.DataFrame, steps: pd.DataFrame, zero_as_documented: bool = False) -> pd.DataFrame:
+    eps = build_episodes(episodes, steps, zero_as_documented=zero_as_documented)
     rows = [evaluate(ep) for ep in eps]
     known = {ep.id for ep in eps}
     st_ids = steps.rename(columns=lambda c: str(c).strip().lower())["episode"]
@@ -469,3 +470,20 @@ def evaluate_all(episodes: pd.DataFrame, steps: pd.DataFrame) -> pd.DataFrame:
         rows.append({"episode": orphan, "verdict": "Indeterminate", "workbook_verdict": "Indeterminate",
                      "reason": "listed in Steps but has no row in Episodes", "flags": "input problems"})
     return pd.DataFrame(rows)
+
+
+def zero_rule_sensitivity(episodes: pd.DataFrame, steps: pd.DataFrame, frozen: pd.DataFrame | None = None):
+    """Verdicts under the registered zero-duration rule vs the earlier treatment (every 0 accepted).
+    Returns (summary, per_episode). Sensitivity only: the registered verdict is always the frozen one."""
+    fz = frozen if frozen is not None else evaluate_all(episodes, steps)
+    dr = evaluate_all(episodes, steps, zero_as_documented=True)
+    m = fz[["episode", "verdict", "indeterminate_reason"]].merge(dr[["episode", "verdict", "indeterminate_reason"]], on="episode",
+                                                                   suffixes=(" (registered rule)", " (every 0 accepted)"), how="outer")
+    m["changed"] = (m["verdict (registered rule)"] != m["verdict (every 0 accepted)"]) | \
+                   (m["indeterminate_reason (registered rule)"].fillna("") != m["indeterminate_reason (every 0 accepted)"].fillna(""))
+    cats = sorted(set(m["verdict (registered rule)"].dropna()) | set(m["verdict (every 0 accepted)"].dropna()))
+    summ = pd.DataFrame({"verdict": cats,
+                         "registered rule": [int((m["verdict (registered rule)"] == c).sum()) for c in cats],
+                         "every 0 accepted (sensitivity)": [int((m["verdict (every 0 accepted)"] == c).sum()) for c in cats]})
+    summ.loc[len(summ)] = ["episodes whose verdict or reason changes", "", int(m["changed"].sum())]
+    return summ, m
