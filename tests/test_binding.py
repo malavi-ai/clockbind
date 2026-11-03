@@ -172,3 +172,15 @@ def test_clock_names_and_aliases():
     res = evaluate_all(ep, st).set_index("episode")
     assert res.loc["K1", "verdict"] == "Payment-binding"
     assert res.loc["K2", "verdict"] == "Indeterminate" and "not one of" in res.loc["K2", "flags"]
+
+
+def test_zero_rule_sensitivity_reports_change_without_touching_primary():
+    from clockbind.binding import zero_rule_sensitivity
+    e, s = chain("Z2", ["2026-01-07", "2026-01-09", "2026-01-12", "2026-01-13"], [0, 2, 3, 1], "2026-01-10")
+    ep = pd.DataFrame([e], columns=EP_COLS)
+    st = pd.DataFrame(s, columns=["episode", "step", "clock", "predecessors", "finish_earliest", "finish_latest", "expected_days"])
+    assert evaluate_all(ep, st).iloc[0]["verdict"] == "Indeterminate"                       # registered rule
+    assert evaluate_all(ep, st, zero_as_documented=True).iloc[0]["verdict"] == "Finance-binding"   # sensitivity
+    summ, per = zero_rule_sensitivity(ep, st)
+    assert bool(per.iloc[0]["changed"]) and per.iloc[0]["verdict (registered rule)"] == "Indeterminate"
+    assert summ.iloc[-1]["every 0 accepted (sensitivity)"] == 1

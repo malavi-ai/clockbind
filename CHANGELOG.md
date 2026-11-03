@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.0.0 — 2026-11-03 (Protocol 4.0)
+- **New plugin `clockbind p4` for Bridge Protocol 4.0 (Study 2a).** The registered v3.4 engine (`clockbind binding run`) is unchanged; Protocol 4.0 runs the same counterfactual machinery with an extended clock set and inputs.
+- **Six clocks:** `institutional` (tariff classification, movement certificates, proof of origin, product control, duty assessment, release) is a clock of its own; under v3.4 `customs` remained an alias of logistics and still is in `clockbind binding`. New verdict **Institution-binding**.
+- **Ex-ante status per step** (`documented | revealed | undocumented`), `revealed_at` and `actionable_from`. **Revealed-in-process rule (knowledge, feasibility and execution separated):** worst case = no ex-ante duration; best case only with a documented `actionable_from` = start at max(ready, actionable_from) and take the post-revelation execution time; without `actionable_from` the worst-case verdict is reported. Different verdicts give **Indeterminate, reason revelation-sensitive** (a sub-type of Indeterminate). An expected duration always prevails over "revealed"; "revealed" without a dated `revealed_at` is treated as undocumented.
+- **Claim-specific evidence and claim ceiling:** `source_class` (internal | counterparty | third-party | public-authority), `direct_record` (does the source record this step's own timing?) and `contemporaneity`; a positive binding verdict is capped at "consistent with" unless every binding clock has a step recorded directly by a non-internal source (`claim_cap` column; the verdict is not changed).
+- **Tests sheet** in the template for pre-specified process-tracing tests (hypothesis, expected observation if true/false, test type, permitted inference).
+- `p4 alpha --output` also writes a disagreement table per item family and the list of units with disagreement. `related_party` flag on episodes with a summary excluding related-party episodes.
+- **Layers sheet** (focal-firm, counterparty, intermediary, institutional, environmental × Activated / Exposed / Not present / Unknown): validation and descriptive counts only.
+- **Blind coder packet** (`p4 blind-packet`): keeps input sheets only, removes every verdict, level, gate, claim, reason, flag, note and interpretation column, and replaces episode codes by random packet codes; the key is written to a separate private file.
+- **Concordance** (`p4 concordance`): Study 1 (v3.4) versus Study 2a (4.0) verdicts, cross-tabulation and a provisional attribution of each change to the Protocol 4.0 rule involved.
+- **Krippendorff's alpha (nominal)** with raw agreement, overall or per item family (`p4 alpha`).
+- **Sensitivity:** `--merge-institutional` reproduces the v3.4 clock set; `--zero-as-documented` as before.
+- **Equivalence verified:** on 200 random networks without institutional or revealed steps, Protocol 4.0 output equals the v3.4 engine column by column; on the locked Bridge timeline the four Level-3 verdicts are reproduced exactly (3 Indeterminate: missing-inputs, window-infeasible, sign-unstable; 1 Non-binding). The v3.4 module state is restored after every Protocol 4.0 run (tested).
+- Docs: `docs/Protocol_4_0.md`.
+
 ## 1.4.0 — 2026-10-04 (Evidence & lock)
 - **No GPL code, no factor_analyzer.** Exploratory factor analysis (minres, ML, principal; varimax, promax, oblimin), KMO, Bartlett and the ω loadings are now ClockBind's own implementation on NumPy/SciPy (`clockbind/analysis/factor.py`, MIT). Agreement with factor_analyzer 0.5.1 is tested: minres and principal to ≤1e-5, ML to ≤5e-4 (optimiser tolerance). The `efa` extra is removed.
 - **Binding engine — clarifications (behaviour change):** Jointly binding keeps its registered meaning (no single-clock correction is sufficient, the combination is). Two or more independently sufficient single-clock corrections → **Indeterminate, reason multiple-sufficient** (previously reported as "Multiple sufficient corrections" for an author decision). An infeasible window → **Indeterminate, reason window-infeasible** (previously "Window infeasible at ex-ante durations"). New columns `indeterminate_reason` (window-infeasible | multiple-sufficient | sign-unstable | missing-inputs), `fragile` (|decisive slack| ≤ 1 day; a robustness flag that never changes the verdict) and `engine_outcome` (raw engine result for audit). An ex-ante duration of 0 counts only with `Steps.zero_documented = Yes`; otherwise it is treated as missing. Verified again against the independent reference implementation on 2,000 random networks.
@@ -14,6 +29,7 @@
 - The pipeline no longer reports a misleading 0 for fixed-term searches when the search log has no source-level entries; it states that the coverage is not documented at source level and was not reconstructed.
 - Tall figures (many episodes) are scaled to fit one PDF page.
 - 30-scenario randomised stress test of the full report (FULL, chat-safe, relative time): outputs written, counts consistent, claim tiers consistent with the engine, no episode code in any chat-safe table, Markdown or PDF text.
+- **Verdict-level sensitivity of the zero-duration rule:** `clockbind binding run --zero-as-documented` (clearly labelled SENSITIVITY output) and, automatically in the full report whenever a 0 was treated as missing, section 8c compares the registered verdicts with the earlier treatment (every ex-ante 0 accepted). The registered verdicts are never changed.
 - Fix: the full report no longer fails on a workbook without episodes.
 
 ## 1.3.0 — 2026-09-28 (Research Studio)

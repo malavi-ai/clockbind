@@ -1,0 +1,11 @@
+{
+  "name": "clockbind",
+  "owner": {"name": "Seyed Mehdi Alavi"},
+  "plugins": [
+    {
+      "name": "clockbind",
+      "source": "./claude-plugin",
+      "description": "Reproducible research tools with local processing: validate, privacy scan, screen, binding verdicts, agreement."
+    }
+  ]
+}

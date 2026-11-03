@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clockbind"
-version = "1.4.0"
+version = "2.0.0"
 description = "ClockBind: reproducible statistics studio for doctoral research — screening, descriptive and inferential statistics, regression with cluster-robust inference, reliability, factor analysis, overlap weighting and conjoint analysis, which-clock-binds verdicts and workbook validation, with provenance, validation against R and a local MCP server for chat apps."
 readme = "README.md"
 license = {text = "MIT"}

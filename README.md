@@ -82,6 +82,13 @@ clockbind screen run --data screening.xlsx --gates gates.json
 clockbind workbook check --data screening.xlsx          # integrity before analysis or freeze
 clockbind binding template --output timeline.xlsx      # timeline input with an example
 clockbind binding run --data timeline.xlsx              # which clock binds? verdicts
+clockbind binding run --data timeline.xlsx --zero-as-documented   # sensitivity only: accept every ex-ante 0
+clockbind p4 template --output timeline_p4.xlsx           # Protocol 4.0 input template (six clocks, revealed steps, layers)
+clockbind p4 run --data timeline_p4.xlsx                 # Protocol 4.0 verdicts (institutional clock, revealed-in-process rule, claim ceiling)
+clockbind p4 run --data timeline_p4.xlsx --merge-institutional   # sensitivity: v3.4 clock set
+clockbind p4 blind-packet --data workbook.xlsx --output coder_packet.xlsx --key KEY_private.xlsx
+clockbind p4 concordance --data timeline_p4.xlsx --study1 locked_verdicts.xlsx
+clockbind p4 alpha --data coding.csv --coders coder_a,coder_b --by item_family
 clockbind report full --data Bridge.xlsx --gates gates.json --chat-safe   # full report (aggregate, safe to share)
 clockbind report full --data Bridge.xlsx --gates gates.json --relative-time # timelines in days from day 0 (publication)
 clockbind lock check --data Bridge.xlsx --gates gates.json --by SMA        # lock readiness (nothing is locked)

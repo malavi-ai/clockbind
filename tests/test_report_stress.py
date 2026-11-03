@@ -120,6 +120,10 @@ def test_report_stress(seed, tmp_path):
         fb = int((res["verdict"] == "Finance-binding").sum())
         assert int(t["07_Finance_ladder"].set_index("level of the financing claim").filter(like="Counterfactually", axis=0)["episodes"].iloc[0]) == fb
         assert set(res["indeterminate_reason"].fillna("")) <= {"", "window-infeasible", "multiple-sufficient", "sign-unstable", "missing-inputs"}
+        if "07_Zero_rule_sensitivity" in t:                       # registered column equals the primary verdict counts
+            zs = t["07_Zero_rule_sensitivity"].iloc[:-1].set_index("verdict")["registered rule"]
+            vc = res["verdict"].value_counts()
+            assert all(int(zs.get(v, 0)) == int(vc.get(v, 0)) for v in set(vc.index) | set(zs.index))
     # chat-safe: manifest present and no episode code anywhere (tables, markdown, PDF text)
     out = tmp_path / "safe"
     assert (out / "SAFE_TO_SHARE.txt").exists()
