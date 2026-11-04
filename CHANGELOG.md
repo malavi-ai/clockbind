@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+- Fix (Protocol 4.0, rule 6.3): the claim ceiling is lifted only when a non-internal source has `direct_record` = Yes. In 2.0.0 a step with `direct_record` left blank also lifted the ceiling. Blank now keeps the claim capped and is reported in the flags. Verdicts are not affected.
+- Tests: regression test for a blank `direct_record`; the claim-ceiling test now codes `direct_record` = Yes explicitly.
+
 ## 2.0.0 — 2026-11-03 (Protocol 4.0)
 - **New plugin `clockbind p4` for Bridge Protocol 4.0 (Study 2a).** The registered v3.4 engine (`clockbind binding run`) is unchanged; Protocol 4.0 runs the same counterfactual machinery with an extended clock set and inputs.
 - **Six clocks:** `institutional` (tariff classification, movement certificates, proof of origin, product control, duty assessment, release) is a clock of its own; under v3.4 `customs` remained an alias of logistics and still is in `clockbind binding`. New verdict **Institution-binding**.

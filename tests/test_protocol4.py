@@ -111,8 +111,19 @@ def test_claim_cap_internal_only():
     r = evaluate_all_v4(e, s).set_index("episode").loc["C1"]
     assert r["verdict"] == "Finance-binding" and r["claim_cap"].startswith("consistent with")
     s.loc[0, "source_class"] = "third-party"
+    s.loc[0, "direct_record"] = "Yes"
     r2 = evaluate_all_v4(e, s).set_index("episode").loc["C1"]
     assert r2["claim_cap"] == "not capped"
+
+
+def test_claim_cap_blank_direct_record_stays_capped():
+    # rule 6.3: third-party source but direct_record not coded -> capped, flagged, verdict unchanged
+    e, s = frames(*chain("C3", ["2026-01-09", "2026-01-10"], [1, 1], "2026-01-04", ["finance", "operational-readiness"],
+                         src=["third-party", "internal"]))
+    r = evaluate_all_v4(e, s).set_index("episode").loc["C3"]
+    assert r["verdict"] == "Finance-binding"
+    assert r["claim_cap"].startswith("consistent with")
+    assert "rule 6.3 requires Yes" in r["flags"]
 
 
 def test_alpha_perfect_and_reference():

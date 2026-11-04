@@ -180,10 +180,11 @@ def _claim_cap(ep: b3.Episode, row: dict, meta: dict) -> str:
             if ep.steps[n].clock != clock:
                 continue
             m = meta.get((ep.id, n), {})
-            if m.get("source_class") in NON_INTERNAL and m.get("direct_record") is not False:
-                if m.get("direct_record") is None:
-                    row.setdefault("_claim_notes", []).append(f"{n}: direct_record not coded; external source assumed to record the step")
-                ok = True
+            if m.get("source_class") in NON_INTERNAL:
+                if m.get("direct_record") is True:
+                    ok = True
+                elif m.get("direct_record") is None:
+                    row.setdefault("_claim_notes", []).append(f"{n}: direct_record not coded; rule 6.3 requires Yes, so the claim stays capped")
         if not ok:
             lacking.append(clock)
     return ("consistent with (internal evidence only for: " + ", ".join(lacking) + ")") if lacking else "not capped"
