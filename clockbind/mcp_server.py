@@ -120,6 +120,35 @@ def build_server():
         return _cli(["stats", "run", "--data", _path(path), "--analysis", analysis, "--params", _json.dumps(obj), "--out", _out_dir()])
 
     @mcp.tool()
+    def survey_plan(spec_json: str) -> str:
+        """Plan one shared survey for several papers: sample size per analysis (conjoint Johnson-Orme, two-group t test,
+        CFA RMSEA close-fit power per group, incremental regression f2, logistic EPV and outcome-rate precision, correlation),
+        completes per group, invitations (response rate, completion loss, eligibility), survey length and a k-anonymity check.
+        Same formulas and numbers as Quartile survey_plan."""
+        import json as _json
+        from .stats import surveyplan
+        return _json.dumps(surveyplan.plan(_json.loads(spec_json)), indent=2)
+
+    @mcp.tool()
+    def egba_bounds(spec_json: str) -> str:
+        """Evidence-Graded Bounds Analysis: bounds of a target expression at each evidence rung (A-E documentary/public,
+        S survey answers, I interviews), NOT IDENTIFIED where a parameter lacks evidence, conflicts kept and reported,
+        labels against a threshold, and the breakdown value of a chosen parameter."""
+        import json as _json
+        from .stats import egba
+        return _json.dumps(egba.run(_json.loads(spec_json)), indent=2)
+
+    @mcp.tool()
+    def egba_time(spec_json: str) -> str:
+        """EGBA-Time: bounds on financing-route activation latency from stage intervals by evidence grade, censoring of
+        pending routes and interval survey answers; classification against the action window (surely on time / surely
+        late / undetermined / not usable / not identified) and Manski bounds on the share usable in time.
+        Same rules and numbers as Quartile egba_time."""
+        import json as _json
+        from .stats import egba_time as _egt
+        return _json.dumps(_egt.run(_json.loads(spec_json)), indent=2)
+
+    @mcp.tool()
     def doctoral_capabilities() -> str:
         """List the installed Paper 1--4 and Bridge analysis engines. This exposes capability metadata only; no research data are read."""
         from .analysis import REGISTRY

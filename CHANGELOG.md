@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0 (2026-11-14)
+- `clockbind.stats.egba_time` and MCP tool `egba_time` (EGBA-Time); worked example tests/egba_time_example.json.
+- `clockbind.stats.surveyplan` and MCP tool `survey_plan`: shared-survey sample-size planner (same formulas and numbers as Quartile).
+- `clockbind.stats.egba` and MCP tool `egba_bounds`: Evidence-Graded Bounds Analysis with survey (S) and interview (I) evidence grades.
+- Tests: tests/test_survey_egba.py.
+
 ## 2.0.1
 
 - Fix (Protocol 4.0, rule 6.3): the claim ceiling is lifted only when a non-internal source has `direct_record` = Yes. In 2.0.0 a step with `direct_record` left blank also lifted the ceiling. Blank now keeps the claim capped and is reported in the flags. Verdicts are not affected.
